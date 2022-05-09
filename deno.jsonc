@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns"
+    ]
+  },
+  "tasks": {
+    "test": "deno test"
+  }
+}
