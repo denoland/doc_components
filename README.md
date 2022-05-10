@@ -3,6 +3,18 @@
 A set of components used to render [deno_doc](https://deno.land/x/deno_doc)
 [DocNodes](https://doc.deno.land/https://deno.land/x/deno_doc/lib/types.d.ts/~/DocNode).
 
+## Showcase
+
+The repository contains a showcase application to see example rendering of the
+components in the `_showcase` directory. It can be run locally using:
+
+```
+> deno task showcase
+```
+
+It is also available on
+[deno-doc-components.deno.dev](https://deno-doc-components.deno.dev/).
+
 ## Usage
 
 These components are abstracted away from any specific JSX engine, and require
