@@ -1,4 +1,4 @@
-# deno_doc_components
+# doc_components
 
 A set of components used to render [deno_doc](https://deno.land/x/deno_doc)
 [DocNodes](https://doc.deno.land/https://deno.land/x/deno_doc/lib/types.d.ts/~/DocNode).

@@ -8,6 +8,7 @@
     ]
   },
   "tasks": {
+    "showcase": "deno run --allow-net _showcase/main.tsx",
     "test": "deno test"
   }
 }
