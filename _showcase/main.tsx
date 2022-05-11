@@ -1,6 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+import { runtime, setup } from "../services.ts";
 import {
   Application,
   colors,
@@ -10,17 +11,16 @@ import {
   HttpError,
   renderSSR,
   Router,
-  setup,
+  setup as twSetup,
   twColors,
   virtualSheet,
 } from "./deps.ts";
-import { runtime, setRuntime } from "../jsx.ts";
 import { Showcase } from "./showcase.tsx";
 
-setRuntime({ Fragment, h });
+await setup({ runtime: { Fragment, h } });
 
 const sheet = virtualSheet();
-setup({
+twSetup({
   sheet,
   theme: {
     backgroundSize: {

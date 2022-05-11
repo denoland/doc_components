@@ -8,7 +8,8 @@
     ]
   },
   "tasks": {
-    "showcase": "deno run --allow-net _showcase/main.tsx",
+    "fmt": "deno fmt --ignore=./_showcase/data",
+    "showcase": "deno run --allow-net --allow-read=./_showcase/data _showcase/main.tsx",
     "test": "deno test"
   }
 }

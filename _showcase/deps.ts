@@ -12,9 +12,10 @@ export {
 
 export * as colors from "https://deno.land/std@0.138.0/fmt/colors.ts";
 
-export * as twColors from "https://esm.sh/twind@0.16.16/colors?pin=v74";
-export { setup } from "https://esm.sh/twind@0.16.16?pin=v74";
+export * as twColors from "https://esm.sh/twind@0.16.16/colors?pin=v78";
+export { css } from "https://esm.sh/twind@0.16.16/css?pin=v78";
+export { apply, setup, tw } from "https://esm.sh/twind@0.16.16?pin=v78";
 export {
   getStyleTag,
   virtualSheet,
-} from "https://esm.sh/twind@0.16.16/sheets?pin=v74";
+} from "https://esm.sh/twind@0.16.16/sheets?pin=v78";
