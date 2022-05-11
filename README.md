@@ -31,7 +31,7 @@ For example with [Nano JSX](https://nanojsx.io/):
 import { Fragment, h } from "https://deno.land/x/nano_jsx/mod.ts";
 import { setup } from "https://deno.land/x/deno_doc_components/services.ts";
 
-setup({ runtime: { Fragment, h } });
+await setup({ runtime: { Fragment, h } });
 ```
 
 For example with [Preact](https://preactjs.com/):
@@ -40,7 +40,7 @@ For example with [Preact](https://preactjs.com/):
 import { Fragment, h } from "https://esm.sh/pract";
 import { setup } from "https://deno.land/x/deno_doc_components/services.ts";
 
-setup({ runtime: { Fragment, h } });
+await setup({ runtime: { Fragment, h } });
 ```
 
 For example with [fresh](https://fresh.deno.dev/):
@@ -52,7 +52,7 @@ import {
 } from "https://raw.githubusercontent.com/lucacasonato/fresh/main/runtime.ts";
 import { setup } from "https://deno.land/x/deno_doc_components/services.ts";
 
-setup({ runtime: { Fragment, h } });
+await setup({ runtime: { Fragment, h } });
 ```
 
 For example with [aleph](https://alephjs.org/) (but validate the version of
@@ -62,7 +62,7 @@ React that the version of aleph you are using uses):
 import { createElement as h, Fragment } from "https://esm.sh/react@18.1.0";
 import { setup } from "https://deno.land/x/deno_doc_components/services.ts";
 
-setup({ runtime: { Fragment, h } });
+await setup({ runtime: { Fragment, h } });
 ```
 
 The tests use Nano JSX, and provide an example of how to setup the runtime.
