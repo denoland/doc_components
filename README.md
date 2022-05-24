@@ -115,9 +115,50 @@ and the symbol that is being looked for (e.g. `Uint8Array`). If the current
 namespace is with another namespace, they will be separated by a `.` (e.g.
 `custom.errors`).
 
+#### twind
+
+You can specify a twind setup configuration by passing a property of `tw` when
+performing a setup. For example:
+
+```ts
+import { setup } from "https://deno.land/x/deno_doc_components/services.ts";
+
+await setup({
+  tw: {
+    theme: {
+      colors: {
+        transparent: "transparent",
+      },
+    },
+  },
+});
+```
+
+twind also keeps some shared hidden state, meaning that modules should share
+exactly the same version of twind. In order to support that, `services.ts`
+re-exports the common twind APIs needed in consuming applications: `apply`,
+`css`, `getStyleTag`, `setup` as `twSetup`, `tw`, and `virtualSheet`.
+
+These can be imported from `services.ts`:
+
+```ts
+import {
+  apply,
+  css,
+  getStyleTag,
+  setup,
+  tw,
+  twSetup,
+  virtualSheet,
+} from "https://deno.land/x/deno_doc_components/services.ts";
+```
+
 ---
 
 Copyright 2021-2022 the Deno authors. All rights reserved. MIT License.
+
+```
+```
 
 ```
 ```

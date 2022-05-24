@@ -32,8 +32,6 @@ const styles = {
 
 type StyleKey = keyof typeof styles;
 
-const styleCache = new Map<StyleKey, string>();
-
 export function style(
   name: StyleKey,
   raw = false,
@@ -42,9 +40,5 @@ export function style(
   if (raw) {
     return styles[name];
   }
-  if (!styleCache.has(name)) {
-    const value = tw`${styles[name]}`;
-    styleCache.set(name, value);
-  }
-  return styleCache.get(name)!;
+  return tw`${styles[name]}`;
 }

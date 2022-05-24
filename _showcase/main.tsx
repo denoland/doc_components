@@ -1,75 +1,34 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { runtime, setup } from "../services.ts";
+import {
+  getStyleTag,
+  runtime,
+  setup,
+  theme,
+  virtualSheet,
+} from "../services.ts";
 import {
   Application,
   colors,
   Fragment,
-  getStyleTag,
   h,
   HttpError,
   renderSSR,
   Router,
-  setup as twSetup,
-  twColors,
-  virtualSheet,
 } from "./deps.ts";
 import { Showcase } from "./showcase.tsx";
-
-await setup({ runtime: { Fragment, h } });
+import { getIndexStructure } from "./util.ts";
 
 const sheet = virtualSheet();
-twSetup({
-  sheet,
-  theme: {
-    backgroundSize: {
-      "4": "1rem",
-    },
-    colors: {
-      transparent: "transparent",
-      current: "currentColor",
-      black: twColors.black,
-      white: twColors.white,
-      gray: twColors.coolGray,
-      red: twColors.red,
-      yellow: twColors.amber,
-      green: twColors.emerald,
-      cyan: twColors.cyan,
-      blue: twColors.lightBlue,
-      indigo: twColors.indigo,
-      purple: twColors.fuchsia,
-      pink: twColors.pink,
-    },
-    fontFamily: {
-      "sans": [
-        "Inter var",
-        "system-ui",
-        "Segoe UI",
-        "Roboto",
-        "Helvetica Neue",
-        "Arial",
-        "Noto Sans",
-        "sans-serif",
-      ],
-      "mono": [
-        "Menlo",
-        "Monaco",
-        "Lucida Console",
-        "Consolas",
-        "Liberation Mono",
-        "Courier New",
-        "monospace",
-      ],
-    },
-  },
-});
+await setup({ runtime: { Fragment, h }, tw: { sheet, theme } });
 
 const router = new Router();
 
 router.get("/", async (ctx, next) => {
   sheet.reset();
-  const body = renderSSR(<Showcase />);
+  const indexStructure = await getIndexStructure();
+  const body = renderSSR(<Showcase>{indexStructure}</Showcase>);
   const styles = getStyleTag(sheet);
   ctx.response.body = `<!DOCTYPE html>
   <html lang="en">

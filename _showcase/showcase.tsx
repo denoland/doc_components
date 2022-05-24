@@ -1,21 +1,18 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { apply, css, tw } from "./deps.ts";
-import { runtime } from "../services.ts";
-import { getIndexStructure } from "./util.ts";
-
+import { type IndexStructure } from "../doc.ts";
 import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleIndex } from "../module_index.tsx";
+import { apply, css, runtime, tw } from "../services.ts";
+import { type Child, take } from "../utils.ts";
 
 const app = css({
   ":global": {
     "html": apply`bg(white dark:gray-900)`,
   },
 });
-
-const indexStructure = await getIndexStructure();
 
 function ComponentTitle(
   { children, module }: { children: string; module: string },
@@ -34,7 +31,8 @@ function ComponentTitle(
   );
 }
 
-export function Showcase() {
+export function Showcase({ children }: { children: Child<IndexStructure> }) {
+  const indexStructure = take(children);
   return (
     <div
       class={tw
