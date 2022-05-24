@@ -32,6 +32,9 @@ const styles = {
 
 type StyleKey = keyof typeof styles;
 
+export function style(name: StyleKey): string;
+export function style(name: StyleKey, raw: boolean): string | Directive<any>;
+export function style(name: StyleKey, raw: true): Directive<any>;
 export function style(
   name: StyleKey,
   raw = false,

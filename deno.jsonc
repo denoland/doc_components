@@ -5,11 +5,14 @@
       "dom.iterable",
       "dom.asynciterable",
       "deno.ns"
+    ],
+    "types": [
+      "./jsx.d.ts"
     ]
   },
   "tasks": {
     "fmt": "deno fmt --ignore=./_showcase/data",
-    "showcase": "deno run --allow-net --allow-read=./_showcase/data _showcase/main.tsx",
+    "showcase": "deno run --check --allow-net --allow-read=./_showcase/data _showcase/main.tsx",
     "test": "deno test"
   }
 }

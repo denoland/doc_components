@@ -118,5 +118,5 @@ export function MarkdownSummary(
         dangerouslySetInnerHTML={{ __html: mdToHtml(md, path) }}
       />
     )
-    : undefined;
+    : null;
 }
