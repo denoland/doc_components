@@ -1,6 +1,20 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { comrak } from "./deps.ts";
+import {
+  comrak,
+  type Configuration as TwConfiguration,
+  setup as twSetup,
+  type ThemeConfiguration,
+  twColors,
+} from "./deps.ts";
+export {
+  apply,
+  css,
+  getStyleTag,
+  setup as twSetup,
+  tw,
+  virtualSheet,
+} from "./deps.ts";
 
 interface JsxRuntime {
   Fragment: (props: Record<string, unknown>) => unknown;
@@ -25,8 +39,55 @@ export interface Configuration {
     symbol: string,
   ) => string | undefined;
   runtime?: JsxRuntime;
+  /** If provided, the twind {@linkcode twSetup setup} will be performed. */
+  tw?: TwConfiguration;
 }
-const runtimeConfig: Required<Configuration> = {
+
+export const theme: ThemeConfiguration = {
+  backgroundSize: {
+    "4": "1rem",
+  },
+  colors: {
+    transparent: "transparent",
+    current: "currentColor",
+    black: twColors.black,
+    white: twColors.white,
+    gray: twColors.coolGray,
+    red: twColors.red,
+    yellow: twColors.amber,
+    green: twColors.emerald,
+    cyan: twColors.cyan,
+    blue: twColors.lightBlue,
+    indigo: twColors.indigo,
+    purple: twColors.fuchsia,
+    pink: twColors.pink,
+  },
+  fontFamily: {
+    "sans": [
+      "Inter var",
+      "system-ui",
+      "Segoe UI",
+      "Roboto",
+      "Helvetica Neue",
+      "Arial",
+      "Noto Sans",
+      "sans-serif",
+    ],
+    "mono": [
+      "Menlo",
+      "Monaco",
+      "Lucida Console",
+      "Consolas",
+      "Liberation Mono",
+      "Courier New",
+      "monospace",
+    ],
+  },
+};
+
+const runtimeConfig: Required<
+  Pick<Configuration, "href" | "lookupSymbolHref" | "runtime">
+> = {
   href(path: string, symbol?: string) {
     return symbol ? `/${path}` : `/${path}/~/${symbol}`;
   },
@@ -53,10 +114,13 @@ const runtimeConfig: Required<Configuration> = {
 
 /** Setup the services used by the doc components. */
 export async function setup(config: Configuration) {
-  const { runtime, ...other } = config;
+  const { runtime, tw, ...other } = config;
   Object.assign(runtimeConfig, other);
   if (runtime) {
     Object.assign(runtimeConfig.runtime, runtime);
+  }
+  if (tw) {
+    twSetup(tw);
   }
   await comrak.init();
 }
