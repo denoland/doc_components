@@ -1,21 +1,17 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import {
-  getStyleTag,
-  runtime,
-  setup,
-  theme,
-  virtualSheet,
-} from "../services.ts";
+import { runtime, setup, theme } from "../services.ts";
 import {
   Application,
   colors,
   Fragment,
+  getStyleTag,
   h,
   HttpError,
   renderSSR,
   Router,
+  virtualSheet,
 } from "./deps.ts";
 import { Showcase } from "./showcase.tsx";
 import { getIndexStructure } from "./util.ts";

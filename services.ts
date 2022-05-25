@@ -7,14 +7,6 @@ import {
   type ThemeConfiguration,
   twColors,
 } from "./deps.ts";
-export {
-  apply,
-  css,
-  getStyleTag,
-  setup as twSetup,
-  tw,
-  virtualSheet,
-} from "./deps.ts";
 
 interface JsxRuntime {
   Fragment: (props: Record<string, unknown>) => unknown;

@@ -16,10 +16,6 @@ export {
   setup,
   type ThemeConfiguration,
   tw,
-} from "https://esm.sh/twind@0.16.16?pin=v78";
-export * as twColors from "https://esm.sh/twind@0.16.16/colors?pin=v78";
-export { css } from "https://esm.sh/twind@0.16.16/css?pin=v78";
-export {
-  getStyleTag,
-  virtualSheet,
-} from "https://esm.sh/twind@0.16.16/sheets?pin=v78";
+} from "twind";
+export * as twColors from "twind/colors";
+export { css } from "twind/css";

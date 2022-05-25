@@ -1,11 +1,12 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+import { apply, css, tw } from "./deps.ts";
 import { type IndexStructure } from "../doc.ts";
 import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleIndex } from "../module_index.tsx";
-import { apply, css, runtime, tw } from "../services.ts";
+import { runtime } from "../services.ts";
 import { type Child, take } from "../utils.ts";
 
 const app = css({

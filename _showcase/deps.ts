@@ -11,3 +11,7 @@ export {
 } from "https://deno.land/x/oak@v10.5.1/mod.ts";
 
 export * as colors from "https://deno.land/std@0.138.0/fmt/colors.ts";
+
+export { apply, tw } from "twind";
+export { css } from "twind/css";
+export { getStyleTag, virtualSheet } from "twind/sheets";

@@ -117,6 +117,17 @@ namespace is with another namespace, they will be separated by a `.` (e.g.
 
 #### twind
 
+twind has some shared hidden state, which means that doc_components needs to
+share the same versions of the remote twind modules. In order to do that,
+`doc_components` from the bare specifiers `twind`, `twind/colors`, `twind/css`.
+Also, if you are setting up twind to SSR in a client application, you will end
+up needing items from `twind/sheets`.
+
+Therefore it is expected that you will use an
+[import map](https://deno.land/manual/node/import_maps) to provide the specific
+version of twind you are using in your end application. This repository contains
+an example which is used for the showcase.
+
 You can specify a twind setup configuration by passing a property of `tw` when
 performing a setup. For example:
 
@@ -134,23 +145,15 @@ await setup({
 });
 ```
 
-twind also keeps some shared hidden state, meaning that modules should share
-exactly the same version of twind. In order to support that, `services.ts`
-re-exports the common twind APIs needed in consuming applications: `apply`,
-`css`, `getStyleTag`, `setup` as `twSetup`, `tw`, and `virtualSheet`.
-
-These can be imported from `services.ts`:
+The `/services.ts` module exports a `theme` object which is the default theme
+settings that the `doc_components` use with twind, which can be used when you
+are performing setup from twind yourself:
 
 ```ts
-import {
-  apply,
-  css,
-  getStyleTag,
-  setup,
-  tw,
-  twSetup,
-  virtualSheet,
-} from "https://deno.land/x/deno_doc_components/services.ts";
+import { setup } from "twind";
+import { theme } from "https://deno.land/x/deno_doc_components/services.ts";
+
+setup({ theme });
 ```
 
 ---
