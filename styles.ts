@@ -33,7 +33,9 @@ const styles = {
 type StyleKey = keyof typeof styles;
 
 export function style(name: StyleKey): string;
+// deno-lint-ignore no-explicit-any
 export function style(name: StyleKey, raw: boolean): string | Directive<any>;
+// deno-lint-ignore no-explicit-any
 export function style(name: StyleKey, raw: true): Directive<any>;
 export function style(
   name: StyleKey,
