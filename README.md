@@ -1,4 +1,8 @@
-# doc_components
+# deno_doc_components
+
+[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https://deno.land/x/deno_doc_components/mod.ts)
+[![Build Status - Cirrus][]][Build status] [![Twitter handle][]][Twitter badge]
+[![Discord Chat](https://img.shields.io/discord/684898665143206084?logo=discord&style=social)](https://discord.gg/deno)
 
 A set of components used to render [deno_doc](https://deno.land/x/deno_doc)
 [DocNodes](https://doc.deno.land/https://deno.land/x/deno_doc/lib/types.d.ts/~/DocNode).
@@ -160,8 +164,7 @@ setup({ theme });
 
 Copyright 2021-2022 the Deno authors. All rights reserved. MIT License.
 
-```
-```
-
-```
-```
+[Build Status - Cirrus]: https://github.com/denoland/doc_components/workflows/ci/badge.svg?branch=main&event=push
+[Build status]: https://github.com/denoland/doc_components/actions
+[Twitter badge]: https://twitter.com/intent/follow?screen_name=deno_land
+[Twitter handle]: https://img.shields.io/twitter/follow/deno_land.svg?style=social&label=Follow
