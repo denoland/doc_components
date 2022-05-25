@@ -2,12 +2,14 @@
 
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
+import { type DocNode } from "../deps.ts";
 import { type IndexStructure } from "../doc.ts";
 import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
+import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndex } from "../module_index.tsx";
 import { runtime } from "../services.ts";
-import { type Child, take } from "../utils.ts";
+import { Usage } from "../usage.tsx";
 
 const app = css({
   ":global": {
@@ -32,8 +34,12 @@ function ComponentTitle(
   );
 }
 
-export function Showcase({ children }: { children: Child<IndexStructure> }) {
-  const indexStructure = take(children);
+export function Showcase(
+  { docNodes, indexStructure }: {
+    docNodes: DocNode[];
+    indexStructure: IndexStructure;
+  },
+) {
   return (
     <div
       class={tw
@@ -46,11 +52,17 @@ export function Showcase({ children }: { children: Child<IndexStructure> }) {
       <MarkdownSummary path="/">
         {`Some _markdown_ with [links](https://deno.land/)`}
       </MarkdownSummary>
+      <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
+      <ModuleDoc url="https://deno.land/x/oak@v10.5.1/mod.ts">
+        {docNodes}
+      </ModuleDoc>
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
       <ModuleIndex>{indexStructure}</ModuleIndex>
       <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
       <Tag color="yellow">abstract</Tag>
       <Tag color="gray">deprecated</Tag>
+      <ComponentTitle module="/usage.tsx">Usage</ComponentTitle>
+      <Usage url="https://deno.land/x/example@v1.0.0/mod.ts" />
     </div>
   );
 }
