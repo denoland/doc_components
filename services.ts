@@ -22,7 +22,7 @@ export interface Configuration {
   /** Provided the current path and optionally a symbol from that path, return
    * an href link. */
   href?: (path: string, symbol?: string) => string;
-  /** PRovides the current module/file, optionally a namespace and a symbol to
+  /** Provides the current module/file, optionally a namespace and a symbol to
    * be looked up, attempt to provide an href link to that symbol. If the
    * symbol cannot be resolved, return `undefined`. */
   lookupSymbolHref?: (
@@ -80,15 +80,17 @@ export const theme: ThemeConfiguration = {
 const runtimeConfig: Required<
   Pick<Configuration, "href" | "lookupSymbolHref" | "runtime">
 > = {
-  href(path: string, symbol?: string) {
-    return symbol ? `/${path}` : `/${path}/~/${symbol}`;
+  href(current: string, symbol?: string) {
+    return symbol ? `/${current}` : `/${current}/~/${symbol}`;
   },
   lookupSymbolHref(
-    path: string,
+    current: string,
     namespace: string | undefined,
     symbol: string,
   ): string | undefined {
-    return namespace ? `/${path}/~/` : `/${path}/~/${symbol}`;
+    return namespace
+      ? `/${current}/~/${namespace}.${symbol}`
+      : `/${current}/~/${symbol}`;
   },
   runtime: {
     Fragment() {

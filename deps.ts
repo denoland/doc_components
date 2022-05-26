@@ -4,6 +4,17 @@ export * as comrak from "https://deno.land/x/comrak@0.1.1/mod.ts";
 export {
   type DocNode,
   type DocNodeClass,
+  type DocNodeEnum,
+  type DocNodeFunction,
+  type DocNodeImport,
+  type DocNodeInterface,
+  type DocNodeModuleDoc,
+  type DocNodeNamespace,
+  type DocNodeTypeAlias,
+  type DocNodeVariable,
+  type JsDoc,
+  type JsDocTag,
+  type JsDocTagKind,
 } from "https://deno.land/x/deno_doc@v0.34.0/lib/types.d.ts";
 
 export { toHtml } from "https://esm.sh/hast-util-to-html@8.0.3?pin=v78";

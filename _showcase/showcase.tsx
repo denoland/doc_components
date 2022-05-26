@@ -10,6 +10,7 @@ import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndex } from "../module_index.tsx";
 import { runtime } from "../services.ts";
 import { Usage } from "../usage.tsx";
+import { type Child, take } from "../utils.ts";
 
 const app = css({
   ":global": {
@@ -20,15 +21,16 @@ const app = css({
 function ComponentTitle(
   { children, module }: { children: string; module: string },
 ) {
+  const name = take(children);
   const href = `https://github.com/denoland/doc_components/blob/main${module}`;
   return (
-    <h3 class={tw`text-xl py-4`}>
+    <h3 class={tw`text-xl py-4`} id={name.toLocaleLowerCase()}>
       <a
         href={href}
         class={tw`text-blue(800 dark:300) hover:underline`}
         target="_blank"
       >
-        {children}
+        {name}
       </a>
     </h3>
   );
@@ -49,7 +51,7 @@ export function Showcase(
       <h2 class={tw`text-2xl py-2`}>Component Showcase</h2>
       <hr />
       <ComponentTitle module="/markdown.tsx">MarkdownSummary</ComponentTitle>
-      <MarkdownSummary path="/">
+      <MarkdownSummary url="https://deno.land/x/oak@v10.5.1/mod.ts">
         {`Some _markdown_ with [links](https://deno.land/)`}
       </MarkdownSummary>
       <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
@@ -57,7 +59,9 @@ export function Showcase(
         {docNodes}
       </ModuleDoc>
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
-      <ModuleIndex>{indexStructure}</ModuleIndex>
+      <ModuleIndex base="https://deno.land/std@0.138.0" path="/">
+        {indexStructure}
+      </ModuleIndex>
       <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
       <Tag color="yellow">abstract</Tag>
       <Tag color="gray">deprecated</Tag>

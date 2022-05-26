@@ -1,6 +1,33 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
+import {
+  type DocNode,
+  type DocNodeClass,
+  type DocNodeEnum,
+  type DocNodeFunction,
+  type DocNodeImport,
+  type DocNodeInterface,
+  type DocNodeModuleDoc,
+  type DocNodeNamespace,
+  type DocNodeTypeAlias,
+  type DocNodeVariable,
+} from "./deps.ts";
+
 export type Child<T> = T | [T];
+
+export interface DocNodeCollection {
+  moduleDoc?: DocNodeTupleArray<DocNodeModuleDoc>;
+  import?: DocNodeTupleArray<DocNodeImport>;
+  namespace?: DocNodeTupleArray<DocNodeNamespace>;
+  class?: DocNodeTupleArray<DocNodeClass>;
+  enum?: DocNodeTupleArray<DocNodeEnum>;
+  variable?: DocNodeTupleArray<DocNodeVariable>;
+  function?: DocNodeTupleArray<DocNodeFunction>;
+  interface?: DocNodeTupleArray<DocNodeInterface>;
+  typeAlias?: DocNodeTupleArray<DocNodeTypeAlias>;
+}
+
+export type DocNodeTupleArray<N extends DocNode> = [label: string, node: N][];
 
 interface ParsedURL {
   registry: string;
@@ -8,6 +35,43 @@ interface ParsedURL {
   package?: string;
   version?: string;
   module?: string;
+}
+
+function appendCollection(
+  collection: DocNodeCollection,
+  nodes: DocNode[],
+  path?: string,
+  includePrivate = false,
+) {
+  for (const node of nodes) {
+    if (includePrivate || node.declarationKind !== "private") {
+      if (node.kind === "namespace" && !node.namespaceDef.elements.length) {
+        continue;
+      }
+      const docNodes: DocNodeTupleArray<DocNode> = collection[node.kind] ??
+        (collection[node.kind] = []);
+      const label = path ? `${path}.${node.name}` : node.name;
+      docNodes.push([label, node]);
+      if (node.kind === "namespace") {
+        appendCollection(
+          collection,
+          node.namespaceDef.elements,
+          label,
+          includePrivate,
+        );
+      }
+    }
+  }
+}
+
+export function asCollection(
+  nodes: DocNode[],
+  path?: string,
+  includePrivate = false,
+): DocNodeCollection {
+  const collection: DocNodeCollection = {};
+  appendCollection(collection, nodes, path, includePrivate);
+  return collection;
 }
 
 export function assert(
@@ -19,6 +83,13 @@ export function assert(
   }
 }
 
+export function byName<Node extends DocNode>(
+  a: [label: string, node: Node],
+  b: [label: string, node: Node],
+) {
+  return a[0].localeCompare(b[0]);
+}
+
 /** Convert a string into a camelCased string. */
 export function camelize(str: string): string {
   return str.split(/[\s_\-]+/).map((word, index) =>
@@ -28,9 +99,22 @@ export function camelize(str: string): string {
   ).join("");
 }
 
+export function isAbstract(node: DocNode) {
+  if (node.kind === "class") {
+    return node.classDef.isAbstract;
+  }
+  return false;
+}
+
+export function isDeprecated(node: DocNode) {
+  if (node.jsDoc && node.jsDoc.tags) {
+    return node.jsDoc.tags.some(({ kind }) => kind === "deprecated");
+  }
+}
+
 /** If the condition is true, return the `isTrue` value, other return `isFalse`
  * which defaults to `undefined`. */
-export function maybe<T>(cond: unknown, isTrue: T): T | undefined;
+export function maybe<T>(cond: unknown, isTrue: T): T | null;
 /** If the condition is true, return the `isTrue` value, other return `isFalse`
  * which defaults to `undefined`. */
 export function maybe<T, F>(cond: unknown, isTrue: T, isFalse: F): T | F;
@@ -40,8 +124,8 @@ export function maybe<T, F>(
   cond: unknown,
   isTrue: T,
   isFalse?: F,
-): T | F | undefined {
-  return cond ? isTrue : isFalse;
+): T | F | null {
+  return cond ? isTrue : isFalse ?? null;
 }
 
 /** Patterns of "registries" which will be parsed to be displayed in a more

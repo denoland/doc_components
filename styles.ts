@@ -2,6 +2,14 @@
 
 import { apply, css, type Directive, tw } from "./deps.ts";
 
+const anchorStyles = css({
+  ":global": {
+    ":target, :target > *": apply`bg-gray(200 dark:800)`,
+  },
+  "margin-left": "-1em",
+  "padding-right": "0.5em",
+});
+
 const codeStyles = css({
   ":not(pre) > code": apply
     `font-mono text-sm py-1 px-1.5 rounded text-black bg-gray-100 dark:(text-white bg-gray-800)`,
@@ -39,8 +47,17 @@ const syntaxHighlightingStyles = css({
 });
 
 const styles = {
+  anchor: apply
+    `opacity-0 group-hover:opacity-100 absolute bg-transparent text-gray-600 dark:text-gray-400 ${anchorStyles}`,
   copyButton: apply
     `float-right px-2 font-sans focus-visible:ring-2 text-sm text-gray(500 dark:300) border border-gray(300 dark:500) rounded hover:shadow`,
+  entryClass: apply`text-green(800 dark:400) mx-2 font-bold truncate`,
+  entryEnum: apply`text-green(700 dark:500) mx-2 font-bold truncate`,
+  entryFunction: apply`text-cyan(800 dark:400) mx-2 font-bold truncate`,
+  entryInterface: apply`text-cyan(900 dark:300) mx-2 font-bold truncate`,
+  entryTypeAlias: apply`text-yellow(700 dark:500) mx-2 font-bold truncate`,
+  entryVariable: apply`text-blue(700 dark:500) mx-2 font-bold truncate`,
+  entryNamespace: apply`text-yellow(800 dark:400) mx-2 font-bold truncate`,
   link: apply`text-blue(800 dark:300) hover:underline`,
   linkPadRight: apply`pr-4 text-blue(800 dark:300) hover:underline`,
   main: apply`p-6 md:(col-span-3 p-12)`,
@@ -63,16 +80,21 @@ const styles = {
   symbolEnum: apply`text-green(700 dark:500) font-bold hover:underline`,
   symbolFunction: apply`text-cyan(800 dark:400) font-bold hover:underline`,
   symbolInterface: apply`text-cyan(900 dark:300) font-bold hover:underline`,
+  symbolListCell: apply`block lg:table-cell py-1 px-2 align-top`,
+  symbolListRow: apply`block lg:table-row`,
+  symbolListTable: apply`block lg:table`,
   symbolNamespace: apply`text-yellow(800 dark:400) font-bold hover:underline`,
   symbolTypeAlias: apply`text-yellow(700 dark:500) font-bold hover:underline`,
   symbolVariable: apply`text-blue(700 dark:500) font-bold hover:underline`,
   tag: apply
     `px-4 py-2 inline-flex leading-5 font-semibold lowercase rounded-full`,
+  tagKind: apply`italic`,
+  tagName: apply`font-medium`,
   tdIndex: apply`py-1 px-2 align-top`,
   rightArrow: apply`inline rotate-90 dark:(filter invert) mr-2`,
 } as const;
 
-type StyleKey = keyof typeof styles;
+export type StyleKey = keyof typeof styles;
 
 export function style(name: StyleKey): string;
 // deno-lint-ignore no-explicit-any
