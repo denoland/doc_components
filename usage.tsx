@@ -1,10 +1,9 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { type DocNode } from "./deps.ts";
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
-import { camelize, type Child, parseURL, take } from "./utils.ts";
+import { camelize, parseURL } from "./utils.ts";
 
 interface ParsedUsage {
   /** The symbol that the item should be imported as. If `usageSymbol` and
@@ -58,8 +57,11 @@ export function parseUsage(
   return { importSymbol, usageSymbol, localVar, importStatement };
 }
 
+let guid = 1;
+
 export function Usage({ url }: { url: string }) {
   const { importSymbol, importStatement } = parseUsage(url);
+  const fnName = `cis${guid++}`;
   return (
     <div class={style("markdown")}>
       <pre>
@@ -67,7 +69,7 @@ export function Usage({ url }: { url: string }) {
           dangerouslySetInnerHTML={{
             __html: `<button class="${
               style("copyButton")
-            }" type="button" onclick="cis()">Copy</button>`,
+            }" type="button" onclick="${fnName}()">Copy</button>`,
           }}
         />
         <code>
@@ -81,7 +83,7 @@ export function Usage({ url }: { url: string }) {
         </code>
       </pre>
       <script>
-        {`function cis() { navigator?.clipboard?.writeText(\`${importStatement}\`); }`}
+        {`function ${fnName}() { navigator?.clipboard?.writeText(\`${importStatement}\`); }`}
       </script>
     </div>
   );
