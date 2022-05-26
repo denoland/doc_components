@@ -17,7 +17,18 @@ import { Showcase } from "./showcase.tsx";
 import { getDocNodes, getIndexStructure } from "./util.ts";
 
 const sheet = virtualSheet();
-await setup({ runtime: { Fragment, h }, tw: { sheet, theme } });
+await setup({
+  lookupHref(url, namespace, symbol) {
+    return namespace
+      ? `/${url}/~/${namespace}.${symbol}`
+      : `/${url}/~/${symbol}`;
+  },
+  resolveHref(url, symbol) {
+    return symbol ? `/${url}/~/${symbol}` : `/${url}`;
+  },
+  runtime: { Fragment, h },
+  tw: { sheet, theme },
+});
 
 const router = new Router();
 

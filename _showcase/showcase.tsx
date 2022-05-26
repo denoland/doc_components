@@ -19,7 +19,7 @@ const app = css({
 });
 
 function ComponentTitle(
-  { children, module }: { children: string; module: string },
+  { children, module }: { children: Child<string>; module: string },
 ) {
   const name = take(children);
   const href = `https://github.com/denoland/doc_components/blob/main${module}`;
@@ -52,7 +52,7 @@ export function Showcase(
       <hr />
       <ComponentTitle module="/markdown.tsx">MarkdownSummary</ComponentTitle>
       <MarkdownSummary url="https://deno.land/x/oak@v10.5.1/mod.ts">
-        {`Some _markdown_ with [links](https://deno.land/)`}
+        {`Some _markdown_ with [links](https://deno.land/) and symbol links, like: {@linkcode Router}`}
       </MarkdownSummary>
       <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
       <ModuleDoc url="https://deno.land/x/oak@v10.5.1/mod.ts">

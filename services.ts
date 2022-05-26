@@ -19,17 +19,30 @@ interface JsxRuntime {
 }
 
 export interface Configuration {
-  /** Provided the current path and optionally a symbol from that path, return
-   * an href link. */
-  href?: (path: string, symbol?: string) => string;
-  /** Provides the current module/file, optionally a namespace and a symbol to
-   * be looked up, attempt to provide an href link to that symbol. If the
-   * symbol cannot be resolved, return `undefined`. */
-  lookupSymbolHref?: (
-    current: string,
+  /** Called when the doc components are trying to resolve a symbol.  The
+   * current url is provided as a string, an optional namespace and the symbol
+   * name attempting to be resolved.
+   *
+   * If provided the namespace, any nested namespaces will be separated by a
+   * `.`.
+   *
+   * Implementors should search the scope of the current module and namespace
+   * ascending to global scopes to resolve the href. If the symbol cannot be
+   * found, the function should return `undefined`. */
+  lookupHref?: (
+    url: string,
     namespace: string | undefined,
     symbol: string,
   ) => string | undefined;
+  /** Called when the doc components are trying to generate a link to a path,
+   * module or symbol within a module.  The URL to the path or module will be
+   * provided, and the symbol will be provided.  If the symbol contains `.`,
+   * the symbol is located within a namespace in the file.
+   *
+   * Implementors should return a string which will be used as the `href` value
+   * for a link. */
+  resolveHref?: (url: string, symbol?: string) => string;
+  /** The JSX runtime that should be used. */
   runtime?: JsxRuntime;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
   tw?: TwConfiguration;
@@ -78,12 +91,12 @@ export const theme: ThemeConfiguration = {
 };
 
 const runtimeConfig: Required<
-  Pick<Configuration, "href" | "lookupSymbolHref" | "runtime">
+  Pick<Configuration, "resolveHref" | "lookupHref" | "runtime">
 > = {
-  href(current: string, symbol?: string) {
+  resolveHref(current: string, symbol?: string) {
     return symbol ? `/${current}` : `/${current}/~/${symbol}`;
   },
-  lookupSymbolHref(
+  lookupHref(
     current: string,
     namespace: string | undefined,
     symbol: string,
@@ -129,16 +142,18 @@ export const runtime: JsxRuntime = {
 };
 
 export const services = {
-  /** Return a link to the provided path and optional symbol. */
-  get href(): (path: string, symbol?: string) => string {
-    return runtimeConfig.href;
+  /** Return a link to the provided URL and optional symbol. */
+  get resolveHref(): (url: string, symbol?: string) => string {
+    return runtimeConfig.resolveHref;
   },
 
-  get lookupSymbolHref(): (
-    current: string,
+  /** Attempt to find a link to a specific symbol from the current URL and
+   * optionally namespace. */
+  get lookupHref(): (
+    url: string,
     namespace: string | undefined,
     symbol: string,
   ) => string | undefined {
-    return runtimeConfig.lookupSymbolHref;
+    return runtimeConfig.lookupHref;
   },
 };

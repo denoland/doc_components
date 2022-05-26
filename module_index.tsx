@@ -39,7 +39,7 @@ function ExportedSymbol(
   },
 ) {
   const node = take(children);
-  const href = services.href(path, name);
+  const href = services.resolveHref(`${base}${path}`, name);
   let linkClass;
   switch (node.kind) {
     case "class":
@@ -113,9 +113,9 @@ function ModuleEntry(
     summary,
   }));
   items.sort((a, b) => a.name.localeCompare(b.name));
-  const href = services.href(name);
+  const url = `${base}${name}`;
+  const href = services.resolveHref(url);
   const path = name;
-  const url = `${base}${path}`;
   const exports = items.map(({ name, node, summary }) => (
     <ExportedSymbol name={name} base={base} path={path} summary={summary}>
       {node}
@@ -171,8 +171,8 @@ function Folder(
     ? getModuleSummary(mods[0], entries)
     : undefined;
   const id = path.slice(1).replaceAll(/[\s/]/g, "_") || "_root";
-  const href = services.href(path);
   const url = `${base}${path}`;
+  const href = services.resolveHref(url);
   return (
     <div class={style("panel")} id={`group_${id}`}>
       {maybe(

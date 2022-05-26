@@ -64,7 +64,7 @@ function parseLinks(
       link = value.slice(0, indexOfSpace);
       title = value.slice(indexOfSpace + 1).trim();
     }
-    const href = services.lookupSymbolHref(url, namespace, link);
+    const href = services.lookupHref(url, namespace, link);
     if (href) {
       if (!title) {
         title = link;

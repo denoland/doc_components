@@ -66,7 +66,10 @@ export function DocLink(
   },
 ) {
   const label = take(children);
-  const href = services.href(url, namespace ? `${namespace}.${label}` : label);
+  const href = services.resolveHref(
+    url,
+    namespace ? `${namespace}.${label}` : label,
+  );
   return <a href={href}>{label}</a>;
 }
 
