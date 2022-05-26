@@ -30,10 +30,11 @@ function getModuleSummary(
 }
 
 function ExportedSymbol(
-  { children, name, path, summary }: {
+  { children, name, path, base, summary }: {
     children: Child<DocNode>;
     name: string;
     path: string;
+    base: string;
     summary?: string;
   },
 ) {
@@ -65,6 +66,7 @@ function ExportedSymbol(
     default:
       linkClass = tw`hover:underline`;
   }
+  const url = `${base}${path}`;
   return (
     <tr>
       <td class={style("tdIndex")}>
@@ -73,16 +75,17 @@ function ExportedSymbol(
         {maybe(isDeprecated(node), <Tag color="gray">deprecated</Tag>)}
       </td>
       <td class={style("tdIndex")}>
-        <MarkdownSummary path={path}>{summary}</MarkdownSummary>
+        <MarkdownSummary url={url}>{summary}</MarkdownSummary>
       </td>
     </tr>
   );
 }
 
 function ModuleEntry(
-  { children, name }: {
+  { children, name, base }: {
     children: Child<DocNode[]>;
     name: string;
+    base: string;
   },
 ) {
   const entries = take(children, true);
@@ -112,8 +115,9 @@ function ModuleEntry(
   items.sort((a, b) => a.name.localeCompare(b.name));
   const href = services.href(name);
   const path = name;
+  const url = `${base}${path}`;
   const exports = items.map(({ name, node, summary }) => (
-    <ExportedSymbol name={name} path={path} summary={summary}>
+    <ExportedSymbol name={name} base={base} path={path} summary={summary}>
       {node}
     </ExportedSymbol>
   ));
@@ -122,7 +126,7 @@ function ModuleEntry(
       <tr>
         <td colSpan={2} class={tw`py-2`}>
           <a href={href} class={style("linkPadRight")}>{name}</a>
-          <MarkdownSummary path={name}>{modSummary}</MarkdownSummary>
+          <MarkdownSummary url={url}>{modSummary}</MarkdownSummary>
         </td>
       </tr>
       {exports}
@@ -131,9 +135,10 @@ function ModuleEntry(
 }
 
 function ModuleList(
-  { children, entries }: {
+  { children, entries, base }: {
     children: Child<string[]>;
     entries: Map<string, DocNode[]>;
+    base: string;
   },
 ) {
   const mods = take(children, true);
@@ -141,7 +146,7 @@ function ModuleList(
   for (const mod of mods) {
     const nodes = entries.get(mod);
     if (nodes && nodes.length) {
-      items.push(<ModuleEntry name={mod}>{nodes}</ModuleEntry>);
+      items.push(<ModuleEntry base={base} name={mod}>{nodes}</ModuleEntry>);
     }
   }
   return (
@@ -152,10 +157,11 @@ function ModuleList(
 }
 
 function Folder(
-  { children, current, path, entries, expanded = false }: {
+  { children, current, path, base, entries, expanded = false }: {
     children: Child<string[]>;
     current: boolean;
     path: string;
+    base: string;
     entries: Map<string, DocNode[]>;
     expanded?: boolean;
   },
@@ -166,6 +172,7 @@ function Folder(
     : undefined;
   const id = path.slice(1).replaceAll(/[\s/]/g, "_") || "_root";
   const href = services.href(path);
+  const url = `${base}${path}`;
   return (
     <div class={style("panel")} id={`group_${id}`}>
       {maybe(
@@ -201,9 +208,9 @@ function Folder(
         <span class={tw`mr-4`}>
           {current ? path : <a href={href} class={style("link")}>{path}</a>}
         </span>
-        <MarkdownSummary path={path}>{summary}</MarkdownSummary>
+        <MarkdownSummary url={url}>{summary}</MarkdownSummary>
       </label>
-      <ModuleList entries={entries}>{mods}</ModuleList>
+      <ModuleList entries={entries} base={base}>{mods}</ModuleList>
     </div>
   );
 }
@@ -211,9 +218,10 @@ function Folder(
 /** Renders an index of a module, providing an overview of each module grouped
  * by path. */
 export function ModuleIndex(
-  { children, path = "/" }: {
+  { children, path = "/", base }: {
     children: Child<IndexStructure>;
     path?: string;
+    base: string;
   },
 ) {
   const indexStructure = take(children);
@@ -226,6 +234,7 @@ export function ModuleIndex(
   const items = folders.map(([key, value]) => (
     <Folder
       path={key}
+      base={base}
       expanded={folders.length <= 1}
       current={path === (key || "/")}
       entries={indexStructure.entries}

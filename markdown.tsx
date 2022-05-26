@@ -3,7 +3,7 @@
 /** @jsx runtime.h */
 import { comrak, htmlEntities, lowlight, toHtml } from "./deps.ts";
 import { runtime, services } from "./services.ts";
-import { style } from "./styles.ts";
+import { style, type StyleKey } from "./styles.ts";
 import { assert, type Child, take } from "./utils.ts";
 
 const CODE_BLOCK_RE =
@@ -47,7 +47,7 @@ function isLink(link: string): boolean {
 
 function parseLinks(
   markdown: string,
-  path: string,
+  url: string,
   namespace?: string,
 ): string {
   let match;
@@ -64,7 +64,7 @@ function parseLinks(
       link = value.slice(0, indexOfSpace);
       title = value.slice(indexOfSpace + 1).trim();
     }
-    const href = services.lookupSymbolHref(path, namespace, link);
+    const href = services.lookupSymbolHref(url, namespace, link);
     if (href) {
       if (!title) {
         title = link;
@@ -94,28 +94,52 @@ function parseLinks(
   return markdown;
 }
 
-function mdToHtml(markdown: string, path: string, namespace?: string): string {
+function mdToHtml(markdown: string, url: string, namespace?: string): string {
   return syntaxHighlight(
     comrak.markdownToHTML(
-      parseLinks(markdown, path, namespace),
+      parseLinks(markdown, url, namespace),
       MARKDOWN_OPTIONS,
     ),
   );
 }
 
-export function MarkdownSummary(
-  { children, path }: {
+export interface MarkdownContext {
+  url: string;
+  namespace?: string;
+  markdownStyle?: StyleKey;
+}
+
+export function Markdown(
+  { children, id, url, namespace, markdownStyle = "markdown" }: {
     children: Child<string | undefined>;
-    path: string;
-    namespace?: string;
-  },
+    id?: string;
+  } & MarkdownContext,
+) {
+  const md = take(children);
+  return md
+    ? (
+      <div
+        class={style(markdownStyle)}
+        id={id}
+        dangerouslySetInnerHTML={{
+          __html: mdToHtml(md, url, namespace),
+        }}
+      />
+    )
+    : null;
+}
+
+export function MarkdownSummary(
+  { children, url, namespace, markdownStyle = "markdownSummary" }: {
+    children: Child<string | undefined>;
+  } & MarkdownContext,
 ) {
   const md = take(children);
   return md
     ? (
       <span
-        class={style("markdownSummary")}
-        dangerouslySetInnerHTML={{ __html: mdToHtml(md, path) }}
+        class={style(markdownStyle)}
+        dangerouslySetInnerHTML={{ __html: mdToHtml(md, url, namespace) }}
       />
     )
     : null;

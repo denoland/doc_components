@@ -14,7 +14,7 @@ import {
   virtualSheet,
 } from "./deps.ts";
 import { Showcase } from "./showcase.tsx";
-import { getIndexStructure } from "./util.ts";
+import { getDocNodes, getIndexStructure } from "./util.ts";
 
 const sheet = virtualSheet();
 await setup({ runtime: { Fragment, h }, tw: { sheet, theme } });
@@ -24,7 +24,10 @@ const router = new Router();
 router.get("/", async (ctx, next) => {
   sheet.reset();
   const indexStructure = await getIndexStructure();
-  const body = renderSSR(<Showcase>{indexStructure}</Showcase>);
+  const docNodes = await getDocNodes();
+  const body = renderSSR(
+    <Showcase indexStructure={indexStructure} docNodes={docNodes} />,
+  );
   const styles = getStyleTag(sheet);
   ctx.response.body = `<!DOCTYPE html>
   <html lang="en">
