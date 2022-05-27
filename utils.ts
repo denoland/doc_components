@@ -48,6 +48,9 @@ function appendCollection(
       if (node.kind === "namespace" && !node.namespaceDef.elements.length) {
         continue;
       }
+      if (node.kind === "moduleDoc" && path) {
+        continue;
+      }
       const docNodes: DocNodeTupleArray<DocNode> = collection[node.kind] ??
         (collection[node.kind] = []);
       const label = path ? `${path}.${node.name}` : node.name;
