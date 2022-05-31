@@ -27,7 +27,7 @@ await setup({
     return symbol ? `/${url}/~/${symbol}` : `/${url}`;
   },
   runtime: { Fragment, h },
-  tw: { sheet, theme },
+  tw: { sheet, theme, darkMode: "class" },
 });
 
 const router = new Router();
