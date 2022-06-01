@@ -1,7 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { comrak, htmlEntities, lowlight, toHtml } from "./deps.ts";
+import { gfm, htmlEntities, lowlight, toHtml } from "./deps.ts";
 import { runtime, services } from "./services.ts";
 import { style, type StyleKey } from "./styles.ts";
 import { assert, type Child, take } from "./utils.ts";
@@ -12,17 +12,6 @@ const CODE_BLOCK_RE =
 /** Matches `{@link ...}`, `{@linkcode ...}, and `{@linkplain ...}` structures
  * in JSDoc */
 const JSDOC_LINK_RE = /\{\s*@link(code|plain)?\s+([^}]+)}/m;
-
-const MARKDOWN_OPTIONS: comrak.ComrakOptions = {
-  extension: {
-    autolink: true,
-    descriptionLists: true,
-    strikethrough: true,
-    superscript: true,
-    table: true,
-    tagfilter: true,
-  },
-};
 
 function syntaxHighlight(html: string): string {
   let match;
@@ -95,12 +84,7 @@ function parseLinks(
 }
 
 function mdToHtml(markdown: string, url: string, namespace?: string): string {
-  return syntaxHighlight(
-    comrak.markdownToHTML(
-      parseLinks(markdown, url, namespace),
-      MARKDOWN_OPTIONS,
-    ),
-  );
+  return syntaxHighlight(gfm(parseLinks(markdown, url, namespace)));
 }
 
 export interface MarkdownContext {

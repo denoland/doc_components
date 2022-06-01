@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-export * as comrak from "https://deno.land/x/comrak@0.1.1/mod.ts";
+export { render as gfm } from "https://deno.land/x/gfm@0.1.20/mod.ts";
 export {
   type DocNode,
   type DocNodeClass,

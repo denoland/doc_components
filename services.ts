@@ -1,7 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import {
-  comrak,
   type Configuration as TwConfiguration,
   setup as twSetup,
   type ThemeConfiguration,
@@ -120,7 +119,7 @@ const runtimeConfig: Required<
 };
 
 /** Setup the services used by the doc components. */
-export async function setup(config: Configuration) {
+export function setup(config: Configuration) {
   const { runtime, tw, ...other } = config;
   Object.assign(runtimeConfig, other);
   if (runtime) {
@@ -129,7 +128,6 @@ export async function setup(config: Configuration) {
   if (tw) {
     twSetup(tw);
   }
-  await comrak.init();
 }
 
 export const runtime: JsxRuntime = {
