@@ -15,6 +15,7 @@ import {
 } from "./deps.ts";
 import { Showcase } from "./showcase.tsx";
 import { getDocNodes, getIndexStructure } from "./util.ts";
+import { gfmCSS } from "../deps.ts";
 
 const sheet = virtualSheet();
 await setup({
@@ -44,6 +45,7 @@ router.get("/", async (ctx, next) => {
   <html lang="en">
     <head>
       ${styles}
+      <style>${gfmCSS}</style>
     </head>
     <body>
       ${body}

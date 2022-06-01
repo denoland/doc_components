@@ -1,6 +1,9 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-export { render as gfm } from "https://deno.land/x/gfm@0.1.20/mod.ts";
+export {
+  CSS as gfmCSS,
+  render as gfm,
+} from "https://deno.land/x/gfm@0.1.20/mod.ts";
 export {
   type DocNode,
   type DocNodeClass,
