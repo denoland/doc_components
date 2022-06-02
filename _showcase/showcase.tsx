@@ -9,6 +9,7 @@ import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndex } from "../module_index.tsx";
 import { runtime } from "../services.ts";
+import { SymbolDoc } from "../symbol_doc.tsx";
 import { Usage } from "../usage.tsx";
 import { type Child, take } from "../utils.ts";
 
@@ -37,11 +38,14 @@ function ComponentTitle(
 }
 
 export function Showcase(
-  { docNodes, indexStructure }: {
+  { docNodes, indexStructure, symbol, url }: {
     docNodes: DocNode[];
+    url: string;
+    symbol: string;
     indexStructure: IndexStructure;
   },
 ) {
+  const itemNodes = docNodes.filter(({ name }) => name === symbol);
   return (
     <div
       class={tw
@@ -51,22 +55,37 @@ export function Showcase(
       <h2 class={tw`text-2xl py-2`}>Component Showcase</h2>
       <hr />
       <ComponentTitle module="/markdown.tsx">MarkdownSummary</ComponentTitle>
-      <MarkdownSummary url="https://deno.land/x/oak@v10.5.1/mod.ts">
+      <MarkdownSummary url={url}>
         {`Some _markdown_ with [links](https://deno.land/) and symbol links, like: {@linkcode Router}`}
       </MarkdownSummary>
       <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
-      <ModuleDoc url="https://deno.land/x/oak@v10.5.1/mod.ts">
+      <ModuleDoc url={url}>
         {docNodes}
       </ModuleDoc>
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
       <ModuleIndex base="https://deno.land/std@0.138.0" path="/">
         {indexStructure}
       </ModuleIndex>
+      <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
+      <SymbolDoc url={url}>{itemNodes}</SymbolDoc>
       <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
       <Tag color="yellow">abstract</Tag>
       <Tag color="gray">deprecated</Tag>
       <ComponentTitle module="/usage.tsx">Usage</ComponentTitle>
       <Usage url="https://deno.land/x/example@v1.0.0/mod.ts" />
+      <Usage
+        url="https://deno.land/x/example@v1.0.0/mod.ts"
+        name="MyClass"
+      />
+      <Usage
+        url="https://deno.land/x/example@v1.0.0/mod.ts"
+        name="namespace.MyClass"
+      />
+      <Usage
+        url="https://deno.land/x/example@v1.0.0/mod.ts"
+        name="Interface"
+        isType
+      />
     </div>
   );
 }

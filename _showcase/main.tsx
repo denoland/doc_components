@@ -37,7 +37,12 @@ router.get("/", async (ctx, next) => {
   const indexStructure = await getIndexStructure();
   const docNodes = await getDocNodes();
   const body = renderSSR(
-    <Showcase indexStructure={indexStructure} docNodes={docNodes} />,
+    <Showcase
+      url="https://deno.land/x/oak@v10.5.1/mod.ts"
+      symbol="Application"
+      indexStructure={indexStructure}
+      docNodes={docNodes}
+    />,
   );
   const styles = getStyleTag(sheet);
   ctx.response.body = `<!DOCTYPE html>

@@ -3,7 +3,7 @@
 /** @jsx runtime.h */
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
-import { camelize, parseURL } from "./utils.ts";
+import { camelize, maybe, parseURL } from "./utils.ts";
 
 interface ParsedUsage {
   /** The symbol that the item should be imported as. If `usageSymbol` and
@@ -47,7 +47,7 @@ export function parseUsage(
   // we create an import statement which is used to populate the copy paste
   // snippet of code.
   let importStatement = item
-    ? `import ${isType ? "type " : ""}{ ${importSymbol} } from "${url}";\n`
+    ? `import { ${isType ? "type " : ""}${importSymbol} } from "${url}";\n`
     : `import * as ${importSymbol} from "${url}";\n`;
   // if we are using a symbol off a imported namespace, we need to destructure
   // it to a local variable.
@@ -59,8 +59,15 @@ export function parseUsage(
 
 let guid = 1;
 
-export function Usage({ url }: { url: string }) {
-  const { importSymbol, importStatement } = parseUsage(url);
+export function Usage(
+  { url, name, isType }: { url: string; name?: string; isType?: boolean },
+) {
+  const {
+    importSymbol,
+    importStatement,
+    usageSymbol,
+    localVar,
+  } = parseUsage(url, name, isType);
   const fnName = `cis${guid++}`;
   return (
     <div class={style("markdown")}>
@@ -74,12 +81,31 @@ export function Usage({ url }: { url: string }) {
         />
         <code>
           <span class="code-keyword">import</span>
-          <span>
-            {" "}* <span class="code-keyword">as</span> {importSymbol}
-            {" "}
-          </span>
+          {name
+            ? (
+              <span>
+                {" "}&#123;{" "}
+                {isType
+                  ? <span class="code-keyword">type{" "}</span>
+                  : undefined}
+                {importSymbol} &#125;{" "}
+              </span>
+            )
+            : (
+              <span>
+                {" "}* <span class="code-keyword">as</span> {importSymbol}
+                {" "}
+              </span>
+            )}
           <span class="code-keyword">from</span>{" "}
-          <span class="code-string">"{url}"</span>;
+          <span class="code-string">"{url}"</span>;{maybe(
+            usageSymbol,
+            <div>
+              <br />
+              <span class="code-keyword">const</span> &#123; {usageSymbol}{" "}
+              &#125; = {localVar};
+            </div>,
+          )}
         </code>
       </pre>
       <script>

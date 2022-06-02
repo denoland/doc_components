@@ -34,6 +34,8 @@ const markdownStyles = css({
   ul: apply`lg:(list-disc list-inside)`,
 });
 
+const none = apply``;
+
 const syntaxHighlightingStyles = css({
   ".code-comment": apply`text-gray(500 dark:400)`,
   ".code-function": apply`text-green(700 dark:300)`,
@@ -49,8 +51,23 @@ const syntaxHighlightingStyles = css({
 const styles = {
   anchor: apply
     `opacity-0 group-hover:opacity-100 absolute bg-transparent text-gray-600 dark:text-gray-400 ${anchorStyles}`,
+  boolean: none,
+  classBody: apply`flex flex-col space-y-4`,
+  classMethod: none,
+  codeBlock: apply
+    `font-mono my-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 overflow-x-auto`,
+  codeBoolean: apply`text-cyan(600 dark:400)`,
   copyButton: apply
     `float-right px-2 font-sans focus-visible:ring-2 text-sm text-gray(500 dark:300) border border-gray(300 dark:500) rounded hover:shadow`,
+  codeClassMethod: apply`text-green(700 dark:300)`,
+  codeDecorator: apply`text-green(600 dark:400) italic`,
+  codeKeyword: apply`text-purple(800 dark:300)`,
+  codeNumberLiteral: apply`text-indigo(600 dark:400)`,
+  codeStringLiteral: apply`text-yellow(500 dark:200)`,
+  codeTypeKeyword: apply`text-cyan(600 dark:400) italic`,
+  codeTypeLink: apply`underline`,
+  codeTypeParam: apply`text-blue(600 dark:400)`,
+  decorator: none,
   entryClass: apply`text-green(800 dark:400) mx-2 font-bold truncate`,
   entryEnum: apply`text-green(700 dark:500) mx-2 font-bold truncate`,
   entryFunction: apply`text-cyan(800 dark:400) mx-2 font-bold truncate`,
@@ -58,8 +75,11 @@ const styles = {
   entryTypeAlias: apply`text-yellow(700 dark:500) mx-2 font-bold truncate`,
   entryVariable: apply`text-blue(700 dark:500) mx-2 font-bold truncate`,
   entryNamespace: apply`text-yellow(800 dark:400) mx-2 font-bold truncate`,
+  keyword: none,
+  indent: apply`ml-4`,
   link: apply`text-blue(800 dark:300) hover:underline`,
   linkPadRight: apply`pr-4 text-blue(800 dark:300) hover:underline`,
+  linkType: apply`underline`,
   main: apply`p-6 md:(col-span-3 p-12)`,
   markdown: apply
     `p-4 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
@@ -69,12 +89,14 @@ const styles = {
       "a": apply`text-blue(700 dark:400) hover:underline`,
     })
   }`,
+  numberLiteral: none,
   panel: css({
     "& > input:checked ~ table": apply`hidden`,
     "& > input:checked ~ label > svg": apply`rotate-0`,
   }),
   panelTitle: apply`block p-2 border(b gray(400 dark:600)) cursor-pointer`,
   section: apply`text-2xl border(b gray(400 dark:600)) p-2 mt-1 mb-3`,
+  stringLiteral: none,
   subSection: apply`text-xl p-2 mx-2.5 mt-1 mb-2.5`,
   symbolClass: apply`text-green(800 dark:400) font-bold hover:underline`,
   symbolEnum: apply`text-green(700 dark:500) font-bold hover:underline`,
@@ -91,6 +113,11 @@ const styles = {
   tagKind: apply`italic`,
   tagName: apply`font-medium`,
   tdIndex: apply`py-1 px-2 align-top`,
+  title: apply
+    `text-2xl md:text-3xl lg:text-4xl text-gray(900 dark:50) font-bold mb-3`,
+  typeKeyword: none,
+  typeLink: apply`underline`,
+  typeParam: none,
   rightArrow: apply`inline rotate-90 dark:(filter invert) mr-2`,
 } as const;
 

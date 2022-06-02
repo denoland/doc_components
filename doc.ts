@@ -5,7 +5,7 @@
  * @module
  */
 
-import { type DocNode, type DocNodeClass } from "./deps.ts";
+import { type DocNode, type DocNodeClass, type DocNodeKind } from "./deps.ts";
 
 /** A utility class that extends {@linkcode Map} that allows serialization to
  * JSON. */
@@ -24,6 +24,22 @@ export interface IndexStructure {
   /** For modules in the structure, any doc node entries available for each
    * module file. */
   entries: SerializeMap<DocNode[]>;
+}
+
+const KIND_ORDER: DocNodeKind[] = [
+  "namespace",
+  "class",
+  "interface",
+  "typeAlias",
+  "variable",
+  "function",
+  "enum",
+  "moduleDoc",
+  "import",
+];
+
+export function byKind(a: DocNode, b: DocNode): number {
+  return KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind);
 }
 
 /** If a doc node has JSDoc, return the first paragraph of the JSDoc doc. */

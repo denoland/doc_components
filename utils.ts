@@ -13,6 +13,10 @@ import {
   type DocNodeVariable,
 } from "./deps.ts";
 
+/** Some JSX libraries (notably nano-jsx) have strange handling of the
+ * child element and don't have good typings when creating a functional
+ * component. This type and the function {@linkcode take} abstract this
+ * away. */
 export type Child<T> = T | [T];
 
 export interface DocNodeCollection {

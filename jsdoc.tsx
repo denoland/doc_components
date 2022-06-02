@@ -10,7 +10,7 @@ import {
 } from "./deps.ts";
 import { Markdown, type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "./services.ts";
-import { style, type StyleKey } from "./styles.ts";
+import { style } from "./styles.ts";
 import { type Child, DocNodeTupleArray, take } from "./utils.ts";
 
 function hasDoc(tag: JsDocTagNode) {
@@ -33,10 +33,10 @@ function hasDoc(tag: JsDocTagNode) {
   }
 }
 
-function JsDoc(
+export function JsDoc(
   { children, tagKinds = [], tagsWithDoc = false, ...markdownContext }: {
     children: Child<JsDocNode | undefined>;
-    tagKinds?: JsDocTagKind[];
+    tagKinds?: JsDocTagKind[] | JsDocTagKind;
     tagsWithDoc?: boolean;
   } & MarkdownContext,
 ) {
