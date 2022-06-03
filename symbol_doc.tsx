@@ -9,6 +9,7 @@ import {
   type DocNodeTypeAlias,
 } from "./deps.ts";
 import { byKind, isAbstract, isDeprecated } from "./doc.ts";
+import { CodeBlockEnum } from "./enums.tsx";
 import { JsDoc, Tag } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "./services.ts";
@@ -30,11 +31,11 @@ function CodeBlock(
           <CodeBlockClass {...markdownContext}>{docNode}</CodeBlockClass>,
         );
         break;
-        // case "enum":
-        //   elements.push(
-        //     <CodeBlockEnum {...markdownContext}>{docNode}</CodeBlockEnum>,
-        //   );
-        //   break;
+      case "enum":
+        elements.push(
+          <CodeBlockEnum {...markdownContext}>{docNode}</CodeBlockEnum>,
+        );
+        break;
         // case "interface":
         //   elements.push(
         //     <CodeBlockInterface {...markdownContext}>
