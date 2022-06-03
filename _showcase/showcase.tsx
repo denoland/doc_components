@@ -7,12 +7,14 @@ import {
   type DocNode,
   type DocNodeClass,
   type DocNodeEnum,
+  type DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
   type DocNodeVariable,
 } from "../deps.ts";
 import { type IndexStructure } from "../doc.ts";
 import { CodeBlockEnum } from "../enums.tsx";
+import { CodeBlockFn } from "../functions.tsx";
 import { CodeBlockInterface } from "../interfaces.tsx";
 import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
@@ -118,6 +120,10 @@ export function ShowcaseCodeBlocks(
   const variableNode = docNodes.find(({ kind }) =>
     kind === "variable"
   ) as DocNodeVariable;
+  const fnName = docNodes.find(({ kind }) => kind === "function")?.name;
+  const fnNodes = docNodes.filter(({ kind, name }) =>
+    kind === "function" && name === fnName
+  ) as DocNodeFunction[];
   return (
     <div
       class={tw
@@ -130,6 +136,8 @@ export function ShowcaseCodeBlocks(
       <CodeBlockClass url={url}>{classNode}</CodeBlockClass>
       <ComponentTitle module="/enums.tsx">CodeBlockEnum</ComponentTitle>
       <CodeBlockEnum url={url}>{enumNode}</CodeBlockEnum>
+      <ComponentTitle module="/functions.tsx">CodeBlockFn</ComponentTitle>
+      <CodeBlockFn url={url}>{fnNodes}</CodeBlockFn>
       <ComponentTitle module="/interfaces.tsx">
         CodeBlockInterface
       </ComponentTitle>

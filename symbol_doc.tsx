@@ -10,6 +10,7 @@ import {
 } from "./deps.ts";
 import { byKind, isAbstract, isDeprecated } from "./doc.ts";
 import { CodeBlockEnum } from "./enums.tsx";
+import { CodeBlockFn } from "./functions.tsx";
 import { CodeBlockInterface } from "./interfaces.tsx";
 import { JsDoc, Tag } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
@@ -64,7 +65,7 @@ function CodeBlock(
     kind === "function"
   ) as DocNodeFunction[];
   if (fnNodes.length) {
-    // elements.push(<CodeBlockFn {...markdownContext}>{fnNodes}</CodeBlockFn>);
+    elements.push(<CodeBlockFn {...markdownContext}>{fnNodes}</CodeBlockFn>);
   }
   return <div>{elements}</div>;
 }
