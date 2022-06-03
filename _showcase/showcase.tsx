@@ -3,9 +3,15 @@
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
 import { CodeBlockClass } from "../classes.tsx";
-import { type DocNode, type DocNodeClass, type DocNodeEnum } from "../deps.ts";
+import {
+  type DocNode,
+  type DocNodeClass,
+  type DocNodeEnum,
+  type DocNodeInterface,
+} from "../deps.ts";
 import { type IndexStructure } from "../doc.ts";
 import { CodeBlockEnum } from "../enums.tsx";
+import { CodeBlockInterface } from "../interfaces.tsx";
 import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
@@ -99,6 +105,9 @@ export function ShowcaseCodeBlocks(
     kind === "class"
   ) as DocNodeClass;
   const enumNode = docNodes.find(({ kind }) => kind === "enum") as DocNodeEnum;
+  const interfaceNode = docNodes.find(({ kind }) =>
+    kind === "interface"
+  ) as DocNodeInterface;
   return (
     <div
       class={tw
@@ -111,6 +120,10 @@ export function ShowcaseCodeBlocks(
       <CodeBlockClass url={url}>{classNode}</CodeBlockClass>
       <ComponentTitle module="/enums.tsx">CodeBlockEnum</ComponentTitle>
       <CodeBlockEnum url={url}>{enumNode}</CodeBlockEnum>
+      <ComponentTitle module="/interfaces.tsx">
+        CodeBlockInterface
+      </ComponentTitle>
+      <CodeBlockInterface url={url}>{interfaceNode}</CodeBlockInterface>
     </div>
   );
 }

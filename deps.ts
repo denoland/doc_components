@@ -2,6 +2,7 @@
 
 export * as comrak from "https://deno.land/x/comrak@0.1.1/mod.ts";
 export type {
+  ClassIndexSignatureDef,
   ClassMethodDef,
   ClassPropertyDef,
   DecoratorDef,
@@ -16,6 +17,10 @@ export type {
   DocNodeNamespace,
   DocNodeTypeAlias,
   DocNodeVariable,
+  InterfaceCallSignatureDef,
+  InterfaceIndexSignatureDef,
+  InterfaceMethodDef,
+  InterfacePropertyDef,
   JsDoc,
   JsDocTag,
   JsDocTagKind,
