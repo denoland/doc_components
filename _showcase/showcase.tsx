@@ -8,6 +8,8 @@ import {
   type DocNodeClass,
   type DocNodeEnum,
   type DocNodeInterface,
+  type DocNodeTypeAlias,
+  type DocNodeVariable,
 } from "../deps.ts";
 import { type IndexStructure } from "../doc.ts";
 import { CodeBlockEnum } from "../enums.tsx";
@@ -18,8 +20,10 @@ import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndex } from "../module_index.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../symbol_doc.tsx";
+import { CodeBlockTypeAlias } from "../type_aliases.tsx";
 import { Usage } from "../usage.tsx";
 import { type Child, take } from "../utils.ts";
+import { CodeBlockVariable } from "../variables.tsx";
 
 const app = css({
   ":global": {
@@ -108,6 +112,12 @@ export function ShowcaseCodeBlocks(
   const interfaceNode = docNodes.find(({ kind }) =>
     kind === "interface"
   ) as DocNodeInterface;
+  const typeAliasNode = docNodes.find(({ kind }) =>
+    kind === "typeAlias"
+  ) as DocNodeTypeAlias;
+  const variableNode = docNodes.find(({ kind }) =>
+    kind === "variable"
+  ) as DocNodeVariable;
   return (
     <div
       class={tw
@@ -124,6 +134,12 @@ export function ShowcaseCodeBlocks(
         CodeBlockInterface
       </ComponentTitle>
       <CodeBlockInterface url={url}>{interfaceNode}</CodeBlockInterface>
+      <ComponentTitle module="/type_aliases.tsx">
+        CodeBlockTypeAlias
+      </ComponentTitle>
+      <CodeBlockTypeAlias url={url}>{typeAliasNode}</CodeBlockTypeAlias>
+      <ComponentTitle module="/variables.tsx">CodeBlockVariable</ComponentTitle>
+      <CodeBlockVariable url={url}>{variableNode}</CodeBlockVariable>
     </div>
   );
 }

@@ -15,8 +15,10 @@ import { JsDoc, Tag } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
+import { CodeBlockTypeAlias } from "./type_aliases.tsx";
 import { Usage } from "./usage.tsx";
 import { type Child, maybe, take } from "./utils.ts";
+import { CodeBlockVariable } from "./variables.tsx";
 
 function CodeBlock(
   { children, ...markdownContext }:
@@ -44,18 +46,18 @@ function CodeBlock(
           </CodeBlockInterface>,
         );
         break;
-        // case "typeAlias":
-        //   elements.push(
-        //     <CodeBlockTypeAlias {...markdownContext}>
-        //       {docNode}
-        //     </CodeBlockTypeAlias>,
-        //   );
-        //   break;
-        // case "variable":
-        //   elements.push(
-        //     <CodeBlockVariable {...markdownContext}>{docNode}</CodeBlockVariable>,
-        //   );
-        //   break;
+      case "typeAlias":
+        elements.push(
+          <CodeBlockTypeAlias {...markdownContext}>
+            {docNode}
+          </CodeBlockTypeAlias>,
+        );
+        break;
+      case "variable":
+        elements.push(
+          <CodeBlockVariable {...markdownContext}>{docNode}</CodeBlockVariable>,
+        );
+        break;
     }
   }
   const fnNodes = docNodes.filter(({ kind }) =>
