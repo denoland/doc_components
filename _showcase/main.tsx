@@ -13,7 +13,7 @@ import {
   Router,
   virtualSheet,
 } from "./deps.ts";
-import { Showcase } from "./showcase.tsx";
+import { Showcase, ShowcaseCodeBlocks } from "./showcase.tsx";
 import { getDocNodes, getIndexStructure } from "./util.ts";
 
 const sheet = virtualSheet();
@@ -41,6 +41,29 @@ router.get("/", async (ctx, next) => {
       url="https://deno.land/x/oak@v10.5.1/mod.ts"
       symbol="Application"
       indexStructure={indexStructure}
+      docNodes={docNodes}
+    />,
+  );
+  const styles = getStyleTag(sheet);
+  ctx.response.body = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      ${styles}
+    </head>
+    <body>
+      ${body}
+    </body>
+  </html>`;
+  ctx.response.type = "html";
+  await next();
+});
+
+router.get("/codeblocks", async (ctx, next) => {
+  sheet.reset();
+  const docNodes = await getDocNodes();
+  const body = renderSSR(
+    <ShowcaseCodeBlocks
+      url="https://deno.land/x/oak@v10.5.1/mod.ts"
       docNodes={docNodes}
     />,
   );

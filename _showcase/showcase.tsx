@@ -2,8 +2,10 @@
 
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
-import { type DocNode } from "../deps.ts";
+import { CodeBlockClass } from "../classes.tsx";
+import { type DocNode, type DocNodeClass, type DocNodeEnum } from "../deps.ts";
 import { type IndexStructure } from "../doc.ts";
+import { CodeBlockEnum } from "../enums.tsx";
 import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
@@ -86,6 +88,29 @@ export function Showcase(
         name="Interface"
         isType
       />
+    </div>
+  );
+}
+
+export function ShowcaseCodeBlocks(
+  { docNodes, url }: { docNodes: DocNode[]; url: string },
+) {
+  const classNode = docNodes.find(({ kind }) =>
+    kind === "class"
+  ) as DocNodeClass;
+  const enumNode = docNodes.find(({ kind }) => kind === "enum") as DocNodeEnum;
+  return (
+    <div
+      class={tw
+        `h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
+    >
+      <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
+      <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
+      <hr />
+      <ComponentTitle module="/classes.tsx">CodeBlockClass</ComponentTitle>
+      <CodeBlockClass url={url}>{classNode}</CodeBlockClass>
+      <ComponentTitle module="/enums.tsx">CodeBlockEnum</ComponentTitle>
+      <CodeBlockEnum url={url}>{enumNode}</CodeBlockEnum>
     </div>
   );
 }
