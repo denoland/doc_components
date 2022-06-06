@@ -137,7 +137,7 @@ export function JsDocModule(
     children: Child<DocNodeTupleArray<DocNodeModuleDoc>>;
   } & MarkdownContext,
 ) {
-  const moduleDoc = take(children, true);
+  const moduleDoc = take(children, true, true);
   if (!moduleDoc || !moduleDoc.length || !moduleDoc[0][1]) {
     // TODO(@kitsonk) remove once problem isolated
     console.error("unexpected children value");
