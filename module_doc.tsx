@@ -80,7 +80,7 @@ function Section<Node extends DocNode>(
     style: StyleKey;
   } & MarkdownContext,
 ) {
-  const tuples = take(children);
+  const tuples = take(children, true, true);
   const displayed = new Set();
   const items = tuples.sort(byName).map(([label, node]) => {
     if (displayed.has(label)) {
