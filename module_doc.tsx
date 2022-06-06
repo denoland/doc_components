@@ -39,7 +39,7 @@ function Entry<Node extends DocNode>(
     style: StyleKey;
   } & MarkdownContext,
 ) {
-  const [label, node] = take(children);
+  const [label, node] = take(children, true);
   return (
     <tr class={style("symbolListRow")}>
       <td class={style("symbolListCell")}>
