@@ -91,6 +91,9 @@ const styles = {
       "a": apply`text-blue(700 dark:400) hover:underline`,
     })
   }`,
+  moduleListFolderCell: apply`block lg:table-row py-2`,
+  moduleListRow: apply`block lg:table-row`,
+  moduleListTable: apply`block lg:(table mx-4)`,
   numberLiteral: none,
   panel: css({
     "& > input:checked ~ table": apply`hidden`,
@@ -114,7 +117,7 @@ const styles = {
     `px-4 py-2 inline-flex leading-5 font-semibold lowercase rounded-full`,
   tagKind: apply`italic`,
   tagName: apply`font-medium`,
-  tdIndex: apply`py-1 px-2 align-top`,
+  tdIndex: apply`block lg:table-cell py-1 px-2 align-top`,
   title: apply
     `text-2xl md:text-3xl lg:text-4xl text-gray(900 dark:50) font-bold mb-3`,
   typeKeyword: none,

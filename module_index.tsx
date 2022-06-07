@@ -68,7 +68,7 @@ function ExportedSymbol(
   }
   const url = `${base}${path}`;
   return (
-    <tr>
+    <tr class={style("moduleListRow")}>
       <td class={style("tdIndex")}>
         <a href={href} class={linkClass}>{name}</a>
         {maybe(isAbstract(node), <Tag color="yellow">abstract</Tag>)}
@@ -123,8 +123,8 @@ function ModuleEntry(
   ));
   return (
     <>
-      <tr>
-        <td colSpan={2} class={tw`py-2`}>
+      <tr class={style("moduleListRow")}>
+        <td colSpan={2} class={style("moduleListFolderCell")}>
           <a href={href} class={style("linkPadRight")}>{name}</a>
           <MarkdownSummary url={url}>{modSummary}</MarkdownSummary>
         </td>
@@ -149,11 +149,7 @@ function ModuleList(
       items.push(<ModuleEntry base={base} name={mod}>{nodes}</ModuleEntry>);
     }
   }
-  return (
-    <table class={tw`m-4`}>
-      <tbody>{items}</tbody>
-    </table>
-  );
+  return <table class={style("moduleListTable")}>{items}</table>;
 }
 
 function Folder(
