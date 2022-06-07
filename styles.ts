@@ -91,7 +91,7 @@ const styles = {
       "a": apply`text-blue(700 dark:400) hover:underline`,
     })
   }`,
-  moduleListFolderCell: apply`block lg:table-row py-2`,
+  moduleListFolderCell: apply`block lg:table-cell py-2`,
   moduleListRow: apply`block lg:table-row`,
   moduleListTable: apply`block lg:(table mx-4)`,
   numberLiteral: none,
