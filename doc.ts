@@ -7,24 +7,10 @@
 
 import { type DocNode, type DocNodeClass, type DocNodeKind } from "./deps.ts";
 
-/** A utility class that extends {@linkcode Map} that allows serialization to
- * JSON. */
-export class SerializeMap<V> extends Map<string, V> {
-  toJSON(): Record<string, V> {
-    return Object.fromEntries(this.entries());
-  }
-}
-
-/** An object which represents an "index" of a module. */
-export interface IndexStructure {
-  /** An object that describes the structure of the module, where the key is
-   * the containing folder and the value is an array of module files that
-   * represent the the "contents" of the folder. */
-  structure: SerializeMap<string[]>;
-  /** For modules in the structure, any doc node entries available for each
-   * module file. */
-  entries: SerializeMap<DocNode[]>;
-}
+const EXT = [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"];
+const INDEX_MODULES = ["mod", "lib", "main", "index"].flatMap((idx) =>
+  EXT.map((ext) => `${idx}${ext}`)
+);
 
 const KIND_ORDER: DocNodeKind[] = [
   "namespace",
@@ -63,4 +49,32 @@ export function isDeprecated(node: DocNode): boolean {
     return !!node.jsDoc.tags.find(({ kind }) => kind === "deprecated");
   }
   return false;
+}
+
+/** Given a set of paths which are expected to be siblings within a folder/dir
+ * return what appears to be the "index" module. If none can be identified,
+ * `undefined` is returned. */
+export function getIndex(paths: string[]): string | undefined {
+  for (const index of INDEX_MODULES) {
+    const item = paths.find((file) => file.toLowerCase().endsWith(index));
+    if (item) {
+      return item;
+    }
+  }
+}
+
+/** Given a record where the key is a folder and the value is an array of
+ * sibling modules, return a combined array of all the module paths that should
+ * be loaded for documentation. */
+export function getPaths(index: Record<string, string[]>): string[] {
+  let paths: string[] = [];
+  for (const values of Object.values(index)) {
+    const index = getIndex(values);
+    if (index) {
+      paths.push(index);
+    } else {
+      paths = paths.concat(values);
+    }
+  }
+  return paths;
 }

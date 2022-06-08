@@ -1,7 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import { type DocNode } from "../deps.ts";
-import { type IndexStructure, SerializeMap } from "../doc.ts";
+import { getPaths } from "../doc.ts";
 
 let docNodes: DocNode[] | undefined;
 
@@ -19,20 +19,41 @@ export async function getDocNodes(): Promise<DocNode[]> {
   return docNodes = await response.json();
 }
 
-let indexStructure: IndexStructure | undefined;
+let entries: Record<string, DocNode[]> | undefined;
 
-export async function getIndexStructure(): Promise<IndexStructure> {
-  if (indexStructure) {
-    return indexStructure;
+export async function getEntries(
+  index: Record<string, string[]>,
+): Promise<Record<string, DocNode[]>> {
+  if (entries) {
+    return entries;
   }
-  const data = await Deno.readTextFile(
-    new URL("./data/index_structure.json", import.meta.url),
+  const paths = getPaths(index);
+  console.log(JSON.stringify(paths));
+  const response = await fetch(
+    "https://apiland.deno.dev/v2/modules/std/0.142.0/doc",
+    {
+      method: "POST",
+      body: JSON.stringify(paths),
+      headers: {
+        "content-type": "application/json; charset=UTF-8",
+      },
+    },
   );
-  return indexStructure = JSON.parse(
-    data,
-    (key, value) =>
-      typeof value === "object" && (key === "structure" || key === "entries")
-        ? new SerializeMap(Object.entries(value))
-        : value,
+  return entries = response.status === 200 ? await response.json() : {};
+}
+
+let index: Record<string, string[]> | undefined;
+
+export async function getIndex(): Promise<Record<string, string[]>> {
+  if (index) {
+    return index;
+  }
+  const response = await fetch(
+    "https://apiland.deno.dev/v2/modules/std/0.142.0/index/",
   );
+  if (response.status !== 200) {
+    console.error(response);
+    throw new Error(`Unexpected result fetching module index.`);
+  }
+  return index = await response.json();
 }

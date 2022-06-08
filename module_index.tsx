@@ -3,12 +3,7 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { type DocNode, tw } from "./deps.ts";
-import {
-  getDocSummary,
-  IndexStructure,
-  isAbstract,
-  isDeprecated,
-} from "./doc.ts";
+import { getDocSummary, getIndex, isAbstract, isDeprecated } from "./doc.ts";
 import { Tag } from "./jsdoc.tsx";
 import { MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "./services.ts";
@@ -17,9 +12,9 @@ import { type Child, maybe, take } from "./utils.ts";
 
 function getModuleSummary(
   mod: string,
-  entries: Map<string, DocNode[]>,
+  entries: Record<string, DocNode[]>,
 ): string | undefined {
-  const docNodes = entries.get(mod);
+  const docNodes = entries[mod];
   if (docNodes) {
     for (const docNode of docNodes) {
       if (docNode.kind === "moduleDoc") {
@@ -137,14 +132,14 @@ function ModuleEntry(
 function ModuleList(
   { children, entries, base }: {
     children: Child<string[]>;
-    entries: Map<string, DocNode[]>;
+    entries: Record<string, DocNode[]>;
     base: string;
   },
 ) {
   const mods = take(children, true);
   const items = [];
   for (const mod of mods) {
-    const nodes = entries.get(mod);
+    const nodes = entries[mod];
     if (nodes && nodes.length) {
       items.push(<ModuleEntry base={base} name={mod}>{nodes}</ModuleEntry>);
     }
@@ -158,7 +153,7 @@ function Folder(
     current: boolean;
     path: string;
     base: string;
-    entries: Map<string, DocNode[]>;
+    entries: Record<string, DocNode[]>;
     expanded?: boolean;
   },
 ) {
@@ -214,17 +209,20 @@ function Folder(
 /** Renders an index of a module, providing an overview of each module grouped
  * by path. */
 export function ModuleIndex(
-  { children, path = "/", base }: {
-    children: Child<IndexStructure>;
+  { children, entries, path = "/", base }: {
+    children: Child<Record<string, string[]>>;
+    entries: Record<string, DocNode[]>;
     path?: string;
     base: string;
   },
 ) {
-  const indexStructure = take(children);
+  const index = take(children);
   const folders: [string, string[]][] = [];
-  for (const [key, value] of indexStructure.structure.entries()) {
+  for (const [key, value] of Object.entries(index)) {
     if (path === "/" || key.startsWith(path)) {
-      folders.push([key, value]);
+      const index = getIndex(value);
+      const paths = index ? [index] : value;
+      folders.push([key, paths]);
     }
   }
   const items = folders.map(([key, value]) => (
@@ -233,7 +231,7 @@ export function ModuleIndex(
       base={base}
       expanded={folders.length <= 1}
       current={path === (key || "/")}
-      entries={indexStructure.entries}
+      entries={entries}
     >
       {value}
     </Folder>

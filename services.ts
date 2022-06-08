@@ -93,14 +93,10 @@ export const theme: ThemeConfiguration = {
 const runtimeConfig: Required<
   Pick<Configuration, "resolveHref" | "lookupHref" | "runtime">
 > = {
-  resolveHref(current: string, symbol?: string) {
+  resolveHref(current, symbol) {
     return symbol ? `/${current}` : `/${current}/~/${symbol}`;
   },
-  lookupHref(
-    current: string,
-    namespace: string | undefined,
-    symbol: string,
-  ): string | undefined {
+  lookupHref(current, namespace, symbol) {
     return namespace
       ? `/${current}/~/${namespace}.${symbol}`
       : `/${current}/~/${symbol}`;
@@ -108,12 +104,12 @@ const runtimeConfig: Required<
   runtime: {
     Fragment() {
       throw new TypeError(
-        "The JSX runtime.Fragment is unset and must be set via setRuntime().",
+        "The JSX runtime.Fragment is unset and must be set via setup().",
       );
     },
     h() {
       throw new TypeError(
-        "The JSX runtime.h is unset and must be set via setRuntime().",
+        "The JSX runtime.h is unset and must be set via setup().",
       );
     },
   },
