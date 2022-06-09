@@ -2,239 +2,185 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type DocNode, tw } from "./deps.ts";
-import { getDocSummary, getIndex, isAbstract, isDeprecated } from "./doc.ts";
-import { Tag } from "./jsdoc.tsx";
+import { type DocNode, type JsDoc, tw } from "./deps.ts";
+import { getIndex } from "./doc.ts";
 import { MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
 import { type Child, maybe, take } from "./utils.ts";
 
-function getModuleSummary(
-  mod: string,
-  entries: Record<string, DocNode[]>,
-): string | undefined {
-  const docNodes = entries[mod];
-  if (docNodes) {
-    for (const docNode of docNodes) {
-      if (docNode.kind === "moduleDoc") {
-        return getDocSummary(docNode);
-      }
-    }
+interface FolderItem {
+  name: string;
+  folders: FolderItem[];
+  modules: string[];
+}
+
+type DocMap = Record<string, JsDoc>;
+
+export interface ModuleIndexWithDoc {
+  index: Record<string, string[]>;
+  docs: DocMap;
+}
+
+function getSummary(jsDoc: JsDoc | undefined): string | undefined {
+  if (jsDoc?.doc) {
+    const [summary] = jsDoc.doc.split("\n\n");
+    return summary;
   }
 }
 
-function ExportedSymbol(
-  { children, name, path, base, summary }: {
-    children: Child<DocNode>;
-    name: string;
-    path: string;
+/** Convert an index of modules into a tree of modules. */
+function toTree(path: string, index: Record<string, string[]>): FolderItem {
+  const folderItems = Object.keys(index)
+    .filter((k) => k.startsWith(path))
+    .map<[string, FolderItem]>((name) => [
+      name,
+      {
+        name,
+        folders: [],
+        modules: index[name],
+      },
+    ]);
+  const folderMap = Object.fromEntries(folderItems);
+  for (const [name, folderItem] of folderItems) {
+    if (name !== path) {
+      const parts = name.split("/");
+      parts.pop();
+      const parentName = parts.length > 1 ? parts.join("/") : "/";
+      const parent = folderMap[parentName];
+      if (parent) {
+        parent.folders.push(folderItem);
+      }
+    }
+  }
+  return folderMap[path];
+}
+
+function Folder(
+  { children, base, parent, docs }: {
+    children: Child<FolderItem>;
     base: string;
-    summary?: string;
+    parent: string;
+    docs: DocMap;
   },
 ) {
-  const node = take(children);
-  const href = services.resolveHref(`${base}${path}`, name);
-  let linkClass;
-  switch (node.kind) {
-    case "class":
-      linkClass = style("symbolClass");
-      break;
-    case "enum":
-      linkClass = style("symbolEnum");
-      break;
-    case "function":
-      linkClass = style("symbolFunction");
-      break;
-    case "interface":
-      linkClass = style("symbolInterface");
-      break;
-    case "typeAlias":
-      linkClass = style("symbolTypeAlias");
-      break;
-    case "variable":
-      linkClass = style("symbolVariable");
-      break;
-    case "namespace":
-      linkClass = style("symbolNamespace");
-      break;
-    default:
-      linkClass = tw`hover:underline`;
-  }
-  const url = `${base}${path}`;
+  const folderItem = take(children);
+  const { name, modules } = folderItem;
+  const url = `${base}${name}`;
+  const href = services.resolveHref(url);
+  const id = name.slice(1).replaceAll(/[\s/]/g, "_") || "_root";
+  const indexModule = getIndex(modules);
+  const summary = getSummary(indexModule ? docs[indexModule] : undefined);
+  const label = parent === "/"
+    ? name.slice(parent.length)
+    : name.slice(parent.length + 1);
   return (
-    <tr class={style("moduleListRow")}>
-      <td class={style("tdIndex")}>
-        <a href={href} class={linkClass}>{name}</a>
-        {maybe(isAbstract(node), <Tag color="yellow">abstract</Tag>)}
-        {maybe(isDeprecated(node), <Tag color="gray">deprecated</Tag>)}
+    <tr class={style("moduleIndexRow")}>
+      <td colSpan={2} class={style("moduleIndexPanelCell")} id={`group_${id}`}>
+        <input
+          type="checkbox"
+          id={`id_${id}`}
+          checked
+          class={tw`hidden`}
+          aria-controls={`group_${id}`}
+        />
+        <label for={`id_${id}`} class={style("panelTitle")}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            fill="#currentColor"
+            class={style("rightArrow")}
+          >
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M10 17l5-5-5-5v10z" />
+          </svg>
+          <span class={tw`mr-4`}>
+            <a href={href} class={style("link")}>{label}</a>
+          </span>
+          <MarkdownSummary url={url}>{summary}</MarkdownSummary>
+        </label>
+        <div class={`content ${tw`ml-4`}`}>
+          <FolderContent base={base} docs={docs}>{folderItem}</FolderContent>
+        </div>
       </td>
-      <td class={style("tdIndex")}>
+    </tr>
+  );
+}
+
+function Module(
+  { children, base, parent, docs }: {
+    children: Child<string>;
+    base: string;
+    parent: string;
+    docs: DocMap;
+  },
+) {
+  const modulePath = take(children);
+  const url = `${base}${modulePath}`;
+  const href = services.resolveHref(url);
+  const summary = getSummary(docs[modulePath]);
+  const label = parent === "/"
+    ? modulePath.slice(parent.length)
+    : modulePath.slice(parent.length + 1);
+  return (
+    <tr class={style("moduleIndexRow")}>
+      <td class={style("moduleIndexModuleCell")}>
+        <a href={href} class={style("link")}>{label}</a>
+      </td>
+      <td class={style("moduleIndexCell")}>
         <MarkdownSummary url={url}>{summary}</MarkdownSummary>
       </td>
     </tr>
   );
 }
 
-function ModuleEntry(
-  { children, name, base }: {
-    children: Child<DocNode[]>;
-    name: string;
+function FolderContent(
+  { children, base, docs }: {
+    children: Child<FolderItem>;
     base: string;
+    docs: DocMap;
   },
 ) {
-  const entries = take(children, true);
-  const nodeMap = new Map<string, { node: DocNode; summary?: string }>();
-  let modSummary;
-  for (const node of entries) {
-    if (node.declarationKind === "export") {
-      if (node.kind === "moduleDoc") {
-        modSummary = getDocSummary(node);
-      } else {
-        const prev = nodeMap.get(node.name);
-        if (prev) {
-          if (!prev.summary) {
-            prev.summary = getDocSummary(node);
-          }
-        } else {
-          nodeMap.set(node.name, { node, summary: getDocSummary(node) });
-        }
-      }
+  const { folders, modules, name } = take(children);
+  const items = [];
+  for (const folderItem of folders) {
+    if (folderItem.folders.length || folderItem.modules.length) {
+      items.push(
+        <Folder base={base} docs={docs} parent={name}>{folderItem}</Folder>,
+      );
     }
   }
-  const items = Array.from(nodeMap).map(([name, { node, summary }]) => ({
-    name,
-    node,
-    summary,
-  }));
-  items.sort((a, b) => a.name.localeCompare(b.name));
-  const url = `${base}${name}`;
-  const href = services.resolveHref(url);
-  const path = name;
-  const exports = items.map(({ name, node, summary }) => (
-    <ExportedSymbol name={name} base={base} path={path} summary={summary}>
-      {node}
-    </ExportedSymbol>
-  ));
+  const indexModule = getIndex(modules);
+  if (indexModule) {
+    items.push(
+      <Module base={base} docs={docs} parent={name}>{indexModule}</Module>,
+    );
+  }
+  modules.sort();
+  for (const mod of modules) {
+    if (mod !== indexModule) {
+      items.push(<Module base={base} docs={docs} parent={name}>{mod}</Module>);
+    }
+  }
   return (
-    <>
-      <tr class={style("moduleListRow")}>
-        <td colSpan={2} class={style("moduleListFolderCell")}>
-          <a href={href} class={style("linkPadRight")}>{name}</a>
-          <MarkdownSummary url={url}>{modSummary}</MarkdownSummary>
-        </td>
-      </tr>
-      {exports}
-    </>
+    <table class={style("moduleIndexTable")}>
+      <tbody class={style("moduleIndexTableBody")}>{items}</tbody>
+    </table>
   );
 }
 
-function ModuleList(
-  { children, entries, base }: {
-    children: Child<string[]>;
-    entries: Record<string, DocNode[]>;
-    base: string;
-  },
-) {
-  const mods = take(children, true);
-  const items = [];
-  for (const mod of mods) {
-    const nodes = entries[mod];
-    if (nodes && nodes.length) {
-      items.push(<ModuleEntry base={base} name={mod}>{nodes}</ModuleEntry>);
-    }
-  }
-  return <table class={style("moduleListTable")}>{items}</table>;
-}
-
-function Folder(
-  { children, current, path, base, entries, expanded = false }: {
-    children: Child<string[]>;
-    current: boolean;
-    path: string;
-    base: string;
-    entries: Record<string, DocNode[]>;
-    expanded?: boolean;
-  },
-) {
-  const mods = take(children, true);
-  const summary = mods.length === 1
-    ? getModuleSummary(mods[0], entries)
-    : undefined;
-  const id = path.slice(1).replaceAll(/[\s/]/g, "_") || "_root";
-  const url = `${base}${path}`;
-  const href = services.resolveHref(url);
+export function ModuleIndex({ children, path = "/", base }: {
+  children: Child<ModuleIndexWithDoc>;
+  path?: string;
+  base: string;
+}) {
+  const { index, docs } = take(children);
+  const root = toTree(path, index);
   return (
-    <div class={style("panel")} id={`group_${id}`}>
-      {maybe(
-        expanded,
-        <input
-          type="checkbox"
-          id={`id_${id}`}
-          class={tw`hidden`}
-          aria-expanded={expanded}
-          aria-controls={`group_${id}`}
-        />,
-        <input
-          type="checkbox"
-          id={`id_${id}`}
-          checked
-          class={tw`hidden`}
-          aria-expanded={expanded}
-          aria-controls={`group_${id}`}
-        />,
-      )}
-      <label for={`id_${id}`} class={style("panelTitle")}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="24"
-          viewBox="0 0 24 24"
-          width="24"
-          fill="#currentColor"
-          class={style("rightArrow")}
-        >
-          <path d="M0 0h24v24H0V0z" fill="none" />
-          <path d="M10 17l5-5-5-5v10z" />
-        </svg>
-        <span class={tw`mr-4`}>
-          {current ? path : <a href={href} class={style("link")}>{path}</a>}
-        </span>
-        <MarkdownSummary url={url}>{summary}</MarkdownSummary>
-      </label>
-      <ModuleList entries={entries} base={base}>{mods}</ModuleList>
+    <div>
+      <FolderContent base={base} docs={docs}>{root}</FolderContent>
     </div>
   );
-}
-
-/** Renders an index of a module, providing an overview of each module grouped
- * by path. */
-export function ModuleIndex(
-  { children, entries, path = "/", base }: {
-    children: Child<Record<string, string[]>>;
-    entries: Record<string, DocNode[]>;
-    path?: string;
-    base: string;
-  },
-) {
-  const index = take(children);
-  const folders: [string, string[]][] = [];
-  for (const [key, value] of Object.entries(index)) {
-    if (path === "/" || key.startsWith(path)) {
-      const index = getIndex(value);
-      const paths = index ? [index] : value;
-      folders.push([key, paths]);
-    }
-  }
-  const items = folders.map(([key, value]) => (
-    <Folder
-      path={key}
-      base={base}
-      expanded={folders.length <= 1}
-      current={path === (key || "/")}
-      entries={entries}
-    >
-      {value}
-    </Folder>
-  ));
-  return <article class={style("main")}>{items}</article>;
 }

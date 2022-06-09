@@ -14,7 +14,7 @@ import {
   virtualSheet,
 } from "./deps.ts";
 import { Showcase, ShowcaseCodeBlocks } from "./showcase.tsx";
-import { getDocNodes, getEntries, getIndex } from "./util.ts";
+import { getDocNodes, getModuleIndex } from "./util.ts";
 
 const sheet = virtualSheet();
 
@@ -35,15 +35,13 @@ const router = new Router();
 
 router.get("/", async (ctx, next) => {
   sheet.reset();
-  const index = await getIndex();
-  const entries = await getEntries(index);
+  const moduleIndex = await getModuleIndex("std", "0.142.0");
   const docNodes = await getDocNodes();
   const body = renderSSR(
     <Showcase
       url="https://deno.land/x/oak@v10.5.1/mod.ts"
       symbol="Application"
-      index={index}
-      entries={entries}
+      moduleIndex={moduleIndex}
       docNodes={docNodes}
     />,
   );

@@ -18,7 +18,7 @@ import { CodeBlockInterface } from "../interfaces.tsx";
 import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
-import { ModuleIndex } from "../module_index.tsx";
+import { ModuleIndex, type ModuleIndexWithDoc } from "../module_index.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../symbol_doc.tsx";
 import { CodeBlockTypeAlias } from "../type_aliases.tsx";
@@ -51,12 +51,11 @@ function ComponentTitle(
 }
 
 export function Showcase(
-  { docNodes, index, entries, symbol, url }: {
+  { docNodes, moduleIndex, symbol, url }: {
     docNodes: DocNode[];
     url: string;
     symbol: string;
-    index: Record<string, string[]>;
-    entries: Record<string, DocNode[]>;
+    moduleIndex: ModuleIndexWithDoc;
   },
 ) {
   const itemNodes = docNodes.filter(({ name }) => name === symbol);
@@ -77,12 +76,8 @@ export function Showcase(
         {docNodes}
       </ModuleDoc>
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
-      <ModuleIndex
-        base="https://deno.land/std@0.142.0"
-        path="/"
-        entries={entries}
-      >
-        {index}
+      <ModuleIndex base="https://deno.land/std@0.142.0">
+        {moduleIndex}
       </ModuleIndex>
       <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
       <SymbolDoc url={url}>{itemNodes}</SymbolDoc>

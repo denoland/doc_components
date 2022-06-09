@@ -34,6 +34,11 @@ const markdownStyles = css({
   ul: apply`lg:(list-disc list-inside)`,
 });
 
+const panelStyles = css({
+  "& > input:checked ~ .content": apply`hidden`,
+  "& > input:checked ~ label > svg": apply`rotate-0`,
+});
+
 const none = apply``;
 
 const syntaxHighlightingStyles = css({
@@ -91,12 +96,16 @@ const styles = {
       "a": apply`text-blue(700 dark:400) hover:underline`,
     })
   }`,
-  moduleListFolderCell: apply`block lg:table-cell py-2`,
-  moduleListRow: apply`block lg:table-row`,
-  moduleListTable: apply`block lg:(table mx-4)`,
+  moduleIndexTable: apply`block w-full lg:(table table-fixed)`,
+  moduleIndexTableBody: apply`block w-full lg:table-row-group`,
+  moduleIndexRow: apply`block lg:table-row`,
+  moduleIndexCell: apply`block ml-4 lg:(table-cell ml-0)`,
+  moduleIndexModuleCell: apply
+    `block pl-2 py-0.5 lg:(table-cell w-48 pl-4 pr-2 py-1.5)`,
+  moduleIndexPanelCell: apply`block lg:table-cell ${panelStyles}`,
   numberLiteral: none,
   panel: css({
-    "& > input:checked ~ table": apply`hidden`,
+    "& > input:checked ~ .content": apply`hidden`,
     "& > input:checked ~ label > svg": apply`rotate-0`,
   }),
   panelTitle: apply`block p-2 border(b gray(400 dark:600)) cursor-pointer`,
@@ -117,7 +126,6 @@ const styles = {
     `px-4 py-2 inline-flex leading-5 font-semibold lowercase rounded-full`,
   tagKind: apply`italic`,
   tagName: apply`font-medium`,
-  tdIndex: apply`block lg:table-cell py-1 px-2 align-top`,
   title: apply
     `text-2xl md:text-3xl lg:text-4xl text-gray(900 dark:50) font-bold mb-3`,
   typeKeyword: none,
