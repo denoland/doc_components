@@ -18,6 +18,28 @@ export async function getDocNodes(
   return response.json();
 }
 
+export async function getEntries(
+  module: string,
+  version: string,
+  modules: string[],
+): Promise<Record<string, DocNode[]>> {
+  const response = await fetch(
+    `https://apiland.deno.dev/v2/modules/${module}/${version}/doc`,
+    {
+      method: "POST",
+      body: JSON.stringify(modules),
+      headers: {
+        "content-type": "application/json",
+      },
+    },
+  );
+  if (response.status !== 200) {
+    console.error(response);
+    throw new Error(`Unexpected result fetching doc nodes.`);
+  }
+  return response.json();
+}
+
 export async function getModuleIndex(
   module: string,
   version: string,

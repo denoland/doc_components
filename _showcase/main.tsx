@@ -15,8 +15,13 @@ import {
   Router,
   virtualSheet,
 } from "./deps.ts";
-import { Showcase, ShowcaseCodeBlocks, ShowcaseRework } from "./showcase.tsx";
-import { getDocNodes, getModuleIndex } from "./util.ts";
+import {
+  Showcase,
+  ShowcaseCodeBlocks,
+  ShowcaseRework,
+  ShowcaseSmoosh,
+} from "./showcase.tsx";
+import { getDocNodes, getEntries, getModuleIndex } from "./util.ts";
 
 import { ModuleDoc } from "../module_doc.tsx";
 
@@ -141,6 +146,38 @@ router.get("/rework/:module/:version/:path*", async (ctx, next) => {
       path={path}
       moduleIndex={moduleIndex}
       mod={mod}
+    />,
+  );
+  const styles = getStyleTag(sheet);
+  ctx.response.body = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      ${styles}
+    </head>
+    <body>
+      ${body}
+    </body>
+  </html>`;
+  ctx.response.type = "html";
+  return next();
+});
+
+router.get("/smoosh/:module/:version/:path*", async (ctx, next) => {
+  sheet.reset();
+  page = "/smoosh";
+  let { module, version, path } = ctx.params;
+  path = `/${path ?? ""}`;
+
+  // an implementor would need to decide to render a module or not...
+  const moduleIndex = await getModuleIndex(module, version, path);
+  const modules = moduleIndex.index[path];
+  const entries = await getEntries(module, version, modules);
+  const body = renderSSR(
+    <ShowcaseSmoosh
+      base={`https://deno.land/x/${module}@${version}`}
+      path={path}
+      moduleIndex={moduleIndex}
+      entries={entries}
     />,
   );
   const styles = getStyleTag(sheet);

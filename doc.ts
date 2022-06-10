@@ -28,6 +28,10 @@ export function byKind(a: DocNode, b: DocNode): number {
   return KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind);
 }
 
+export function byKindValue(a: DocNodeKind, b: DocNodeKind): number {
+  return KIND_ORDER.indexOf(a) - KIND_ORDER.indexOf(b);
+}
+
 /** If a doc node has JSDoc, return the first paragraph of the JSDoc doc. */
 export function getDocSummary(docNode: DocNode): string | undefined {
   if (docNode.jsDoc?.doc) {

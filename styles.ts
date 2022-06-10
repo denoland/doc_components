@@ -106,6 +106,8 @@ const styles = {
   modulePathIndexTable: apply`block lg:table`,
   modulePathIndexRow: apply`block lg:table-row`,
   modulePathIndexCell: apply`block lg:table-cell px-2 py-1`,
+  modulePathIndexSymbolCell: apply`block lg:table-cell pl-5 pr-2 py-1`,
+  none,
   numberLiteral: none,
   panel: css({
     "& > input:checked ~ .content": apply`hidden`,

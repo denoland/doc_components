@@ -2,12 +2,12 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type DocNode, type JsDoc, tw } from "./deps.ts";
+import { type JsDoc } from "./deps.ts";
 import { getIndex } from "./doc.ts";
 import { MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
-import { type Child, maybe, take } from "./utils.ts";
+import { type Child, take } from "./utils.ts";
 
 type DocMap = Record<string, JsDoc>;
 
@@ -27,7 +27,8 @@ function findItems(
       modules = value;
     } else if (
       key.startsWith(path) &&
-      !key.slice(path === "/" ? path.length : path.length + 1).includes("/")
+      !key.slice(path === "/" ? path.length : path.length + 1).includes("/") &&
+      value.length
     ) {
       folders.push([key, getIndex(value)]);
     }
