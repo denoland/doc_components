@@ -19,6 +19,7 @@ import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndex, type ModuleIndexWithDoc } from "../module_index.tsx";
+import { ModulePathIndex } from "../module_path_index.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../symbol_doc.tsx";
 import { CodeBlockTypeAlias } from "../type_aliases.tsx";
@@ -147,6 +148,30 @@ export function ShowcaseCodeBlocks(
       <CodeBlockTypeAlias url={url}>{typeAliasNode}</CodeBlockTypeAlias>
       <ComponentTitle module="/variables.tsx">CodeBlockVariable</ComponentTitle>
       <CodeBlockVariable url={url}>{variableNode}</CodeBlockVariable>
+    </div>
+  );
+}
+
+export function ShowcaseRework({ base, path, moduleIndex, mod }: {
+  base: string;
+  path: string;
+  moduleIndex: ModuleIndexWithDoc;
+  mod?: [string, DocNode[]];
+}) {
+  return (
+    <div
+      class={tw
+        `h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
+    >
+      <div class={tw`p-2 border rounded`}>{path}</div>
+      <div class={tw`mx-4 p-2`}>
+        {moduleIndex && (
+          <ModulePathIndex base={base} path={path} skipMods={!!mod}>
+            {moduleIndex}
+          </ModulePathIndex>
+        )}
+        {mod && <ModuleDoc url={`${base}${mod[0]}`}>{mod[1]}</ModuleDoc>}
+      </div>
     </div>
   );
 }

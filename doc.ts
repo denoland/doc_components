@@ -56,7 +56,7 @@ export function isDeprecated(node: DocNode): boolean {
  * `undefined` is returned. */
 export function getIndex(paths: string[]): string | undefined {
   for (const index of INDEX_MODULES) {
-    const item = paths.find((file) => file.toLowerCase().endsWith(index));
+    const item = paths.find((file) => file.toLowerCase().endsWith(`/${index}`));
     if (item) {
       return item;
     }

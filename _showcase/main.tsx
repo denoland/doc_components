@@ -1,6 +1,8 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+import { type DocNode } from "../deps.ts";
+import { getIndex } from "../doc.ts";
 import { runtime, setup, theme } from "../services.ts";
 import {
   Application,
@@ -13,10 +15,13 @@ import {
   Router,
   virtualSheet,
 } from "./deps.ts";
-import { Showcase, ShowcaseCodeBlocks } from "./showcase.tsx";
+import { Showcase, ShowcaseCodeBlocks, ShowcaseRework } from "./showcase.tsx";
 import { getDocNodes, getModuleIndex } from "./util.ts";
 
+import { ModuleDoc } from "../module_doc.tsx";
+
 const sheet = virtualSheet();
+let page = "/";
 
 await setup({
   lookupHref(url, namespace, symbol) {
@@ -25,7 +30,18 @@ await setup({
       : `/${url}/~/${symbol}`;
   },
   resolveHref(url, symbol) {
-    return symbol ? `/${url}/~/${symbol}` : `/${url}`;
+    if (symbol) {
+      return `https://doc.deno.land/${url}/~/${symbol}`;
+    }
+    const pattern = new URLPattern(
+      "https://deno.land/x/:module@:version/:path*",
+    );
+    const result = pattern.exec(url);
+    if (result) {
+      const { module, version, path } = result.pathname.groups;
+      return `${page}/${module}/${version}/${path}`;
+    }
+    return `/${url}`;
   },
   runtime: { Fragment, h },
   tw: { sheet, theme, darkMode: "class" },
@@ -36,7 +52,7 @@ const router = new Router();
 router.get("/", async (ctx, next) => {
   sheet.reset();
   const moduleIndex = await getModuleIndex("std", "0.142.0");
-  const docNodes = await getDocNodes();
+  const docNodes = await getDocNodes("oak", "v10.6.0", "/mod.ts");
   const body = renderSSR(
     <Showcase
       url="https://deno.land/x/oak@v10.5.1/mod.ts"
@@ -61,10 +77,10 @@ router.get("/", async (ctx, next) => {
 
 router.get("/codeblocks", async (ctx, next) => {
   sheet.reset();
-  const docNodes = await getDocNodes();
+  const docNodes = await getDocNodes("oak", "v10.6.0", "/mod.ts");
   const body = renderSSR(
     <ShowcaseCodeBlocks
-      url="https://deno.land/x/oak@v10.5.1/mod.ts"
+      url="https://deno.land/x/oak@v10.6.0/mod.ts"
       docNodes={docNodes}
     />,
   );
@@ -80,6 +96,65 @@ router.get("/codeblocks", async (ctx, next) => {
   </html>`;
   ctx.response.type = "html";
   await next();
+});
+
+router.get("/rework/:module/:version/:path*", async (ctx, next) => {
+  sheet.reset();
+  page = "/rework";
+  let { module, version, path } = ctx.params;
+  path = `/${path ?? ""}`;
+
+  // hacky way to figure out if we are just rendering a module doc
+  if (path.match(/\...$/)) {
+    const nodes = await getDocNodes(module, version, path);
+    const body = renderSSR(
+      <ModuleDoc url={`https://deno.land/x/${module}@${version}${path}`}>
+        {nodes}
+      </ModuleDoc>,
+    );
+    const styles = getStyleTag(sheet);
+    ctx.response.body = `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          ${styles}
+        </head>
+        <body>
+          ${body}
+        </body>
+      </html>`;
+    ctx.response.type = "html";
+    return next();
+  }
+
+  // an implementor would need to decide to render a module or not...
+  const moduleIndex = await getModuleIndex(module, version, path);
+  const indexModule = getIndex(moduleIndex.index[path]);
+  const mod = indexModule
+    ? [indexModule, await getDocNodes(module, version, indexModule)] as [
+      string,
+      DocNode[],
+    ]
+    : undefined;
+  const body = renderSSR(
+    <ShowcaseRework
+      base={`https://deno.land/x/${module}@${version}`}
+      path={path}
+      moduleIndex={moduleIndex}
+      mod={mod}
+    />,
+  );
+  const styles = getStyleTag(sheet);
+  ctx.response.body = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      ${styles}
+    </head>
+    <body>
+      ${body}
+    </body>
+  </html>`;
+  ctx.response.type = "html";
+  return next();
 });
 
 const app = new Application();
@@ -140,4 +215,4 @@ app.addEventListener("error", (evt) => {
   console.error(msg);
 });
 
-app.listen();
+app.listen({ port: 3100 });

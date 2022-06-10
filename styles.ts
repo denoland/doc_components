@@ -103,6 +103,9 @@ const styles = {
   moduleIndexModuleCell: apply
     `block pl-2 py-0.5 lg:(table-cell w-48 pl-4 pr-2 py-1.5)`,
   moduleIndexPanelCell: apply`block lg:table-cell ${panelStyles}`,
+  modulePathIndexTable: apply`block lg:table`,
+  modulePathIndexRow: apply`block lg:table-row`,
+  modulePathIndexCell: apply`block lg:table-cell px-2 py-1`,
   numberLiteral: none,
   panel: css({
     "& > input:checked ~ .content": apply`hidden`,
