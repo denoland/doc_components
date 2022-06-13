@@ -87,7 +87,7 @@ const styles = {
   link: apply`text-blue(800 dark:300) hover:underline`,
   linkPadRight: apply`pr-4 text-blue(800 dark:300) hover:underline`,
   linkType: apply`underline`,
-  main: apply`p-6 md:(col-span-3 p-12)`,
+  main: apply`p-3 md:(col-span-3 p-6)`,
   markdown: apply
     `p-4 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
   markdownSummary: apply`text-gray(600 dark:400) ${
