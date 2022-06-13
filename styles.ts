@@ -63,7 +63,7 @@ const styles = {
     `font-mono my-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 overflow-x-auto`,
   codeBoolean: apply`text-cyan(600 dark:400)`,
   copyButton: apply
-    `float-right px-2 font-sans focus-visible:ring-2 text-sm text-gray(500 dark:300) border border-gray(300 dark:500) rounded hover:shadow`,
+    `float-right bg-gray-50 px-2 font-sans focus-visible:ring-2 text-sm text-gray(500 dark:300) border border-gray(300 dark:500) rounded hover:shadow`,
   codeClassMethod: apply`text-green(700 dark:300)`,
   codeDecorator: apply`text-green(600 dark:400) italic`,
   codeFnName: apply`text-green(700 dark:300)`,
@@ -87,7 +87,7 @@ const styles = {
   link: apply`text-blue(800 dark:300) hover:underline`,
   linkPadRight: apply`pr-4 text-blue(800 dark:300) hover:underline`,
   linkType: apply`underline`,
-  main: apply`p-3 md:(col-span-3 p-6)`,
+  main: apply`md:(col-span-3)`,
   markdown: apply
     `p-4 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
   markdownSummary: apply`text-gray(600 dark:400) ${
