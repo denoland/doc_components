@@ -110,8 +110,7 @@ export function Usage(
       </pre>
       <script
         dangerouslySetInnerHTML={{
-          __html:
-            `function ${fnName}() { 
+          __html: `function ${fnName}() { 
               navigator?.clipboard?.writeText(\`${importStatement}\`); 
               document.querySelector(\'#${fnName}\').innerHTML = "✅ Copied"; 
               setTimeout(() => {
