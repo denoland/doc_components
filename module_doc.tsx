@@ -46,7 +46,7 @@ function Entry<Node extends DocNode>(
         <span class={style(entryStyle)}>
           <DocLink {...context}>{label}</DocLink>
           {maybe(isAbstract(node), <Tag color="yellow">abstract</Tag>)}
-          {maybe(isDeprecated(node), <Tag color="gray">deprecated</Tag>)}
+          {maybe(isDeprecated(node), <Tag color="gray">👎 deprecated</Tag>)}
         </span>
       </td>
       <td class={tw`block lg:table-cell ${style("symbolListCell")}`}>
