@@ -128,7 +128,7 @@ const styles = {
   symbolTypeAlias: apply`text-yellow(700 dark:500) font-bold hover:underline`,
   symbolVariable: apply`text-blue(700 dark:500) font-bold hover:underline`,
   tag: apply
-    `px-4 py-2 inline-flex leading-5 font-semibold lowercase rounded-full`,
+    `px-4 py-2 inline-flex leading-4 font-medium lowercase rounded-full`,
   tagKind: apply`italic`,
   tagName: apply`font-medium`,
   title: apply
