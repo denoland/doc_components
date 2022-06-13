@@ -74,7 +74,7 @@ export function Usage(
       <pre>
         <span
           dangerouslySetInnerHTML={{
-            __html: `<button class="${
+            __html: `<button id="${fnName}" class="${
               style("copyButton")
             }" type="button" onclick="${fnName}()">Copy</button>`,
           }}
@@ -108,9 +108,12 @@ export function Usage(
           )}
         </code>
       </pre>
-      <script>
-        {`function ${fnName}() { navigator?.clipboard?.writeText(\`${importStatement}\`); }`}
-      </script>
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            `function ${fnName}() { navigator?.clipboard?.writeText(\`${importStatement}\`); document.querySelector(\'#${fnName}\').innerHTML = "✅ Copied"; }`,
+        }}
+      />
     </div>
   );
 }
