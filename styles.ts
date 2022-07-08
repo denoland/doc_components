@@ -2,14 +2,6 @@
 
 import { apply, css, type Directive, tw } from "./deps.ts";
 
-const anchorStyles = css({
-  ":global": {
-    ":target, :target > *": apply`bg-gray(200 dark:800)`,
-  },
-  "margin-left": "-1em",
-  "padding-right": "0.5em",
-});
-
 const codeStyles = css({
   ":not(pre) > code": apply
     `font-mono text-sm py-1 px-1.5 rounded text-black bg-gray-100 dark:(text-white bg-gray-800)`,
@@ -54,8 +46,6 @@ const syntaxHighlightingStyles = css({
 });
 
 const styles = {
-  anchor: apply
-    `opacity-0 group-hover:opacity-100 absolute bg-transparent text-gray-600 dark:text-gray-400 ${anchorStyles}`,
   boolean: none,
   classBody: apply`flex flex-col space-y-4`,
   classMethod: none,
@@ -84,12 +74,15 @@ const styles = {
   fnName: none,
   keyword: none,
   indent: apply`ml-4`,
-  link: apply`text-blue(800 dark:300) hover:underline`,
-  linkPadRight: apply`pr-4 text-blue(800 dark:300) hover:underline`,
+  link: apply`text([#056CF0] dark:blue-300) hover:(underline text-blue-500)`,
+  linkPadRight: apply
+    `pr-4 text([#056CF0] dark:300) hover:(underline text-blue-500)`,
   linkType: apply`underline`,
   main: apply`md:(col-span-3)`,
   markdown: apply
     `p-4 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
+  usage: apply
+    `flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
   markdownSummary: apply`text-gray(600 dark:400) ${
     css({
       "p": apply`inline-block`,
@@ -103,10 +96,26 @@ const styles = {
   moduleIndexModuleCell: apply
     `block pl-2 py-0.5 lg:(table-cell w-48 pl-4 pr-2 py-1.5)`,
   moduleIndexPanelCell: apply`block lg:table-cell ${panelStyles}`,
-  modulePathIndexTable: apply`block lg:table`,
-  modulePathIndexRow: apply`block lg:table-row`,
-  modulePathIndexCell: apply`block lg:table-cell px-2 py-1`,
+  modulePathIndex: apply`rounded-lg w-full border border-secondary`,
+  modulePathIndexHeader: apply`flex justify-between items-center`,
+  modulePathIndexHeaderTitle: apply
+    `ml-5 font-semibold text-lg flex items-center`,
+  modulePathIndexHeaderTitleSpan: apply`ml-2 leading-none`,
+  modulePathIndexSource: apply
+    `rounded-md border border-dark-border p-2 my-3.5 mr-5`,
+  modulePathIndexTable: apply`block lg:table w-full`,
+  modulePathIndexRow: apply`block lg:table-row odd:bg-ultralight`,
+  modulePathIndexLinkCell: apply
+    `block lg:table-cell pl-5 pr-3 py-2.5 font-semibold`,
+  modulePathIndexLinkCellIcon: apply`inline my-1.5 mr-3`,
+  modulePathIndexDocCell: apply
+    `block lg:(table-cell pl-0 pt-2.5 mt-0) pl-11 pr-5.5 pb-2.5 -mt-2 text-[#9CA0AA]`,
   modulePathIndexSymbolCell: apply`block lg:table-cell pl-5 pr-2 py-1`,
+  modulePathIndexPanel: apply`hidden lg:block w-72 flex-shrink-0`,
+  modulePathIndexPanelFolder: apply`flex gap-1 p-2 rounded-lg w-full`,
+  modulePathIndexPanelModule: apply`flex gap-1 ml-2.5 p-2 rounded-lg w-full`,
+  modulePathIndexPanelModuleActive: apply`bg-gray-100 font-bold`,
+  modulePathIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
   none,
   numberLiteral: none,
   panel: css({
@@ -114,14 +123,17 @@ const styles = {
     "& > input:checked ~ label > svg": apply`rotate-0`,
   }),
   panelTitle: apply`block p-2 border(b gray(400 dark:600)) cursor-pointer`,
-  section: apply`text-2xl border(b gray(400 dark:600)) p-2 mt-1 mb-3`,
+  section: apply`text-sm font-bold py-1`,
+  moduleDoc: apply`space-y-6`,
   stringLiteral: none,
   subSection: apply`text-xl p-2 mx-2.5 mt-1 mb-2.5`,
   symbolClass: apply`text-green(800 dark:400) font-bold hover:underline`,
   symbolEnum: apply`text-green(700 dark:500) font-bold hover:underline`,
   symbolFunction: apply`text-cyan(800 dark:400) font-bold hover:underline`,
   symbolInterface: apply`text-cyan(900 dark:300) font-bold hover:underline`,
-  symbolListCell: apply`block lg:table-cell py-1 px-2 align-top`,
+  symbolListCellSymbol: apply
+    `block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(w-52 block)`,
+  symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-[#9CA0AA]`,
   symbolListRow: apply`block lg:table-row`,
   symbolListTable: apply`block lg:table`,
   symbolNamespace: apply`text-yellow(800 dark:400) font-bold hover:underline`,
