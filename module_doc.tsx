@@ -6,8 +6,9 @@ import { getDocSummary } from "./doc.ts";
 import { JsDocModule, Tag } from "./jsdoc.tsx";
 import { type MarkdownContext, MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "./services.ts";
-import { style, type StyleKey } from "./styles.ts";
+import { style } from "./styles.ts";
 import { Usage } from "./usage.tsx";
+import * as SymbolKind from "./symbol_kind.tsx";
 import {
   asCollection,
   byName,
@@ -23,19 +24,21 @@ import * as Icons from "./Icons.tsx";
 export const TARGET_RE = /(\s|[\[\]])/g;
 
 function Entry<Node extends DocNode>(
-  { children, ...context }: {
+  { children, icon, ...context }: {
     children: Child<[label: string, node: Node]>;
+    icon: ComponentChildren;
   } & MarkdownContext,
 ) {
   const [label, node] = take(children, true);
   return (
     <tr class={style("symbolListRow")}>
       <td class={style("symbolListCellSymbol")}>
-        <span>
+        <div>
+          {icon}
           <DocLink {...context}>{label}</DocLink>
           {maybe(isAbstract(node), <Tag color="yellow">abstract</Tag>)}
           {maybe(isDeprecated(node), <Tag color="gray">👎 deprecated</Tag>)}
-        </span>
+        </div>
       </td>
       <td class={style("symbolListCellDoc")}>
         <MarkdownSummary {...context}>
@@ -61,21 +64,11 @@ export function DocLink(
   return <a href={href}>{label}</a>;
 }
 
-const colors = {
-  "Namespaces": "#D25646",
-  "Classes": "#2FA850",
-  "Enums": "#22abb0",
-  "Variables": "#7E57C0",
-  "Functions": "#026BEB",
-  "Interfaces": "#D4A068",
-  "Type Aliases": "#A4478C",
-} as const;
-type sectionTitle = keyof typeof colors;
-
 function Section<Node extends DocNode>(
-  { children, title, ...markdownContext }: {
+  { children, title, icon, ...markdownContext }: {
     children: Child<DocNodeTupleArray<Node>>;
-    title: sectionTitle;
+    title: string;
+    icon: ComponentChildren;
   } & MarkdownContext,
 ) {
   const tuples = take(children, true, true);
@@ -85,7 +78,7 @@ function Section<Node extends DocNode>(
       return null;
     }
     displayed.add(label);
-    return <Entry {...markdownContext}>{[label, node]}</Entry>;
+    return <Entry {...markdownContext} icon={icon}>{[label, node]}</Entry>;
   });
   return (
     <div>
@@ -95,11 +88,11 @@ function Section<Node extends DocNode>(
   );
 }
 
-function SectionTitle({ children }: { children: Child<sectionTitle> }) {
+function SectionTitle({ children }: { children: Child<string> }) {
   const name = take(children);
   const id = name.replaceAll(TARGET_RE, "_");
   return (
-    <h2 class={tw`text-[${colors[name]}] ${style("section")}`} id={id}>
+    <h2 class={style("section")} id={id}>
       <a href={`#${id}`} aria-label="Anchor">
         {name}
       </a>
@@ -140,37 +133,65 @@ export function ModuleDoc(
               )}
             </div>
             {collection.namespace && (
-              <Section title="Namespaces" {...markdownContext}>
+              <Section
+                title="Namespaces"
+                icon={<SymbolKind.Namespace />}
+                {...markdownContext}
+              >
                 {collection.namespace}
               </Section>
             )}
             {collection.class && (
-              <Section title="Classes" {...markdownContext}>
+              <Section
+                title="Classes"
+                icon={<SymbolKind.Class />}
+                {...markdownContext}
+              >
                 {collection.class}
               </Section>
             )}
             {collection.enum && (
-              <Section title="Enums" {...markdownContext}>
+              <Section
+                title="Enums"
+                icon={<SymbolKind.Enum />}
+                {...markdownContext}
+              >
                 {collection.enum}
               </Section>
             )}
             {collection.variable && (
-              <Section title="Variables" {...markdownContext}>
+              <Section
+                title="Variables"
+                icon={<SymbolKind.Variable />}
+                {...markdownContext}
+              >
                 {collection.variable}
               </Section>
             )}
             {collection.function && (
-              <Section title="Functions" {...markdownContext}>
+              <Section
+                title="Functions"
+                icon={<SymbolKind.Function />}
+                {...markdownContext}
+              >
                 {collection.function}
               </Section>
             )}
             {collection.interface && (
-              <Section title="Interfaces" {...markdownContext}>
+              <Section
+                title="Interfaces"
+                icon={<SymbolKind.Interface />}
+                {...markdownContext}
+              >
                 {collection.interface}
               </Section>
             )}
             {collection.typeAlias && (
-              <Section title="Type Aliases" {...markdownContext}>
+              <Section
+                title="Type Aliases"
+                icon={<SymbolKind.TypeAlias />}
+                {...markdownContext}
+              >
                 {collection.typeAlias}
               </Section>
             )}

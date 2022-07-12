@@ -123,8 +123,10 @@ const styles = {
     "& > input:checked ~ label > svg": apply`rotate-0`,
   }),
   panelTitle: apply`block p-2 border(b gray(400 dark:600)) cursor-pointer`,
-  section: apply`text-sm font-bold py-1`,
+  section: apply`text-sm font-semibold text-[#9CA0AA] py-1`,
   symbolDocHeader: apply`flex justify-between items-center py-3.5`,
+  symbolKind: apply
+    `rounded-full w-6 h-6 mr-2 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0`,
   sourceButton: apply`rounded-md border border-[#DDDDDD] p-2`,
   stringLiteral: none,
   subSection: apply`text-xl p-2 mx-2.5 mt-1 mb-2.5`,
@@ -133,7 +135,7 @@ const styles = {
   symbolFunction: apply`text-cyan(800 dark:400) font-bold hover:underline`,
   symbolInterface: apply`text-cyan(900 dark:300) font-bold hover:underline`,
   symbolListCellSymbol: apply
-    `block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(w-52 block)`,
+    `block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(min-w-52 flex items-center)`,
   symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-[#9CA0AA]`,
   symbolListRow: apply`block lg:table-row`,
   symbolListTable: apply`block lg:table`,
