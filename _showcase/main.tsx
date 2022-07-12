@@ -19,7 +19,7 @@ import { Showcase, ShowcaseCodeBlocks } from "./showcase.tsx";
 import { getDocNodes, getModuleIndex } from "./util.ts";
 
 const sheet = virtualSheet();
-let page = "/";
+const page = "/";
 
 await setup({
   lookupHref(url, namespace, symbol) {
