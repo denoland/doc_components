@@ -18,9 +18,7 @@ import { CodeBlockInterface } from "../interfaces.tsx";
 import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
-import { ModuleIndex, type ModuleIndexWithDoc } from "../module_index.tsx";
-import { ModulePathIndex } from "../module_path_index.tsx";
-import { ModuleSymbolIndex } from "../module_symbol_index.tsx";
+import { ModuleIndexWithDoc, ModulePathIndex } from "../module_path_index.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../symbol_doc.tsx";
 import { CodeBlockTypeAlias } from "../type_aliases.tsx";
@@ -74,13 +72,16 @@ export function Showcase(
         {`Some _markdown_ with [links](https://deno.land/) and symbol links, like: {@linkcode Router}`}
       </MarkdownSummary>
       <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
-      <ModuleDoc url={url}>
+      <ModuleDoc url={url} sourceUrl={url}>
         {docNodes}
       </ModuleDoc>
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
-      <ModuleIndex base="https://deno.land/std@0.142.0">
+      <ModulePathIndex
+        base="https://deno.land/std@0.142.0"
+        sourceUrl="https://deno.land/std@0.142.0"
+      >
         {moduleIndex}
-      </ModuleIndex>
+      </ModulePathIndex>
       <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
       <SymbolDoc url={url}>{itemNodes}</SymbolDoc>
       <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
@@ -149,51 +150,6 @@ export function ShowcaseCodeBlocks(
       <CodeBlockTypeAlias url={url}>{typeAliasNode}</CodeBlockTypeAlias>
       <ComponentTitle module="/variables.tsx">CodeBlockVariable</ComponentTitle>
       <CodeBlockVariable url={url}>{variableNode}</CodeBlockVariable>
-    </div>
-  );
-}
-
-export function ShowcaseRework({ base, path, moduleIndex, mod }: {
-  base: string;
-  path: string;
-  moduleIndex: ModuleIndexWithDoc;
-  mod?: [string, DocNode[]];
-}) {
-  return (
-    <div
-      class={tw
-        `h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
-    >
-      <div class={tw`p-2 border rounded`}>{path}</div>
-      <div class={tw`mx-4 p-2`}>
-        {moduleIndex && (
-          <ModulePathIndex base={base} path={path} skipMods={!!mod}>
-            {moduleIndex}
-          </ModulePathIndex>
-        )}
-        {mod && <ModuleDoc url={`${base}${mod[0]}`}>{mod[1]}</ModuleDoc>}
-      </div>
-    </div>
-  );
-}
-
-export function ShowcaseSmoosh({ base, path, moduleIndex, entries }: {
-  base: string;
-  path: string;
-  moduleIndex: ModuleIndexWithDoc;
-  entries: Record<string, DocNode[]>;
-}) {
-  return (
-    <div
-      class={tw
-        `h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
-    >
-      <div class={tw`p-2 border rounded`}>{path}</div>
-      <div>
-        <ModuleSymbolIndex base={base} path={path} entries={entries}>
-          {moduleIndex}
-        </ModuleSymbolIndex>
-      </div>
     </div>
   );
 }
