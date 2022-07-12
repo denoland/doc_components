@@ -135,7 +135,7 @@ const styles = {
   symbolFunction: apply`text-cyan(800 dark:400) font-bold hover:underline`,
   symbolInterface: apply`text-cyan(900 dark:300) font-bold hover:underline`,
   symbolListCellSymbol: apply
-    `block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(min-w-52 flex items-center)`,
+    `block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(min-w-[13rem] flex items-center)`,
   symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-[#9CA0AA]`,
   symbolListRow: apply`block lg:table-row`,
   symbolListTable: apply`block lg:table`,

@@ -86,7 +86,7 @@ function Extends(
     code?: boolean;
   },
 ) {
-  const extensions = take(children);
+  const extensions = take(children, true);
   if (!extensions.length) {
     return null;
   }
