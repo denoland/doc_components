@@ -1,8 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { type DocNode } from "../deps.ts";
-import { getIndex } from "../doc.ts";
 import { runtime, setup, theme } from "../services.ts";
 import {
   Application,

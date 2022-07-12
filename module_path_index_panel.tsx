@@ -86,7 +86,7 @@ export function ModulePathIndexPanel(
 ) {
   const { index } = take(children);
   const [folders, modules] = findItems(path, index);
-  const items = folders.map((folder) => (
+  const items = folders.sort().map((folder) => (
     <Folder base={base} parent={path}>
       {folder}
     </Folder>

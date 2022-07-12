@@ -19,6 +19,7 @@ import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndexWithDoc, ModulePathIndex } from "../module_path_index.tsx";
+import { ModulePathIndexPanel } from "../module_path_index_panel.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../symbol_doc.tsx";
 import { CodeBlockTypeAlias } from "../type_aliases.tsx";
@@ -82,6 +83,9 @@ export function Showcase(
       >
         {moduleIndex}
       </ModulePathIndex>
+      <ModulePathIndexPanel base="https://deno.land/std@0.142.0" current="/version.ts">
+        {moduleIndex}
+      </ModulePathIndexPanel>
       <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
       <SymbolDoc url={url}>{itemNodes}</SymbolDoc>
       <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
