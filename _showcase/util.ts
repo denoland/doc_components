@@ -1,7 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import { type DocNode } from "../deps.ts";
-import { type ModuleIndexWithDoc } from "../module_index.tsx";
+import { type ModuleIndexWithDoc } from "../module_path_index.tsx";
 
 export async function getDocNodes(
   module: string,
