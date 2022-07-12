@@ -83,7 +83,10 @@ export function Showcase(
       >
         {moduleIndex}
       </ModulePathIndex>
-      <ModulePathIndexPanel base="https://deno.land/std@0.142.0" current="/version.ts">
+      <ModulePathIndexPanel
+        base="https://deno.land/std@0.142.0"
+        current="/version.ts"
+      >
         {moduleIndex}
       </ModulePathIndexPanel>
       <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
