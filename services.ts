@@ -54,8 +54,6 @@ export interface Configuration {
   runtime?: JsxRuntime;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
   tw?: TwConfiguration;
-  /** If set to true, will disable the loading of comrak. */
-  useCustomMarkdownRenderer?: boolean;
 }
 
 export const theme: ThemeConfiguration = {
@@ -138,7 +136,7 @@ const runtimeConfig: Required<
 
 /** Setup the services used by the doc components. */
 export async function setup(config: Configuration) {
-  const { runtime, tw, useCustomMarkdownRenderer, ...other } = config;
+  const { runtime, tw, ...other } = config;
   Object.assign(runtimeConfig, other);
   if (runtime) {
     Object.assign(runtimeConfig.runtime, runtime);
@@ -146,7 +144,7 @@ export async function setup(config: Configuration) {
   if (tw) {
     twSetup(tw);
   }
-  if (!useCustomMarkdownRenderer) {
+  if (!other.markdownToHTML) {
     await comrak.init();
   }
 }
