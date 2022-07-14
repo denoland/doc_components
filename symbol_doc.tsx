@@ -20,7 +20,7 @@ import { CodeBlockTypeAlias } from "./type_aliases.tsx";
 import { Usage } from "./usage.tsx";
 import { type Child, maybe, take } from "./utils.ts";
 import { CodeBlockVariable } from "./variables.tsx";
-import * as Icons from "./Icons.tsx";
+import * as Icons from "./icons.tsx";
 
 function CodeBlock(
   { children, ...markdownContext }:

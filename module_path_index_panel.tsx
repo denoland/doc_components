@@ -7,7 +7,7 @@ import { getIndex } from "./doc.ts";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
 import { type Child, take } from "./utils.ts";
-import * as Icons from "./Icons.tsx";
+import * as Icons from "./icons.tsx";
 import { ModuleIndexWithDoc } from "./module_path_index.tsx";
 
 export function findItems(

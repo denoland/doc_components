@@ -19,7 +19,7 @@ import {
   maybe,
   take,
 } from "./utils.ts";
-import * as Icons from "./Icons.tsx";
+import * as Icons from "./icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
 
