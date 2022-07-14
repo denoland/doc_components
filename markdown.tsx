@@ -94,7 +94,11 @@ function parseLinks(
   return markdown;
 }
 
-function mdToHtml(markdown: string, url: string, namespace?: string): string {
+export function mdToHtml(
+  markdown: string,
+  url: string,
+  namespace?: string,
+): string {
   return syntaxHighlight(
     comrak.markdownToHTML(
       parseLinks(markdown, url, namespace),
@@ -122,7 +126,7 @@ export function Markdown(
         class={style(markdownStyle)}
         id={id}
         dangerouslySetInnerHTML={{
-          __html: mdToHtml(md, url, namespace),
+          __html: services.markdownToHTML(md, url, namespace),
         }}
       />
     )
@@ -139,7 +143,9 @@ export function MarkdownSummary(
     ? (
       <span
         class={style(markdownStyle)}
-        dangerouslySetInnerHTML={{ __html: mdToHtml(md, url, namespace) }}
+        dangerouslySetInnerHTML={{
+          __html: services.markdownToHTML(md, url, namespace),
+        }}
       />
     )
     : null;

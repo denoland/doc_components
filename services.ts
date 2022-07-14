@@ -7,6 +7,7 @@ import {
   type ThemeConfiguration,
   twColors,
 } from "./deps.ts";
+import { mdToHtml } from "./markdown.tsx";
 
 interface JsxRuntime {
   Fragment: (props: Record<string, unknown>) => unknown;
@@ -43,6 +44,12 @@ export interface Configuration {
    * for a link. */
   resolveHref?: (url: string, symbol?: string) => string;
   resolveSourceHref?: (url: string, line?: number) => string;
+  /** Called when markdown needs to be rendered. */
+  markdownToHTML?: (
+    markdown: string,
+    url: string,
+    namespace?: string,
+  ) => string;
   /** The JSX runtime that should be used. */
   runtime?: JsxRuntime;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
@@ -94,7 +101,11 @@ export const theme: ThemeConfiguration = {
 const runtimeConfig: Required<
   Pick<
     Configuration,
-    "resolveHref" | "lookupHref" | "resolveSourceHref" | "runtime"
+    | "resolveHref"
+    | "lookupHref"
+    | "resolveSourceHref"
+    | "markdownToHTML"
+    | "runtime"
   >
 > = {
   resolveHref(current, symbol) {
@@ -108,6 +119,7 @@ const runtimeConfig: Required<
   resolveSourceHref(url, line) {
     return line ? `${url}#L${line}` : url;
   },
+  markdownToHTML: mdToHtml,
   runtime: {
     Fragment() {
       throw new TypeError(
@@ -132,7 +144,9 @@ export async function setup(config: Configuration) {
   if (tw) {
     twSetup(tw);
   }
-  await comrak.init();
+  if (!other.markdownToHTML) {
+    await comrak.init();
+  }
 }
 
 export const runtime: JsxRuntime = {
@@ -162,5 +176,14 @@ export const services = {
 
   get resolveSourceHref(): (url: string, line?: number) => string {
     return runtimeConfig.resolveSourceHref;
+  },
+
+  /** Render Markdown to HTML */
+  get markdownToHTML(): (
+    markdown: string,
+    url: string,
+    namespace?: string,
+  ) => string {
+    return runtimeConfig.markdownToHTML;
   },
 };
