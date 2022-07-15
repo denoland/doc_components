@@ -2,6 +2,8 @@
 
 export * as comrak from "https://deno.land/x/comrak@0.1.1/mod.ts";
 export type {
+  Accessibility,
+  ClassConstructorDef,
   ClassIndexSignatureDef,
   ClassMethodDef,
   ClassPropertyDef,
@@ -28,6 +30,7 @@ export type {
   LiteralIndexSignatureDef,
   LiteralMethodDef,
   LiteralPropertyDef,
+  Location,
   ObjectPatPropDef,
   ParamDef,
   TruePlusMinus,

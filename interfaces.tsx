@@ -11,6 +11,8 @@ import {
   type InterfacePropertyDef,
   type TsTypeDef,
 } from "./deps.ts";
+import { Anchor, nameToId, SectionTitle } from "./doc_common.tsx";
+import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
@@ -107,7 +109,7 @@ function Extends(
   );
 }
 
-function IndexSignatures(
+export function IndexSignatures(
   { children, ...props }: {
     children: Child<IndexSignatureDef[]>;
     url: string;
@@ -137,6 +139,39 @@ function IndexSignatures(
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
+}
+
+export function IndexSignaturesDoc(
+  { children, ...markdownContext }:
+    & { children: Child<IndexSignatureDef[]> }
+    & MarkdownContext,
+) {
+  const defs = take(children, true);
+  if (!defs.length) {
+    return null;
+  }
+  const items = defs.map(({ readonly, params, tsType }, i) => {
+    const id = nameToId("index_sig", String(i));
+    return (
+      <div class={style("docItem")}>
+        <Anchor>{id}</Anchor>
+        {maybe(
+          readonly,
+          <span class={style("keyword")}>readonly{" "}</span>,
+        )}[<Params {...markdownContext}>{params}</Params>]{tsType && (
+          <span>
+            : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+          </span>
+        )}
+      </div>
+    );
+  });
+  return (
+    <div>
+      <SectionTitle>Index Signatures</SectionTitle>
+      {items}
+    </div>
+  );
 }
 
 function Methods(

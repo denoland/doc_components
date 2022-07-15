@@ -2,11 +2,19 @@
 
 import { apply, css, type Directive, tw } from "./deps.ts";
 
+const anchorStyles = css({
+  ":global": {
+    ":target, :target > *": apply`bg-gray(200 dark:800)`,
+  },
+  "margin-left": "-1em",
+  "padding-right": "0.5em",
+});
+
 const codeStyles = css({
-  ":not(pre) > code": apply
-    `font-mono text-sm py-1 px-1.5 rounded text-black bg-gray-100 dark:(text-white bg-gray-800)`,
-  pre: apply
-    `font-mono text-sm p-2.5 rounded-lg text-black bg-gray-100 dark:(text-white bg-gray-800) overflow-x-auto`,
+  ":not(pre) > code":
+    apply`font-mono text-sm py-1 px-1.5 rounded text-black bg-gray-100 dark:(text-white bg-gray-800)`,
+  pre:
+    apply`font-mono text-sm p-2.5 rounded-lg text-black bg-gray-100 dark:(text-white bg-gray-800) overflow-x-auto`,
 });
 
 const markdownStyles = css({
@@ -37,8 +45,8 @@ const syntaxHighlightingStyles = css({
   ".code-comment": apply`text-gray(500 dark:400)`,
   ".code-function": apply`text-green(700 dark:300)`,
   ".code-literal": apply`text-cyan(600 dark:400)`,
-  ".code-keyword, .code-operator, .code-variable.code-language": apply
-    `text-purple(800 dark:300)`,
+  ".code-keyword, .code-operator, .code-variable.code-language":
+    apply`text-purple(800 dark:300)`,
   ".code-number, .code-doctag": apply`text-indigo(600 dark:400)`,
   ".code-regexp": apply`text-red(700 dark:300)`,
   ".code-string": apply`text-yellow(500 dark:200)`,
@@ -46,14 +54,16 @@ const syntaxHighlightingStyles = css({
 });
 
 const styles = {
+  anchor:
+    apply`opacity-0 group-hover:opacity-100 absolute bg-transparent text-gray-600 dark:text-gray-400 ${anchorStyles}`,
   boolean: none,
   classBody: apply`flex flex-col space-y-4`,
   classMethod: none,
-  codeBlock: apply
-    `font-mono my-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 overflow-x-auto`,
+  codeBlock:
+    apply`font-mono my-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 overflow-x-auto`,
   codeBoolean: apply`text-cyan(600 dark:400)`,
-  copyButton: apply
-    `float-right bg-gray-50 px-2 font-sans focus-visible:ring-2 text-sm text-gray(500 dark:300) border border-gray(300 dark:500) rounded hover:shadow`,
+  copyButton:
+    apply`float-right bg-gray-50 px-2 font-sans focus-visible:ring-2 text-sm text-gray(500 dark:300) border border-gray(300 dark:500) rounded hover:shadow`,
   codeClassMethod: apply`text-green(700 dark:300)`,
   codeDecorator: apply`text-green(600 dark:400) italic`,
   codeFnName: apply`text-green(700 dark:300)`,
@@ -64,6 +74,11 @@ const styles = {
   codeTypeLink: apply`underline`,
   codeTypeParam: apply`text-blue(600 dark:400)`,
   decorator: none,
+  docBlockItems: none,
+  docEntry: apply`flex justify-between`,
+  docEntryChildren: apply`overflow-auto font-mono break-words`,
+  docItem: apply`group relative py-2 px-1`,
+  docSubItem: apply`group relative py-2 px-1 ml-2.5`,
   entryClass: apply`text-green(800 dark:400) mx-2 font-bold truncate`,
   entryEnum: apply`text-green(700 dark:500) mx-2 font-bold truncate`,
   entryFunction: apply`text-cyan(800 dark:400) mx-2 font-bold truncate`,
@@ -75,14 +90,14 @@ const styles = {
   keyword: none,
   indent: apply`ml-4`,
   link: apply`text([#056CF0] dark:blue-300) hover:(underline text-blue-500)`,
-  linkPadRight: apply
-    `pr-4 text([#056CF0] dark:300) hover:(underline text-blue-500)`,
+  linkPadRight:
+    apply`pr-4 text([#056CF0] dark:300) hover:(underline text-blue-500)`,
   linkType: apply`underline`,
   main: apply`md:(col-span-3)`,
-  markdown: apply
-    `p-4 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
-  usage: apply
-    `flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
+  markdown:
+    apply`p-4 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
+  usage:
+    apply`flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
   markdownSummary: apply`text-gray(600 dark:400) ${
     css({
       "p": apply`inline-block`,
@@ -95,21 +110,21 @@ const styles = {
   moduleIndexTableBody: apply`block w-full lg:table-row-group`,
   moduleIndexRow: apply`block lg:table-row`,
   moduleIndexCell: apply`block ml-4 lg:(table-cell ml-0)`,
-  moduleIndexModuleCell: apply
-    `block pl-2 py-0.5 lg:(table-cell w-48 pl-4 pr-2 py-1.5)`,
+  moduleIndexModuleCell:
+    apply`block pl-2 py-0.5 lg:(table-cell w-48 pl-4 pr-2 py-1.5)`,
   moduleIndexPanelCell: apply`block lg:table-cell ${panelStyles}`,
   modulePathIndex: apply`rounded-lg w-full border border-[#E5E7EB]`,
   modulePathIndexHeader: apply`flex justify-between items-center py-3.5 pr-5`,
-  modulePathIndexHeaderTitle: apply
-    `ml-5 font-semibold text-lg flex items-center`,
+  modulePathIndexHeaderTitle:
+    apply`ml-5 font-semibold text-lg flex items-center`,
   modulePathIndexHeaderTitleSpan: apply`ml-2 leading-none`,
   modulePathIndexTable: apply`block lg:table w-full`,
   modulePathIndexRow: apply`block lg:table-row odd:bg-[#F8F7F6]`,
-  modulePathIndexLinkCell: apply
-    `block lg:table-cell pl-5 pr-3 py-2.5 font-semibold`,
+  modulePathIndexLinkCell:
+    apply`block lg:table-cell pl-5 pr-3 py-2.5 font-semibold`,
   modulePathIndexLinkCellIcon: apply`inline my-1.5 mr-3`,
-  modulePathIndexDocCell: apply
-    `block lg:(table-cell pl-0 pt-2.5 mt-0) pl-11 pr-[1.375rem] pb-2.5 -mt-2 text-[#9CA0AA]`,
+  modulePathIndexDocCell:
+    apply`block lg:(table-cell pl-0 pt-2.5 mt-0) pl-11 pr-[1.375rem] pb-2.5 -mt-2 text-[#9CA0AA]`,
   modulePathIndexSymbolCell: apply`block lg:table-cell pl-5 pr-2 py-1`,
   modulePathIndexPanel: apply`hidden lg:block w-72 flex-shrink-0`,
   modulePathIndexPanelFolder: apply`flex gap-1 p-2 rounded-lg w-full`,
@@ -125,29 +140,31 @@ const styles = {
   panelTitle: apply`block p-2 border(b gray(400 dark:600)) cursor-pointer`,
   section: apply`text-sm font-semibold text-[#9CA0AA] py-1`,
   symbolDocHeader: apply`flex justify-between items-center py-3.5`,
-  symbolKind: apply
-    `rounded-full w-6 h-6 mr-2 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0`,
+  symbolKind:
+    apply`rounded-full w-6 h-6 mr-2 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0`,
   sourceButton: apply`rounded-md border border-[#DDDDDD] p-2`,
+  sourceLink:
+    apply`pl-2 break-words text-gray-600 hover:text-gray-800 dark:(text-gray-400 hover:text-gray-200) hover:underline`,
   stringLiteral: none,
   subSection: apply`text-xl p-2 mx-2.5 mt-1 mb-2.5`,
   symbolClass: apply`text-green(800 dark:400) font-bold hover:underline`,
   symbolEnum: apply`text-green(700 dark:500) font-bold hover:underline`,
   symbolFunction: apply`text-cyan(800 dark:400) font-bold hover:underline`,
   symbolInterface: apply`text-cyan(900 dark:300) font-bold hover:underline`,
-  symbolListCellSymbol: apply
-    `block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(min-w-[13rem] flex items-center)`,
+  symbolListCellSymbol:
+    apply`block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(min-w-[13rem] flex items-center)`,
   symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-[#9CA0AA]`,
   symbolListRow: apply`block lg:table-row`,
   symbolListTable: apply`block lg:table`,
   symbolNamespace: apply`text-yellow(800 dark:400) font-bold hover:underline`,
   symbolTypeAlias: apply`text-yellow(700 dark:500) font-bold hover:underline`,
   symbolVariable: apply`text-blue(700 dark:500) font-bold hover:underline`,
-  tag: apply
-    `px-4 py-2 inline-flex leading-4 font-medium lowercase rounded-full`,
+  tag:
+    apply`px-4 py-2 inline-flex leading-4 font-medium lowercase rounded-full`,
   tagKind: apply`italic`,
   tagName: apply`font-medium`,
-  title: apply
-    `text-2xl md:text-3xl lg:text-4xl text-gray(900 dark:50) font-bold mb-3`,
+  title:
+    apply`text-2xl md:text-3xl lg:text-4xl text-gray(900 dark:50) font-bold mb-3`,
   typeKeyword: none,
   typeLink: apply`underline`,
   typeParam: none,

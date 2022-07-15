@@ -2,7 +2,8 @@
 
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
-import { CodeBlockClass } from "../classes.tsx";
+import { Tag } from "../doc_common.tsx";
+import { CodeBlockClass, DocBlockClass } from "../classes.tsx";
 import {
   type DocNode,
   type DocNodeClass,
@@ -15,7 +16,6 @@ import {
 import { CodeBlockEnum } from "../enums.tsx";
 import { CodeBlockFn } from "../functions.tsx";
 import { CodeBlockInterface } from "../interfaces.tsx";
-import { Tag } from "../jsdoc.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndexWithDoc, ModulePathIndex } from "../module_path_index.tsx";
@@ -62,8 +62,7 @@ export function Showcase(
   const itemNodes = docNodes.filter(({ name }) => name === symbol);
   return (
     <div
-      class={tw
-        `h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
+      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
     >
       <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
       <h2 class={tw`text-2xl py-2`}>Component Showcase</h2>
@@ -113,6 +112,25 @@ export function Showcase(
   );
 }
 
+export function ShowcaseDocBlocks(
+  { docNodes, url }: { docNodes: DocNode[]; url: string },
+) {
+  const classNode = docNodes.find(({ kind }) =>
+    kind === "class"
+  ) as DocNodeClass;
+  return (
+    <div
+      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
+    >
+      <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
+      <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
+      <hr />
+      <ComponentTitle module="/classes.tsx">DocBlockClass</ComponentTitle>
+      <DocBlockClass url={url}>{classNode}</DocBlockClass>
+    </div>
+  );
+}
+
 export function ShowcaseCodeBlocks(
   { docNodes, url }: { docNodes: DocNode[]; url: string },
 ) {
@@ -135,8 +153,7 @@ export function ShowcaseCodeBlocks(
   ) as DocNodeFunction[];
   return (
     <div
-      class={tw
-        `h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
+      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
     >
       <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
       <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>

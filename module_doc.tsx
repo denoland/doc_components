@@ -3,7 +3,9 @@
 /** @jsx runtime.h */
 import { type DocNode, tw } from "./deps.ts";
 import { getDocSummary } from "./doc.ts";
-import { JsDocModule, Tag } from "./jsdoc.tsx";
+import { SectionTitle, Tag } from "./doc_common.tsx";
+import * as Icons from "./icons.tsx";
+import { JsDocModule } from "./jsdoc.tsx";
 import { type MarkdownContext, MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
@@ -19,7 +21,6 @@ import {
   maybe,
   take,
 } from "./utils.ts";
-import * as Icons from "./icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
 
@@ -85,18 +86,6 @@ function Section<Node extends DocNode>(
       <SectionTitle>{title}</SectionTitle>
       <table class={style("symbolListTable")}>{items}</table>
     </div>
-  );
-}
-
-function SectionTitle({ children }: { children: Child<string> }) {
-  const name = take(children);
-  const id = name.replaceAll(TARGET_RE, "_");
-  return (
-    <h2 class={style("section")} id={id}>
-      <a href={`#${id}`} aria-label="Anchor">
-        {name}
-      </a>
-    </h2>
   );
 }
 

@@ -1,6 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+import { type DocNode } from "../deps.ts";
 import { runtime, setup, theme } from "../services.ts";
 import {
   Application,
@@ -13,7 +14,11 @@ import {
   Router,
   virtualSheet,
 } from "./deps.ts";
-import { Showcase, ShowcaseCodeBlocks } from "./showcase.tsx";
+import {
+  Showcase,
+  ShowcaseCodeBlocks,
+  ShowcaseDocBlocks,
+} from "./showcase.tsx";
 import { getDocNodes, getModuleIndex } from "./util.ts";
 
 const sheet = virtualSheet();
@@ -76,6 +81,258 @@ router.get("/codeblocks", async (ctx, next) => {
   const docNodes = await getDocNodes("oak", "v10.6.0", "/mod.ts");
   const body = renderSSR(
     <ShowcaseCodeBlocks
+      url="https://deno.land/x/oak@v10.6.0/mod.ts"
+      docNodes={docNodes}
+    />,
+  );
+  const styles = getStyleTag(sheet);
+  ctx.response.body = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      ${styles}
+    </head>
+    <body>
+      ${body}
+    </body>
+  </html>`;
+  ctx.response.type = "html";
+  await next();
+});
+
+router.get("/docblocks", async (ctx, next) => {
+  sheet.reset();
+  // const docNodes = await getDocNodes("oak", "v10.6.0", "/mod.ts");
+  const docNodes: DocNode[] = [{
+    name: "AClass",
+    kind: "class",
+    location: {
+      filename: "https://deno.land/x/mod/mod.ts",
+      line: 23,
+      col: 0,
+    },
+    declarationKind: "export",
+    classDef: {
+      isAbstract: false,
+      constructors: [{
+        name: "new",
+        params: [{
+          kind: "identifier",
+          name: "a",
+          tsType: {
+            kind: "keyword",
+            keyword: "string",
+            repr: "string",
+          },
+          optional: false,
+        }],
+        location: {
+          filename: "https://deno.land/x/mod/mod.ts",
+          line: 25,
+          col: 2,
+        },
+        jsDoc: {
+          doc: "Some sort of doc `here`. **love it**",
+          tags: [{
+            kind: "deprecated",
+            doc: "some deprecated doc",
+          }, {
+            kind: "param",
+            name: "a",
+            doc: "some param _doc_",
+          }],
+        },
+      }],
+      properties: [{
+        tsType: {
+          kind: "keyword",
+          keyword: "number",
+          repr: "number",
+        },
+        readonly: false,
+        optional: true,
+        isAbstract: false,
+        isStatic: false,
+        name: "someNumber",
+        decorators: [{
+          name: "log",
+          location: {
+            filename: "https://deno.land/x/mod/mod.ts",
+            line: 30,
+            col: 2,
+          },
+        }],
+        location: {
+          filename: "https://deno.land/x/mod/mod.ts",
+          line: 31,
+          col: 2,
+        },
+      }, {
+        jsDoc: {
+          doc: "some property JSDoc",
+          tags: [{ kind: "deprecated" }],
+        },
+        tsType: {
+          kind: "keyword",
+          keyword: "string",
+          repr: "string",
+        },
+        readonly: true,
+        accessibility: "protected",
+        optional: false,
+        isAbstract: false,
+        isStatic: false,
+        name: "prop1",
+        location: {
+          filename: "https://deno.land/x/mod/mod.ts",
+          line: 30,
+          col: 2,
+        },
+      }],
+      indexSignatures: [],
+      methods: [{
+        kind: "getter",
+        name: "value",
+        optional: false,
+        isAbstract: false,
+        isStatic: false,
+        functionDef: {
+          params: [],
+          returnType: {
+            kind: "keyword",
+            keyword: "string",
+            repr: "string",
+          },
+          isAsync: false,
+          isGenerator: false,
+          typeParams: [],
+        },
+        location: {
+          filename: "https://deno.land/x/mod/mod.ts",
+          line: 26,
+          col: 2,
+        },
+      }, {
+        kind: "method",
+        name: "stringify",
+        optional: true,
+        isAbstract: false,
+        isStatic: true,
+        functionDef: {
+          params: [{
+            kind: "identifier",
+            name: "value",
+            optional: false,
+            tsType: {
+              kind: "keyword",
+              keyword: "unknown",
+              repr: "unknown",
+            },
+          }],
+          isAsync: false,
+          isGenerator: false,
+          typeParams: [],
+        },
+        jsDoc: {
+          doc: "some js doc for the method",
+          tags: [{
+            kind: "param",
+            name: "value",
+            doc: "the value to stringify",
+          }],
+        },
+        location: {
+          filename: "https://deno.land/x/mod/mod.ts",
+          line: 27,
+          col: 2,
+        },
+      }, {
+        kind: "setter",
+        name: "other",
+        optional: false,
+        isAbstract: false,
+        isStatic: false,
+        functionDef: {
+          params: [{
+            kind: "identifier",
+            name: "value",
+            optional: false,
+            tsType: {
+              kind: "keyword",
+              keyword: "string",
+              repr: "string",
+            },
+          }],
+          isAsync: false,
+          isGenerator: false,
+          typeParams: [],
+        },
+        location: {
+          filename: "https://deno.land/x/mod/mod.ts",
+          line: 26,
+          col: 2,
+        },
+      }, {
+        kind: "getter",
+        name: "other",
+        optional: false,
+        isAbstract: false,
+        isStatic: false,
+        functionDef: {
+          params: [],
+          returnType: {
+            kind: "keyword",
+            keyword: "string",
+            repr: "string",
+          },
+          isAsync: false,
+          isGenerator: false,
+          typeParams: [],
+        },
+        location: {
+          filename: "https://deno.land/x/mod/mod.ts",
+          line: 26,
+          col: 2,
+        },
+      }],
+      extends: "Other",
+      implements: [{
+        kind: "typeRef",
+        typeRef: { typeName: "AnInterface" },
+        repr: "AnInterface<T>",
+      }, {
+        kind: "typeRef",
+        typeRef: { typeName: "OtherInterface" },
+        repr: "OtherInterface",
+      }],
+      typeParams: [{
+        name: "T",
+        constraint: { kind: "keyword", keyword: "string", repr: "string" },
+      }],
+      superTypeParams: [{
+        kind: "literal",
+        literal: {
+          kind: "string",
+          string: "other",
+        },
+        repr: "string",
+      }, {
+        kind: "typeRef",
+        typeRef: { typeName: "Value" },
+        repr: "Value",
+      }],
+      decorators: [{
+        name: "debug",
+        args: ["arg"],
+        location: {
+          filename: "https://deno.land/x/mod/mod.ts",
+          line: 22,
+          col: 0,
+        },
+      }],
+    },
+  }];
+  const body = renderSSR(
+    <ShowcaseDocBlocks
       url="https://deno.land/x/oak@v10.6.0/mod.ts"
       docNodes={docNodes}
     />,

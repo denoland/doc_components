@@ -8,6 +8,7 @@ import {
   type LiteralIndexSignatureDef,
   type LiteralMethodDef,
   type LiteralPropertyDef,
+  type Location,
   type TruePlusMinus,
   type TsTypeDef,
   type TsTypeIntersectionDef,
@@ -16,6 +17,8 @@ import {
   type TsTypeTupleDef,
   type TsTypeUnionDef,
 } from "./deps.ts";
+import { Anchor, DocEntry, SectionTitle } from "./doc_common.tsx";
+import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
@@ -691,4 +694,33 @@ export function TypeParams(
     }
   }
   return <>&lt;{items}&gt;</>;
+}
+
+export function TypeParamsDoc(
+  { children, location, ...markdownContext }: {
+    children: Child<TsTypeParamDef[]>;
+    location: Location;
+  } & MarkdownContext,
+) {
+  const defs = take(children, true);
+  if (!defs.length) {
+    return null;
+  }
+  const items = defs.map((def) => {
+    const id = `typedef_${def.name}`;
+    return (
+      <div class={style("docItem")} id={id}>
+        <Anchor>{id}</Anchor>
+        <DocEntry location={location}>
+          <TypeParam {...markdownContext}>{def}</TypeParam>
+        </DocEntry>
+      </div>
+    );
+  });
+  return (
+    <div>
+      <SectionTitle>Type Parameters</SectionTitle>
+      {items}
+    </div>
+  );
 }
