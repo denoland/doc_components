@@ -13,7 +13,7 @@ import {
   type DocNodeTypeAlias,
   type DocNodeVariable,
 } from "../deps.ts";
-import { CodeBlockEnum } from "../enums.tsx";
+import { CodeBlockEnum, DocBlockEnum } from "../enums.tsx";
 import { CodeBlockFn } from "../functions.tsx";
 import { CodeBlockInterface } from "../interfaces.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
@@ -118,6 +118,7 @@ export function ShowcaseDocBlocks(
   const classNode = docNodes.find(({ kind }) =>
     kind === "class"
   ) as DocNodeClass;
+  const enumNode = docNodes.find(({ kind }) => kind === "enum") as DocNodeEnum;
   return (
     <div
       class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
@@ -127,6 +128,8 @@ export function ShowcaseDocBlocks(
       <hr />
       <ComponentTitle module="/classes.tsx">DocBlockClass</ComponentTitle>
       <DocBlockClass url={url}>{classNode}</DocBlockClass>
+      <ComponentTitle module="/enum.tsx">DocBlockEnum</ComponentTitle>
+      <DocBlockEnum url={url}>{enumNode}</DocBlockEnum>
     </div>
   );
 }

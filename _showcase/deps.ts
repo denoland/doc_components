@@ -1,8 +1,8 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-export { h } from "https://deno.land/x/nano_jsx@v0.0.30/core.ts";
-export { Fragment } from "https://deno.land/x/nano_jsx@v0.0.30/fragment.ts";
-export { renderSSR } from "https://deno.land/x/nano_jsx@v0.0.30/ssr.ts";
+export { h } from "https://deno.land/x/nano_jsx@v0.0.33/core.ts";
+export { Fragment } from "https://deno.land/x/nano_jsx@v0.0.33/fragment.ts";
+export { renderSSR } from "https://deno.land/x/nano_jsx@v0.0.33/ssr.ts";
 
 export {
   Application,

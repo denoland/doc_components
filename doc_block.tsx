@@ -2,7 +2,8 @@
 
 /** @jsx runtime.h */
 import { DocBlockClass } from "./classes.tsx";
-import { type DocNode, type DocNodeFunction } from "./deps.ts";
+import { type DocNode } from "./deps.ts";
+import { DocBlockEnum } from "./enums.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "./services.ts";
 import { type Child, take } from "./utils.ts";
@@ -19,6 +20,11 @@ export function DocBlock(
       case "class":
         elements.push(
           <DocBlockClass {...markdownContext}>{docNode}</DocBlockClass>,
+        );
+        break;
+      case "enum":
+        elements.push(
+          <DocBlockEnum {...markdownContext}>{docNode}</DocBlockEnum>,
         );
         break;
     }

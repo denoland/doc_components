@@ -330,6 +330,33 @@ router.get("/docblocks", async (ctx, next) => {
         },
       }],
     },
+  }, {
+    name: "SomeEnum",
+    kind: "enum",
+    location: {
+      filename: "https://deno.land/x/mod/mod.ts",
+      line: 100,
+      col: 0,
+    },
+    declarationKind: "export",
+    enumDef: {
+      members: [{
+        name: "String",
+        init: {
+          kind: "literal",
+          literal: { kind: "string", string: "string" },
+          repr: "string",
+        },
+        jsDoc: { doc: "Enum member with _JSDoc_." },
+      }, {
+        name: "Array",
+        init: {
+          kind: "literal",
+          literal: { kind: "string", string: "array" },
+          repr: "array",
+        },
+      }],
+    },
   }];
   const body = renderSSR(
     <ShowcaseDocBlocks
