@@ -4,6 +4,7 @@
 import { DocBlockClass } from "./classes.tsx";
 import { type DocNode } from "./deps.ts";
 import { DocBlockEnum } from "./enums.tsx";
+import { DocBlockInterface } from "./interfaces.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "./services.ts";
 import { type Child, take } from "./utils.ts";
@@ -25,6 +26,11 @@ export function DocBlock(
       case "enum":
         elements.push(
           <DocBlockEnum {...markdownContext}>{docNode}</DocBlockEnum>,
+        );
+        break;
+      case "interface":
+        elements.push(
+          <DocBlockInterface {...markdownContext}>{docNode}</DocBlockInterface>,
         );
         break;
     }

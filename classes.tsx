@@ -773,9 +773,9 @@ function ImplementsDoc(
     );
   });
   return (
-    <div>
+    <>
       <SectionTitle>Implements</SectionTitle>
       {items}
-    </div>
+    </>
   );
 }

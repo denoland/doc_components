@@ -15,7 +15,7 @@ import {
 } from "../deps.ts";
 import { CodeBlockEnum, DocBlockEnum } from "../enums.tsx";
 import { CodeBlockFn } from "../functions.tsx";
-import { CodeBlockInterface } from "../interfaces.tsx";
+import { CodeBlockInterface, DocBlockInterface } from "../interfaces.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndexWithDoc, ModulePathIndex } from "../module_path_index.tsx";
@@ -119,6 +119,9 @@ export function ShowcaseDocBlocks(
     kind === "class"
   ) as DocNodeClass;
   const enumNode = docNodes.find(({ kind }) => kind === "enum") as DocNodeEnum;
+  const interfaceNode = docNodes.find(({ kind }) =>
+    kind === "interface"
+  ) as DocNodeInterface;
   return (
     <div
       class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
@@ -130,6 +133,10 @@ export function ShowcaseDocBlocks(
       <DocBlockClass url={url}>{classNode}</DocBlockClass>
       <ComponentTitle module="/enum.tsx">DocBlockEnum</ComponentTitle>
       <DocBlockEnum url={url}>{enumNode}</DocBlockEnum>
+      <ComponentTitle module="/interfaces.tsx">
+        DocBlockInterface
+      </ComponentTitle>
+      <DocBlockInterface url={url}>{interfaceNode}</DocBlockInterface>
     </div>
   );
 }
