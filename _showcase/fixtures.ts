@@ -3,7 +3,8 @@
 import {
   type DocNodeClass,
   type DocNodeEnum,
-  DocNodeInterface,
+  type DocNodeFunction,
+  type DocNodeInterface,
 } from "../deps.ts";
 
 export const classNode: DocNodeClass = {
@@ -379,3 +380,47 @@ export const interfaceNode: DocNodeInterface = {
     }],
   },
 };
+
+export const fnNodes: DocNodeFunction[] = [{
+  kind: "function",
+  name: "a",
+  location: { filename: "https://deno.land/x/mod/mod.ts", line: 300, col: 0 },
+  declarationKind: "export",
+  jsDoc: { doc: "overload **one**" },
+  functionDef: {
+    params: [{
+      kind: "identifier",
+      name: "b",
+      optional: false,
+      tsType: { kind: "keyword", keyword: "string", repr: "string" },
+    }],
+    returnType: { kind: "keyword", keyword: "string", repr: "string" },
+    isAsync: false,
+    isGenerator: false,
+    typeParams: [],
+  },
+}, {
+  kind: "function",
+  name: "a",
+  location: { filename: "https://deno.land/x/mod/mod.ts", line: 300, col: 0 },
+  declarationKind: "export",
+  jsDoc: {
+    doc: "overload **two**",
+    tags: [
+      { kind: "param", name: "b", doc: "a param doc" },
+      { kind: "deprecated", doc: "don't use this!" },
+    ],
+  },
+  functionDef: {
+    params: [{
+      kind: "identifier",
+      name: "b",
+      optional: false,
+      tsType: { kind: "keyword", keyword: "number", repr: "number" },
+    }],
+    returnType: { kind: "keyword", keyword: "number", repr: "number" },
+    isAsync: false,
+    isGenerator: false,
+    typeParams: [],
+  },
+}];

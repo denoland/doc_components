@@ -14,7 +14,7 @@ import {
   type DocNodeVariable,
 } from "../deps.ts";
 import { CodeBlockEnum, DocBlockEnum } from "../enums.tsx";
-import { CodeBlockFn } from "../functions.tsx";
+import { CodeBlockFn, DocBlockFn } from "../functions.tsx";
 import { CodeBlockInterface, DocBlockInterface } from "../interfaces.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
@@ -122,6 +122,9 @@ export function ShowcaseDocBlocks(
   const interfaceNode = docNodes.find(({ kind }) =>
     kind === "interface"
   ) as DocNodeInterface;
+  const fnNodes = docNodes.filter(({ kind }) =>
+    kind === "function"
+  ) as DocNodeFunction[];
   return (
     <div
       class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
@@ -137,6 +140,8 @@ export function ShowcaseDocBlocks(
         DocBlockInterface
       </ComponentTitle>
       <DocBlockInterface url={url}>{interfaceNode}</DocBlockInterface>
+      <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
+      <DocBlockFn url={url}>{fnNodes}</DocBlockFn>
     </div>
   );
 }

@@ -2,8 +2,9 @@
 
 /** @jsx runtime.h */
 import { DocBlockClass } from "./classes.tsx";
-import { type DocNode } from "./deps.ts";
+import { type DocNode, type DocNodeFunction } from "./deps.ts";
 import { DocBlockEnum } from "./enums.tsx";
+import { DocBlockFn } from "./functions.tsx";
 import { DocBlockInterface } from "./interfaces.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "./services.ts";
@@ -34,6 +35,12 @@ export function DocBlock(
         );
         break;
     }
+  }
+  const fnNodes = docNodes.filter(({ kind }) =>
+    kind === "function"
+  ) as DocNodeFunction[];
+  if (fnNodes.length) {
+    elements.push(<DocBlockFn {...markdownContext}>{fnNodes}</DocBlockFn>);
   }
   return <div>{elements}</div>;
 }

@@ -50,7 +50,7 @@ export function DocBlockEnum(
   const items = [...members].sort(byName).map(({ name, init, jsDoc }) => {
     const id = nameToId("enum", `${enumName}_${name}`);
     return (
-      <div class={style("docItem")}>
+      <div class={style("docItem")} id={id}>
         <Anchor>{id}</Anchor>
         <DocEntry location={location}>
           {`${enumName}.${name}`}
