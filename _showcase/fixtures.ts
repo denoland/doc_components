@@ -1,5 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
+import { DocNodeNamespace } from "https://deno.land/x/deno_doc@v0.34.0/lib/types.d.ts";
 import {
   type DocNodeClass,
   type DocNodeEnum,
@@ -16,6 +17,10 @@ export const classNode: DocNodeClass = {
     col: 0,
   },
   declarationKind: "export",
+  jsDoc: {
+    doc: "a deprecated class",
+    tags: [{ kind: "deprecated", doc: "don't use this" }],
+  },
   classDef: {
     isAbstract: false,
     constructors: [{
@@ -424,3 +429,14 @@ export const fnNodes: DocNodeFunction[] = [{
     typeParams: [],
   },
 }];
+
+export const namespaceNode: DocNodeNamespace = {
+  kind: "namespace",
+  name: "things",
+  location: { filename: "https://deno.land/x/mod/mod.ts", line: 400, col: 0 },
+  declarationKind: "export",
+  jsDoc: { doc: "some namespace level _doc_" },
+  namespaceDef: {
+    elements: [classNode, enumNode, interfaceNode, ...fnNodes],
+  },
+};

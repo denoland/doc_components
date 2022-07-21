@@ -2,7 +2,13 @@
 
 /** @jsx runtime.h */
 import { type DocNode } from "../deps.ts";
-import { classNode, enumNode, fnNodes, interfaceNode } from "./fixtures.ts";
+import {
+  classNode,
+  enumNode,
+  fnNodes,
+  interfaceNode,
+  namespaceNode,
+} from "./fixtures.ts";
 import { runtime, setup, theme } from "../services.ts";
 import {
   Application,
@@ -102,7 +108,13 @@ router.get("/codeblocks", async (ctx, next) => {
 
 router.get("/docblocks", async (ctx, next) => {
   sheet.reset();
-  const docNodes: DocNode[] = [classNode, enumNode, interfaceNode, ...fnNodes];
+  const docNodes: DocNode[] = [
+    classNode,
+    enumNode,
+    interfaceNode,
+    ...fnNodes,
+    namespaceNode,
+  ];
   const body = renderSSR(
     <ShowcaseDocBlocks
       url="https://deno.land/x/oak@v10.6.0/mod.ts"

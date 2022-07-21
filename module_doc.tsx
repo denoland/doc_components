@@ -65,7 +65,7 @@ export function DocLink(
   return <a href={href}>{label}</a>;
 }
 
-function Section<Node extends DocNode>(
+export function Section<Node extends DocNode>(
   { children, title, icon, ...markdownContext }: {
     children: Child<DocNodeTupleArray<Node>>;
     title: string;

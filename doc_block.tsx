@@ -7,6 +7,7 @@ import { DocBlockEnum } from "./enums.tsx";
 import { DocBlockFn } from "./functions.tsx";
 import { DocBlockInterface } from "./interfaces.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
+import { DocBlockNamespace } from "./namespaces.tsx";
 import { runtime } from "./services.ts";
 import { type Child, take } from "./utils.ts";
 
@@ -32,6 +33,11 @@ export function DocBlock(
       case "interface":
         elements.push(
           <DocBlockInterface {...markdownContext}>{docNode}</DocBlockInterface>,
+        );
+        break;
+      case "namespace":
+        elements.push(
+          <DocBlockNamespace {...markdownContext}>{docNode}</DocBlockNamespace>,
         );
         break;
       case "typeAlias":

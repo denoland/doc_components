@@ -69,6 +69,8 @@ export function DocBlockFn(
       if (isDeprecated({ jsDoc })) {
         tags.push(<Tag color="gray">deprecated</Tag>);
       }
+      // TODO(@kitsonk) suppress defs with bodies when !isSingle when property
+      // available.
       return (
         <div class={style("docItem")} id={id}>
           <Anchor>{id}</Anchor>

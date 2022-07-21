@@ -10,6 +10,7 @@ import {
   type DocNodeEnum,
   type DocNodeFunction,
   type DocNodeInterface,
+  type DocNodeNamespace,
   type DocNodeTypeAlias,
   type DocNodeVariable,
 } from "../deps.ts";
@@ -26,6 +27,7 @@ import { CodeBlockTypeAlias } from "../type_aliases.tsx";
 import { Usage } from "../usage.tsx";
 import { type Child, take } from "../utils.ts";
 import { CodeBlockVariable } from "../variables.tsx";
+import { DocBlockNamespace } from "../namespaces.tsx";
 
 const app = css({
   ":global": {
@@ -125,6 +127,9 @@ export function ShowcaseDocBlocks(
   const fnNodes = docNodes.filter(({ kind }) =>
     kind === "function"
   ) as DocNodeFunction[];
+  const namespaceNode = docNodes.find(({ kind }) =>
+    kind === "namespace"
+  ) as DocNodeNamespace;
   return (
     <div
       class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
@@ -142,6 +147,8 @@ export function ShowcaseDocBlocks(
       <DocBlockInterface url={url}>{interfaceNode}</DocBlockInterface>
       <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
       <DocBlockFn url={url}>{fnNodes}</DocBlockFn>
+      <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>
+      <DocBlockNamespace url={url}>{namespaceNode}</DocBlockNamespace>
     </div>
   );
 }
