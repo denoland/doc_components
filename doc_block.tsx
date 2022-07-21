@@ -34,6 +34,9 @@ export function DocBlock(
           <DocBlockInterface {...markdownContext}>{docNode}</DocBlockInterface>,
         );
         break;
+      case "typeAlias":
+        elements.push();
+        break;
     }
   }
   const fnNodes = docNodes.filter(({ kind }) =>

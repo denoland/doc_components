@@ -10,7 +10,7 @@ import { Params } from "./params.tsx";
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
 import { TypeDef, TypeParams } from "./types.tsx";
-import { type Child, isDeprecated, take } from "./utils.ts";
+import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 
 export function CodeBlockFn({ children, ...props }: {
   children: Child<DocNodeFunction[]>;
@@ -50,6 +50,10 @@ export function DocBlockFn(
     & MarkdownContext,
 ) {
   const defs = take(children, true);
+  // when there is only one definition, it is assumed that the JSDoc will be
+  // displayed outside of the DocBlock. When there are multiple overloads
+  // though, any JSDoc will be associated with each overload.
+  const isSingle = defs.length === 1;
   const items = defs.map(
     (
       {
@@ -82,13 +86,16 @@ export function DocBlockFn(
             )}
             {tags}
           </DocEntry>
-          <JsDoc
-            tagKinds={["param", "return", "template", "deprecated"]}
-            tagsWithDoc
-            {...markdownContext}
-          >
-            {jsDoc}
-          </JsDoc>
+          {maybe(
+            !isSingle,
+            <JsDoc
+              tagKinds={["param", "return", "template", "deprecated"]}
+              tagsWithDoc
+              {...markdownContext}
+            >
+              {jsDoc}
+            </JsDoc>,
+          )}
         </div>
       );
     },
