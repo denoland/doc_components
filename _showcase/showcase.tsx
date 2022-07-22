@@ -23,7 +23,7 @@ import { ModuleIndexWithDoc, ModulePathIndex } from "../module_path_index.tsx";
 import { ModulePathIndexPanel } from "../module_path_index_panel.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../symbol_doc.tsx";
-import { CodeBlockTypeAlias } from "../type_aliases.tsx";
+import { CodeBlockTypeAlias, DocBlockTypeAlias } from "../type_aliases.tsx";
 import { Usage } from "../usage.tsx";
 import { type Child, take } from "../utils.ts";
 import { CodeBlockVariable } from "../variables.tsx";
@@ -127,6 +127,9 @@ export function ShowcaseDocBlocks(
   const fnNodes = docNodes.filter(({ kind }) =>
     kind === "function"
   ) as DocNodeFunction[];
+  const typeAliasNode = docNodes.find(({ kind }) =>
+    kind === "typeAlias"
+  ) as DocNodeTypeAlias;
   const namespaceNode = docNodes.find(({ kind }) =>
     kind === "namespace"
   ) as DocNodeNamespace;
@@ -147,6 +150,8 @@ export function ShowcaseDocBlocks(
       <DocBlockInterface url={url}>{interfaceNode}</DocBlockInterface>
       <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
       <DocBlockFn url={url}>{fnNodes}</DocBlockFn>
+      <ComponentTitle module="/type_alias.tsx">DocNodeTypeAlias</ComponentTitle>
+      <DocBlockTypeAlias url={url}>{typeAliasNode}</DocBlockTypeAlias>
       <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>
       <DocBlockNamespace url={url}>{namespaceNode}</DocBlockNamespace>
     </div>

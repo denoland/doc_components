@@ -588,7 +588,7 @@ function ConstructorsDoc(
   const items = defs.map(({ location, params, jsDoc, accessibility }, i) => {
     const id = nameToId("ctor", String(i));
     return (
-      <div class={style("docItem")}>
+      <div class={style("docItem")} id={id}>
         <Anchor>{id}</Anchor>
         <DocEntry location={location}>
           <span class={style("keyword")}>new{" "}</span>

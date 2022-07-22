@@ -9,6 +9,7 @@ import { DocBlockInterface } from "./interfaces.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { DocBlockNamespace } from "./namespaces.tsx";
 import { runtime } from "./services.ts";
+import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
 
 export function DocBlock(
@@ -41,7 +42,9 @@ export function DocBlock(
         );
         break;
       case "typeAlias":
-        elements.push();
+        elements.push(
+          <DocBlockTypeAlias {...markdownContext}>{docNode}</DocBlockTypeAlias>,
+        );
         break;
     }
   }

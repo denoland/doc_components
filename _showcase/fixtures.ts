@@ -6,6 +6,7 @@ import {
   type DocNodeEnum,
   type DocNodeFunction,
   type DocNodeInterface,
+  type DocNodeTypeAlias,
 } from "../deps.ts";
 
 export const classNode: DocNodeClass = {
@@ -430,6 +431,31 @@ export const fnNodes: DocNodeFunction[] = [{
   },
 }];
 
+export const typeAliasNode: DocNodeTypeAlias = {
+  kind: "typeAlias",
+  name: "StringRecord",
+  location: { filename: "https://deno.land/x/mod/mod.ts", line: 500, col: 0 },
+  declarationKind: "export",
+  jsDoc: {
+    doc: "some sort of type alias",
+    tags: [{ kind: "template", name: "V", doc: "the value of the record" }],
+  },
+  typeAliasDef: {
+    tsType: {
+      kind: "typeRef",
+      typeRef: {
+        typeName: "Record",
+        typeParams: [
+          { kind: "keyword", keyword: "string", repr: "string" },
+          { kind: "typeRef", typeRef: { typeName: "V" }, repr: "V" },
+        ],
+      },
+      repr: "",
+    },
+    typeParams: [{ name: "V" }],
+  },
+};
+
 export const namespaceNode: DocNodeNamespace = {
   kind: "namespace",
   name: "things",
@@ -437,6 +463,6 @@ export const namespaceNode: DocNodeNamespace = {
   declarationKind: "export",
   jsDoc: { doc: "some namespace level _doc_" },
   namespaceDef: {
-    elements: [classNode, enumNode, interfaceNode, ...fnNodes],
+    elements: [classNode, enumNode, interfaceNode, ...fnNodes, typeAliasNode],
   },
 };

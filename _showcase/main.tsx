@@ -8,6 +8,7 @@ import {
   fnNodes,
   interfaceNode,
   namespaceNode,
+  typeAliasNode,
 } from "./fixtures.ts";
 import { runtime, setup, theme } from "../services.ts";
 import {
@@ -113,6 +114,7 @@ router.get("/docblocks", async (ctx, next) => {
     enumNode,
     interfaceNode,
     ...fnNodes,
+    typeAliasNode,
     namespaceNode,
   ];
   const body = renderSSR(
