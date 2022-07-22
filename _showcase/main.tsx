@@ -1,6 +1,15 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+import { type DocNode } from "../deps.ts";
+import {
+  classNode,
+  enumNode,
+  fnNodes,
+  interfaceNode,
+  namespaceNode,
+  typeAliasNode,
+} from "./fixtures.ts";
 import { runtime, setup, theme } from "../services.ts";
 import {
   Application,
@@ -13,7 +22,11 @@ import {
   Router,
   virtualSheet,
 } from "./deps.ts";
-import { Showcase, ShowcaseCodeBlocks } from "./showcase.tsx";
+import {
+  Showcase,
+  ShowcaseCodeBlocks,
+  ShowcaseDocBlocks,
+} from "./showcase.tsx";
 import { getDocNodes, getModuleIndex } from "./util.ts";
 
 const sheet = virtualSheet();
@@ -76,6 +89,36 @@ router.get("/codeblocks", async (ctx, next) => {
   const docNodes = await getDocNodes("oak", "v10.6.0", "/mod.ts");
   const body = renderSSR(
     <ShowcaseCodeBlocks
+      url="https://deno.land/x/oak@v10.6.0/mod.ts"
+      docNodes={docNodes}
+    />,
+  );
+  const styles = getStyleTag(sheet);
+  ctx.response.body = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      ${styles}
+    </head>
+    <body>
+      ${body}
+    </body>
+  </html>`;
+  ctx.response.type = "html";
+  await next();
+});
+
+router.get("/docblocks", async (ctx, next) => {
+  sheet.reset();
+  const docNodes: DocNode[] = [
+    classNode,
+    enumNode,
+    interfaceNode,
+    ...fnNodes,
+    typeAliasNode,
+    namespaceNode,
+  ];
+  const body = renderSSR(
+    <ShowcaseDocBlocks
       url="https://deno.land/x/oak@v10.6.0/mod.ts"
       docNodes={docNodes}
     />,

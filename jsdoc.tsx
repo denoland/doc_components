@@ -45,7 +45,11 @@ export function JsDoc(
     return null;
   }
   const docTags = [];
-  for (const tag of jsDoc.tags ?? []) {
+  if (!Array.isArray(tagKinds)) {
+    tagKinds = [tagKinds];
+  }
+  const { tags = [] } = jsDoc;
+  for (const tag of tags) {
     if (
       (tagKinds.includes(tag.kind) || tag.kind === "example") &&
       !(tagsWithDoc && !hasDoc(tag))
@@ -56,6 +60,7 @@ export function JsDoc(
   return (
     <div>
       <Markdown {...markdownContext}>{jsDoc.doc}</Markdown>
+      <div class={style("indent")}>{docTags}</div>
     </div>
   );
 }
@@ -140,21 +145,4 @@ export function JsDocModule(
   const moduleDoc = take(children, true, true);
   const [[, { jsDoc }]] = moduleDoc;
   return <JsDoc {...markdownContext}>{jsDoc}</JsDoc>;
-}
-
-export function Tag(
-  { children, color = "gray" }: { children: unknown; color: string },
-) {
-  return (
-    <span>
-      {" "}
-      <span
-        class={tw`bg-${color}(100 dark:800) text-${color}(800 dark:100) ${
-          style("tag", true)
-        }`}
-      >
-        {children}
-      </span>
-    </span>
-  );
 }

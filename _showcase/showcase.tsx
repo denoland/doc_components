@@ -2,30 +2,32 @@
 
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
-import { CodeBlockClass } from "../classes.tsx";
+import { Tag } from "../doc_common.tsx";
+import { CodeBlockClass, DocBlockClass } from "../classes.tsx";
 import {
   type DocNode,
   type DocNodeClass,
   type DocNodeEnum,
   type DocNodeFunction,
   type DocNodeInterface,
+  type DocNodeNamespace,
   type DocNodeTypeAlias,
   type DocNodeVariable,
 } from "../deps.ts";
-import { CodeBlockEnum } from "../enums.tsx";
-import { CodeBlockFn } from "../functions.tsx";
-import { CodeBlockInterface } from "../interfaces.tsx";
-import { Tag } from "../jsdoc.tsx";
+import { CodeBlockEnum, DocBlockEnum } from "../enums.tsx";
+import { CodeBlockFn, DocBlockFn } from "../functions.tsx";
+import { CodeBlockInterface, DocBlockInterface } from "../interfaces.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
 import { ModuleIndexWithDoc, ModulePathIndex } from "../module_path_index.tsx";
 import { ModulePathIndexPanel } from "../module_path_index_panel.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../symbol_doc.tsx";
-import { CodeBlockTypeAlias } from "../type_aliases.tsx";
+import { CodeBlockTypeAlias, DocBlockTypeAlias } from "../type_aliases.tsx";
 import { Usage } from "../usage.tsx";
 import { type Child, take } from "../utils.ts";
 import { CodeBlockVariable } from "../variables.tsx";
+import { DocBlockNamespace } from "../namespaces.tsx";
 
 const app = css({
   ":global": {
@@ -62,8 +64,7 @@ export function Showcase(
   const itemNodes = docNodes.filter(({ name }) => name === symbol);
   return (
     <div
-      class={tw
-        `h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
+      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
     >
       <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
       <h2 class={tw`text-2xl py-2`}>Component Showcase</h2>
@@ -113,6 +114,50 @@ export function Showcase(
   );
 }
 
+export function ShowcaseDocBlocks(
+  { docNodes, url }: { docNodes: DocNode[]; url: string },
+) {
+  const classNode = docNodes.find(({ kind }) =>
+    kind === "class"
+  ) as DocNodeClass;
+  const enumNode = docNodes.find(({ kind }) => kind === "enum") as DocNodeEnum;
+  const interfaceNode = docNodes.find(({ kind }) =>
+    kind === "interface"
+  ) as DocNodeInterface;
+  const fnNodes = docNodes.filter(({ kind }) =>
+    kind === "function"
+  ) as DocNodeFunction[];
+  const typeAliasNode = docNodes.find(({ kind }) =>
+    kind === "typeAlias"
+  ) as DocNodeTypeAlias;
+  const namespaceNode = docNodes.find(({ kind }) =>
+    kind === "namespace"
+  ) as DocNodeNamespace;
+  return (
+    <div
+      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
+    >
+      <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
+      <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
+      <hr />
+      <ComponentTitle module="/classes.tsx">DocBlockClass</ComponentTitle>
+      <DocBlockClass url={url}>{classNode}</DocBlockClass>
+      <ComponentTitle module="/enum.tsx">DocBlockEnum</ComponentTitle>
+      <DocBlockEnum url={url}>{enumNode}</DocBlockEnum>
+      <ComponentTitle module="/interfaces.tsx">
+        DocBlockInterface
+      </ComponentTitle>
+      <DocBlockInterface url={url}>{interfaceNode}</DocBlockInterface>
+      <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
+      <DocBlockFn url={url}>{fnNodes}</DocBlockFn>
+      <ComponentTitle module="/type_alias.tsx">DocNodeTypeAlias</ComponentTitle>
+      <DocBlockTypeAlias url={url}>{typeAliasNode}</DocBlockTypeAlias>
+      <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>
+      <DocBlockNamespace url={url}>{namespaceNode}</DocBlockNamespace>
+    </div>
+  );
+}
+
 export function ShowcaseCodeBlocks(
   { docNodes, url }: { docNodes: DocNode[]; url: string },
 ) {
@@ -135,8 +180,7 @@ export function ShowcaseCodeBlocks(
   ) as DocNodeFunction[];
   return (
     <div
-      class={tw
-        `h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
+      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
     >
       <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
       <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
