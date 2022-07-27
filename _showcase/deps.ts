@@ -8,9 +8,9 @@ export {
   Application,
   HttpError,
   Router,
-} from "https://deno.land/x/oak@v10.5.1/mod.ts";
+} from "https://deno.land/x/oak@v10.6.0/mod.ts";
 
-export * as colors from "https://deno.land/std@0.138.0/fmt/colors.ts";
+export * as colors from "https://deno.land/std@0.149.0/fmt/colors.ts";
 
 export { apply, tw } from "twind";
 export { css } from "twind/css";

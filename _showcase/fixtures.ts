@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { DocNodeNamespace } from "https://deno.land/x/deno_doc@v0.34.0/lib/types.d.ts";
+import { DocNodeNamespace } from "https://deno.land/x/deno_doc@0.39.0/lib/types.d.ts";
 import {
   type DocNodeClass,
   type DocNodeEnum,
@@ -261,12 +261,22 @@ export const enumNode: DocNodeEnum = {
         repr: "string",
       },
       jsDoc: { doc: "Enum member with _JSDoc_." },
+      location: {
+        filename: "https://deno.land/x/mod/mod.ts",
+        line: 101,
+        col: 2,
+      },
     }, {
       name: "Array",
       init: {
         kind: "literal",
         literal: { kind: "string", string: "array" },
         repr: "array",
+      },
+      location: {
+        filename: "https://deno.land/x/mod/mod.ts",
+        line: 102,
+        col: 2,
       },
     }],
   },
