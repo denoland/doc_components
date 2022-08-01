@@ -43,6 +43,11 @@ export interface Configuration {
    * Implementors should return a string which will be used as the `href` value
    * for a link. */
   resolveHref?: (url: string, symbol?: string) => string;
+  /** Called when doc components are trying to generate a link to a source file.
+   *
+   * Implementors should return a string which which will be used as the `href`
+   * value for a link to the source code view of a file. If no source file can
+   * be resolved, `undefined` should be returned. */
   resolveSourceHref?: (url: string, line?: number) => string;
   /** Called when markdown needs to be rendered. */
   markdownToHTML?: (
@@ -174,7 +179,7 @@ export const services = {
     return runtimeConfig.lookupHref;
   },
 
-  get resolveSourceHref(): (url: string, line?: number) => string {
+  get resolveSourceHref(): (url: string, line?: number) => string | undefined {
     return runtimeConfig.resolveSourceHref;
   },
 

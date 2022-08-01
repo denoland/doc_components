@@ -11,6 +11,7 @@ import {
   type DocNodeNamespace,
   type DocNodeTypeAlias,
   type DocNodeVariable,
+  type JsDoc,
 } from "./deps.ts";
 
 /** Some JSX libraries (notably nano-jsx) have strange handling of the
@@ -113,8 +114,8 @@ export function isAbstract(node: DocNode) {
   return false;
 }
 
-export function isDeprecated(node: DocNode) {
-  if (node.jsDoc && node.jsDoc.tags) {
+export function isDeprecated(node?: { jsDoc?: JsDoc }) {
+  if (node && node.jsDoc && node.jsDoc.tags) {
     return node.jsDoc.tags.some(({ kind }) => kind === "deprecated");
   }
 }

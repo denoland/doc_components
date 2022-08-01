@@ -9,13 +9,23 @@ import {
   type InterfaceIndexSignatureDef,
   type InterfaceMethodDef,
   type InterfacePropertyDef,
+  type Location,
   type TsTypeDef,
 } from "./deps.ts";
+import {
+  Anchor,
+  DocEntry,
+  nameToId,
+  SectionTitle,
+  Tag,
+} from "./doc_common.tsx";
+import { JsDoc } from "./jsdoc.tsx";
+import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
-import { TypeDef, TypeParams } from "./types.tsx";
-import { type Child, maybe, take } from "./utils.ts";
+import { TypeDef, TypeParams, TypeParamsDoc } from "./types.tsx";
+import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 
 type IndexSignatureDef =
   | ClassIndexSignatureDef
@@ -49,6 +59,53 @@ function CallSignatures(
   return <div class={style("indent")}>{items}</div>;
 }
 
+function CallSignaturesDoc(
+  { children, ...markdownContext }: {
+    children: Child<InterfaceCallSignatureDef[]>;
+  } & MarkdownContext,
+) {
+  const defs = take(children, true);
+  if (!defs.length) {
+    return null;
+  }
+  const items = defs.map(
+    ({ typeParams, params, tsType, jsDoc, location }, i) => {
+      const id = nameToId("call_sig", String(i));
+      const tags = [];
+      if (isDeprecated({ jsDoc })) {
+        tags.push(<Tag color="gray">deprecated</Tag>);
+      }
+      return (
+        <div class={style("docItem")} id={id}>
+          <Anchor>{id}</Anchor>
+          <DocEntry location={location}>
+            <TypeParams {...markdownContext}>{typeParams}</TypeParams>(<Params
+              inline
+              {...markdownContext}
+            >
+              {params}
+            </Params>){tsType && (
+              <>
+                : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+              </>
+            )}
+            {tags}
+          </DocEntry>
+          <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
+            {jsDoc}
+          </JsDoc>
+        </div>
+      );
+    },
+  );
+  return (
+    <>
+      <SectionTitle>Call Signatures</SectionTitle>
+      {items}
+    </>
+  );
+}
+
 export function CodeBlockInterface({ children, ...props }: {
   children: Child<DocNodeInterface>;
   url: string;
@@ -74,6 +131,40 @@ export function CodeBlockInterface({ children, ...props }: {
       <CallSignatures code {...props}>{callSignatures}</CallSignatures>
       <Properties code {...props}>{properties}</Properties>
       <Methods code {...props}>{methods}</Methods>&#125;
+    </div>
+  );
+}
+
+export function DocBlockInterface(
+  { children, ...markdownContext }:
+    & { children: Child<DocNodeInterface> }
+    & MarkdownContext,
+) {
+  const {
+    location,
+    interfaceDef: {
+      typeParams,
+      extends: exts,
+      indexSignatures,
+      callSignatures,
+      properties,
+      methods,
+    },
+  } = take(children);
+  return (
+    <div class={style("docBlockItems")}>
+      <TypeParamsDoc location={location} {...markdownContext}>
+        {typeParams}
+      </TypeParamsDoc>
+      <ExtendsDoc location={location} {...markdownContext}>{exts}</ExtendsDoc>
+      <IndexSignaturesDoc {...markdownContext}>
+        {indexSignatures}
+      </IndexSignaturesDoc>
+      <CallSignaturesDoc {...markdownContext}>
+        {callSignatures}
+      </CallSignaturesDoc>
+      <PropertiesDoc {...markdownContext}>{properties}</PropertiesDoc>
+      <MethodsDoc {...markdownContext}>{methods}</MethodsDoc>
     </div>
   );
 }
@@ -107,7 +198,36 @@ function Extends(
   );
 }
 
-function IndexSignatures(
+function ExtendsDoc(
+  { children, location, ...markdownContext }: {
+    children: Child<TsTypeDef[]>;
+    location: Location;
+  } & MarkdownContext,
+) {
+  const defs = take(children, true);
+  if (!defs.length) {
+    return null;
+  }
+  const items = defs.map((def) => {
+    const id = nameToId("extends", def.repr);
+    return (
+      <div class={style("docItem")} id={id}>
+        <Anchor>{id}</Anchor>
+        <DocEntry location={location}>
+          <TypeDef {...markdownContext}>{def}</TypeDef>
+        </DocEntry>
+      </div>
+    );
+  });
+  return (
+    <>
+      <SectionTitle>Extends</SectionTitle>
+      {items}
+    </>
+  );
+}
+
+export function IndexSignatures(
   { children, ...props }: {
     children: Child<IndexSignatureDef[]>;
     url: string;
@@ -137,6 +257,39 @@ function IndexSignatures(
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
+}
+
+export function IndexSignaturesDoc(
+  { children, ...markdownContext }:
+    & { children: Child<IndexSignatureDef[]> }
+    & MarkdownContext,
+) {
+  const defs = take(children, true);
+  if (!defs.length) {
+    return null;
+  }
+  const items = defs.map(({ readonly, params, tsType }, i) => {
+    const id = nameToId("index_sig", String(i));
+    return (
+      <div class={style("docItem")} id={id}>
+        <Anchor>{id}</Anchor>
+        {maybe(
+          readonly,
+          <span class={style("keyword")}>readonly{" "}</span>,
+        )}[<Params {...markdownContext}>{params}</Params>]{tsType && (
+          <span>
+            : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+          </span>
+        )}
+      </div>
+    );
+  });
+  return (
+    <>
+      <SectionTitle>Index Signatures</SectionTitle>
+      {items}
+    </>
+  );
 }
 
 function Methods(
@@ -182,6 +335,81 @@ function Methods(
   return <div class={style("indent")}>{items}</div>;
 }
 
+function MethodsDoc(
+  { children, ...markdownContext }:
+    & { children: Child<InterfaceMethodDef[]> }
+    & MarkdownContext,
+) {
+  const defs = take(children, true);
+  if (!defs.length) {
+    return null;
+  }
+  const items = defs.map(
+    (
+      {
+        name,
+        kind,
+        location,
+        jsDoc,
+        computed,
+        optional,
+        params,
+        returnType,
+        typeParams,
+      },
+      i,
+    ) => {
+      const id = nameToId("method", `${name}_${i}`);
+      const tags = [];
+      if (kind !== "method") {
+        tags.push(<Tag color="purple">{kind}</Tag>);
+      }
+      if (optional) {
+        tags.push(<Tag color="cyan">optional</Tag>);
+      }
+      if (isDeprecated({ jsDoc })) {
+        tags.push(<Tag color="gray">deprecated</Tag>);
+      }
+      return (
+        <div class={style("docItem")} id={id}>
+          <Anchor>{id}</Anchor>
+          <DocEntry location={location}>
+            {name === "new"
+              ? <span class={style("keyword")}>new</span>
+              : computed
+              ? `[${name}]`
+              : name}
+            <TypeParams {...markdownContext}>{typeParams}</TypeParams>(<Params
+              inline
+              {...markdownContext}
+            >
+              {params}
+            </Params>){returnType && (
+              <>
+                : <TypeDef inline {...markdownContext}>{returnType}</TypeDef>
+              </>
+            )}
+            {tags}
+          </DocEntry>
+          <JsDoc
+            tagKinds={["param", "return", "template", "deprecated"]}
+            tagsWithDoc
+            {...markdownContext}
+          >
+            {jsDoc}
+          </JsDoc>
+        </div>
+      );
+    },
+  );
+  return (
+    <>
+      <SectionTitle>Methods</SectionTitle>
+      {items}
+    </>
+  );
+}
+
 function Properties({ children, ...props }: {
   children: Child<InterfacePropertyDef[]>;
   url: string;
@@ -209,4 +437,63 @@ function Properties({ children, ...props }: {
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
+}
+
+function PropertiesDoc(
+  { children, ...markdownContext }:
+    & { children: Child<InterfacePropertyDef[]> }
+    & MarkdownContext,
+) {
+  const defs = take(children, true);
+  if (!defs.length) {
+    return null;
+  }
+  const items = defs.map(
+    (
+      {
+        name,
+        location,
+        jsDoc,
+        readonly,
+        computed,
+        optional,
+        tsType,
+      },
+    ) => {
+      const id = nameToId("prop", name);
+      const tags = [];
+      if (readonly) {
+        tags.push(<Tag color="purple">readonly</Tag>);
+      }
+      if (optional) {
+        tags.push(<Tag color="cyan">optional</Tag>);
+      }
+      if (isDeprecated({ jsDoc })) {
+        tags.push(<Tag color="gray">deprecated</Tag>);
+      }
+      return (
+        <div class={style("docItem")} id={id}>
+          <Anchor>{id}</Anchor>
+          <DocEntry location={location}>
+            {maybe(computed, `[${name}]`, name)}
+            {tsType && (
+              <>
+                : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+              </>
+            )}
+            {tags}
+          </DocEntry>
+          <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
+            {jsDoc}
+          </JsDoc>
+        </div>
+      );
+    },
+  );
+  return (
+    <>
+      <SectionTitle>Properties</SectionTitle>
+      {items}
+    </>
+  );
 }
