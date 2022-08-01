@@ -2,29 +2,44 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { tw } from "./deps.ts";
+import { DocNode, DocNodeKind, JsDoc, tw } from "./deps.ts";
 import { getIndex } from "./doc.ts";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "./icons.tsx";
-import { ModuleIndexWithDoc } from "./module_path_index.tsx";
+import { docNodeKindMap, docNodeKindOrder } from "./symbol_kind.tsx";
 
-export function findItems(
-  path: string,
-  index: Record<string, string[]>,
-): [folders: string[], modules: string[]] {
-  let modules: string[] = [];
-  const folders: string[] = [];
-  for (const [key, value] of Object.entries(index)) {
-    if (key === path) {
-      modules = value;
-    } else if (
-      key.startsWith(path) &&
-      !key.slice(path === "/" ? path.length : path.length + 1).includes("/") &&
-      value.length
-    ) {
-      folders.push(key);
+interface DocPageDirItem {
+  kind: "dir";
+  path: string;
+}
+
+interface SymbolItem {
+  name: string;
+  kind: DocNodeKind;
+  jsDoc?: JsDoc;
+}
+
+interface DocPageModuleItem {
+  kind: "module";
+  path: string;
+  items: SymbolItem[];
+}
+
+export type DocPageNavItem = DocPageModuleItem | DocPageDirItem;
+
+export function splitItems(
+  rootPath: string,
+  items: DocPageNavItem[],
+): [folders: DocPageDirItem[], modules: DocPageModuleItem[]] {
+  const folders: DocPageDirItem[] = [];
+  const modules: DocPageModuleItem[] = [];
+  for (const item of items) {
+    if (item.kind === "dir") {
+      folders.push(item);
+    } else {
+      modules.push(item);
     }
   }
   return [folders, modules];
@@ -40,78 +55,127 @@ function Folder({ children, base, parent }: {
   const href = services.resolveHref(url);
   const label = `${folderName.slice(parent === "/" ? 1 : parent.length + 1)}/`;
   return (
-    <a class={style("modulePathIndexPanelFolder")} href={href}>
-      <Icons.Dir class={tw`m-2`} />
+    <a class={style("modulePathIndexPanelEntry")} href={href}>
+      <Icons.Dir />
       {label}
     </a>
   );
 }
 
-function Module({ children, base, parent, current, isIndex }: {
-  children: Child<string>;
-  base: string;
-  parent: string;
-  current?: string;
-  isIndex?: boolean;
-}) {
-  const modulePath = take(children);
-  const url = `${base}${modulePath}`;
+function Module(
+  { children, base, parent, current, currentSymbol, isIndex }: {
+    children: Child<DocPageModuleItem>;
+    base: string;
+    parent: string;
+    current?: string;
+    currentSymbol?: string;
+    isIndex?: boolean;
+  },
+) {
+  const { path, items } = take(children);
+  const url = `${base}${path}`;
   const href = services.resolveHref(url);
-  const label = modulePath.slice(parent === "/" ? 1 : parent.length + 1);
-  const active = current ? current == modulePath : isIndex;
+  const label = path.slice(parent === "/" ? 1 : parent.length + 1);
+  const active = current ? current == path : isIndex;
+  const open = active && currentSymbol;
   return (
-    <a
-      class={style("modulePathIndexPanelModule") +
-        (active ? " " + style("modulePathIndexPanelModuleActive") : "")}
-      href={href}
-    >
-      {/*TODO: <Icons.File />*/}
-      {label}
-      {isIndex && (
-        <span class={style("modulePathIndexPanelModuleIndex")}>
-          (default module)
+    <div>
+      <a
+        class={style("modulePathIndexPanelEntry") +
+          ((active && !currentSymbol)
+            ? " " + style("modulePathIndexPanelActive")
+            : "")}
+        href={href}
+      >
+        <Icons.TriangleLeft class={open ? tw`rotate-90` : undefined} />
+        <span>
+          {label}
+          {isIndex && (
+            <span class={style("modulePathIndexPanelModuleIndex")}>
+              {" "}(default module)
+            </span>
+          )}
         </span>
+      </a>
+
+      {open && (
+        <div>
+          {items.filter((symbol) =>
+            symbol.kind !== "import" && symbol.kind !== "moduleDoc"
+          ).sort((a, b) =>
+            (docNodeKindOrder.indexOf(a.kind) -
+              docNodeKindOrder.indexOf(b.kind)) || a.name.localeCompare(b.name)
+          ).map((symbol) => {
+            const Icon = docNodeKindMap[symbol.kind];
+            return (
+              <a
+                class={style("modulePathIndexPanelSymbol") +
+                  ((active && currentSymbol === symbol.name)
+                    ? " " + style("modulePathIndexPanelActive")
+                    : "")}
+                href={services.resolveHref(url, symbol.name)}
+              >
+                <Icon />
+                {symbol.name}
+              </a>
+            );
+          })}
+        </div>
       )}
-    </a>
+    </div>
   );
 }
 
 export function ModulePathIndexPanel(
-  { children, path = "/", base, current }: {
-    children: Child<ModuleIndexWithDoc>;
+  { children, path = "/", base, current, currentSymbol }: {
+    children: Child<DocPageNavItem[]>;
     base: string;
-    path?: string;
-    current: string;
+    path: string;
+    current?: string;
+    currentSymbol?: string;
   },
 ) {
-  const { index } = take(children);
-  const [folders, modules] = findItems(path, index);
-  const items = folders.sort().map((folder) => (
+  const items = take(children, true);
+  const [folders, modules] = splitItems(path, items);
+  const entries = folders.sort().map((folder) => (
     <Folder base={base} parent={path}>
-      {folder}
+      {folder.path}
     </Folder>
   ));
 
-  const moduleIndex = getIndex(modules);
+  const moduleIndex = getIndex(modules.map((module) => module.path));
   if (moduleIndex) {
     if (current === path) {
       current = moduleIndex;
     }
-    items.push(
-      <Module base={base} parent={path} current={current} isIndex>
-        {moduleIndex}
+    entries.push(
+      <Module
+        base={base}
+        parent={path}
+        current={current}
+        currentSymbol={currentSymbol}
+        isIndex
+      >
+        {modules.find((module) => module.path === moduleIndex)!}
       </Module>,
     );
   }
   modules.sort();
   for (const module of modules) {
-    if (module !== moduleIndex) {
-      items.push(
-        <Module base={base} parent={path} current={current}>{module}</Module>,
+    if (module.path !== moduleIndex) {
+      entries.push(
+        <Module
+          base={base}
+          parent={path}
+          current={current}
+          currentSymbol={currentSymbol}
+        >
+          {module}
+        </Module>,
       );
     }
   }
-  if (items.length === 0) {
+  if (entries.length === 0) {
     return <></>;
   }
   return (
@@ -126,7 +190,7 @@ export function ModulePathIndexPanel(
       <div class={tw`mt-4`}>
       </div>*/
       }
-      {items}
+      {entries}
     </div>
   );
 }
