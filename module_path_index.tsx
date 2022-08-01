@@ -81,7 +81,10 @@ export function ModulePathIndex(
   },
 ) {
   const items = take(children, true);
-  items.sort((a, b) => (order.indexOf(a.kind) - order.indexOf(b.kind)) || a.path.localeCompare(b.path));
+  items.sort((a, b) =>
+    (order.indexOf(a.kind) - order.indexOf(b.kind)) ||
+    a.path.localeCompare(b.path)
+  );
   const entries = [];
   for (const item of items) {
     if (item.ignored) {
