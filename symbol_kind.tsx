@@ -29,6 +29,8 @@ export const docNodeKindMap = {
   "import": () => null,
 } as const;
 
+export const docNodeKindOrder = Object.keys(colors);
+
 export function Namespace() {
   const [text, bg] = colors["namespace"];
   return (
@@ -41,7 +43,10 @@ export function Namespace() {
 export function Class() {
   const [text, bg] = colors["class"];
   return (
-    <div class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
+    <div
+      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      title="Class"
+    >
       c
     </div>
   );
@@ -50,7 +55,10 @@ export function Class() {
 export function Enum() {
   const [text, bg] = colors["enum"];
   return (
-    <div class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
+    <div
+      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      title="Enum"
+    >
       E
     </div>
   );
@@ -59,7 +67,10 @@ export function Enum() {
 export function Variable() {
   const [text, bg] = colors["variable"];
   return (
-    <div class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
+    <div
+      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      title="Variable"
+    >
       v
     </div>
   );
@@ -68,7 +79,10 @@ export function Variable() {
 export function Function() {
   const [text, bg] = colors["function"];
   return (
-    <div class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
+    <div
+      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      title="Function"
+    >
       f
     </div>
   );
@@ -77,7 +91,10 @@ export function Function() {
 export function Interface() {
   const [text, bg] = colors["interface"];
   return (
-    <div class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
+    <div
+      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      title="Interface"
+    >
       I
     </div>
   );
@@ -86,7 +103,10 @@ export function Interface() {
 export function TypeAlias() {
   const [text, bg] = colors["typeAlias"];
   return (
-    <div class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
+    <div
+      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      title="Type Alias"
+    >
       T
     </div>
   );

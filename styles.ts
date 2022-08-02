@@ -127,9 +127,11 @@ const styles = {
     apply`block lg:(table-cell pl-0 pt-2.5 mt-0) pl-11 pr-[1.375rem] pb-2.5 -mt-2 text-[#9CA0AA]`,
   modulePathIndexSymbolCell: apply`block lg:table-cell pl-5 pr-2 py-1`,
   modulePathIndexPanel: apply`hidden lg:block w-72 flex-shrink-0`,
-  modulePathIndexPanelFolder: apply`flex gap-1 p-2 rounded-lg w-full`,
-  modulePathIndexPanelModule: apply`flex gap-1 ml-2.5 p-2 rounded-lg w-full`,
-  modulePathIndexPanelModuleActive: apply`bg-gray-100 font-bold`,
+  modulePathIndexPanelActive: apply`bg-gray-100 font-bold`,
+  modulePathIndexPanelEntry:
+    apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 children:flex-none`,
+  modulePathIndexPanelSymbol:
+    apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 children:flex-none`,
   modulePathIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
   none,
   numberLiteral: none,
@@ -141,7 +143,7 @@ const styles = {
   section: apply`text-sm font-semibold text-[#9CA0AA] py-1`,
   symbolDocHeader: apply`flex justify-between items-center py-3.5`,
   symbolKind:
-    apply`rounded-full w-6 h-6 mr-2 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0`,
+    apply`rounded-full w-6 h-6 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0`,
   sourceButton: apply`rounded-md border border-[#DDDDDD] p-2`,
   sourceLink:
     apply`pl-2 break-words text-gray-600 hover:text-gray-800 dark:(text-gray-400 hover:text-gray-200) hover:underline`,
@@ -152,7 +154,7 @@ const styles = {
   symbolFunction: apply`text-cyan(800 dark:400) font-bold hover:underline`,
   symbolInterface: apply`text-cyan(900 dark:300) font-bold hover:underline`,
   symbolListCellSymbol:
-    apply`block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(min-w-[13rem] flex items-center)`,
+    apply`block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(space-x-2 min-w-[13rem] flex items-center)`,
   symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-[#9CA0AA]`,
   symbolListRow: apply`block lg:table-row`,
   symbolListTable: apply`block lg:table`,

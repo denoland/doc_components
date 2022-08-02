@@ -68,3 +68,18 @@ export function Index() {
     </svg>
   );
 }
+
+export function TriangleLeft(props: { class?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      {...props}
+    >
+      <path d="M2.5 10L7.5 5L2.5 0V10Z" fill="#6C6E78" />
+    </svg>
+  );
+}

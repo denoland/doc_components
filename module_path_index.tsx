@@ -2,60 +2,37 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type JsDoc } from "./deps.ts";
-import { getIndex } from "./doc.ts";
 import { MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "./icons.tsx";
 
-type DocMap = Record<string, JsDoc>;
-
-export interface ModuleIndexWithDoc {
-  index: Record<string, string[]>;
-  docs: DocMap;
+export interface IndexItem {
+  kind: "dir" | "module" | "file";
+  path: string;
+  size: number;
+  ignored: boolean;
+  doc?: string;
 }
 
-function findItems(
-  path: string,
-  index: Record<string, string[]>,
-): [folders: [string, string | undefined][], modules: string[]] {
-  let modules: string[] = [];
-  const folders: [string, string | undefined][] = [];
-  for (const [key, value] of Object.entries(index)) {
-    if (key === path) {
-      modules = value;
-    } else if (
-      key.startsWith(path) &&
-      !key.slice(path === "/" ? path.length : path.length + 1).includes("/") &&
-      value.length
-    ) {
-      folders.push([key, getIndex(value)]);
-    }
-  }
-  return [folders, modules];
-}
-
-function getSummary(jsDoc: JsDoc | undefined): string | undefined {
-  if (jsDoc?.doc) {
-    const [summary] = jsDoc.doc.split("\n\n");
+function getSummary(doc: string | undefined): string | undefined {
+  if (doc) {
+    const [summary] = doc.split("\n\n");
     return summary;
   }
 }
 
-function Folder({ children, base, parent, indexModule, docs }: {
-  children: Child<string>;
+function Folder({ children, base, parent }: {
+  children: Child<IndexItem>;
   base: string;
   parent: string;
-  indexModule: string | undefined;
-  docs: DocMap;
 }) {
-  const folderName = take(children);
-  const url = `${base}${folderName}`;
+  const item = take(children);
+  const url = `${base}${item.path}`;
   const href = services.resolveHref(url);
-  const summary = getSummary(indexModule ? docs[indexModule] : undefined);
-  const label = `${folderName.slice(parent === "/" ? 1 : parent.length + 1)}/`;
+  const summary = getSummary(item.doc);
+  const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
   return (
     <tr class={style("modulePathIndexRow")}>
       <td class={style("modulePathIndexLinkCell")}>
@@ -69,17 +46,16 @@ function Folder({ children, base, parent, indexModule, docs }: {
   );
 }
 
-function Module({ children, base, parent, docs }: {
-  children: Child<string>;
+function Module({ children, base, parent }: {
+  children: Child<IndexItem>;
   base: string;
   parent: string;
-  docs: DocMap;
 }) {
-  const modulePath = take(children);
-  const url = `${base}${modulePath}`;
+  const item = take(children);
+  const url = `${base}${item.path}`;
   const href = services.resolveHref(url);
-  const summary = getSummary(docs[modulePath]);
-  const label = modulePath.slice(parent === "/" ? 1 : parent.length + 1);
+  const summary = getSummary(item.doc);
+  const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
   return (
     <tr class={style("modulePathIndexRow")}>
       <td class={style("modulePathIndexLinkCell")}>
@@ -93,43 +69,35 @@ function Module({ children, base, parent, docs }: {
   );
 }
 
+const order = ["dir", "module", "file"] as const;
+
 export function ModulePathIndex(
   { children, path = "/", base, skipMods = false, sourceUrl }: {
-    children: Child<ModuleIndexWithDoc>;
+    children: Child<IndexItem[]>;
     base: string;
     skipMods?: boolean;
     path?: string;
     sourceUrl: string;
   },
 ) {
-  const { index, docs } = take(children);
-  const [folders, modules] = findItems(path, index);
-  const items = [];
-  folders.sort();
-  for (const [folder, indexModule] of folders) {
-    items.push(
-      <Folder base={base} docs={docs} parent={path} indexModule={indexModule}>
-        {folder}
-      </Folder>,
-    );
-  }
-  if (!skipMods) {
-    const moduleIndex = getIndex(modules);
-    if (moduleIndex) {
-      items.push(
-        <Module base={base} docs={docs} parent={path}>{moduleIndex}</Module>,
-      );
+  const items = take(children, true);
+  items.sort((a, b) =>
+    (order.indexOf(a.kind) - order.indexOf(b.kind)) ||
+    a.path.localeCompare(b.path)
+  );
+  const entries = [];
+  for (const item of items) {
+    if (item.ignored) {
+      continue;
     }
-    modules.sort();
-    for (const module of modules) {
-      if (module !== moduleIndex) {
-        items.push(
-          <Module base={base} docs={docs} parent={path}>{module}</Module>,
-        );
-      }
+    if (item.kind === "dir") {
+      entries.push(<Folder base={base} parent={path}>{item}</Folder>);
+    } else if (item.kind === "module" && !skipMods) {
+      entries.push(<Module base={base} parent={path}>{item}</Module>);
     }
   }
-  if (items.length === 0) {
+
+  if (entries.length === 0) {
     return <></>;
   }
   return (
@@ -146,7 +114,7 @@ export function ModulePathIndex(
           <Icons.SourceFile />
         </a>
       </div>
-      <table class={style("modulePathIndexTable")}>{items}</table>
+      <table class={style("modulePathIndexTable")}>{entries}</table>
     </div>
   );
 }
