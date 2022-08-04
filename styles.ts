@@ -130,9 +130,11 @@ const styles = {
   modulePathIndexPanelActive: apply`bg-gray-100 font-bold`,
   modulePathIndexPanelEntry:
     apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 children:flex-none`,
+  modulePathIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
   modulePathIndexPanelSymbol:
     apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 children:flex-none`,
-  modulePathIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
+  modulePathIndexPanelToggle:
+    apply`hidden checked:sibling:children:first-child:rotate-90 not-checked:siblings:last-child:hidden`,
   none,
   numberLiteral: none,
   panel: css({
