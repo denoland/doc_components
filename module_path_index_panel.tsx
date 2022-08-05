@@ -53,7 +53,7 @@ function Folder({ children, base, parent }: {
   const folderName = take(children);
   const url = `${base}${folderName}`;
   const href = services.resolveHref(url);
-  const label = `${folderName.slice(parent === "/" ? 1 : parent.length + 1)}/`;
+  const label = folderName.slice(parent === "/" ? 1 : parent.length + 1);
   return (
     <a class={style("modulePathIndexPanelEntry")} href={href}>
       <Icons.Dir />
@@ -86,25 +86,23 @@ function Module(
         autoComplete="off"
         checked={!!(active && currentSymbol)}
       />
-      <a
+      <label
+        htmlFor={path}
         class={style("modulePathIndexPanelEntry") +
           ((active && !currentSymbol)
             ? " " + style("modulePathIndexPanelActive")
             : "")}
-        href={href}
       >
-        <label htmlFor={path}>
-          <Icons.TriangleLeft />
-        </label>
-        <span>
+        <Icons.TriangleLeft />
+        <a href={href}>
           {label}
           {isIndex && (
             <span class={style("modulePathIndexPanelModuleIndex")}>
               {" "}(default module)
             </span>
           )}
-        </span>
-      </a>
+        </a>
+      </label>
 
       <div>
         {items.filter((symbol) =>
