@@ -85,7 +85,7 @@ export function Tag(
     <span>
       {" "}
       <span
-        class={tw`bg-${color}(100 dark:800) text-${color}(800 dark:100) ${
+        class={tw`bg-${color}(100 dark:800) whitespace-nowrap text-${color}(800 dark:100) ${
           style("tag", true)
         }`}
       >
