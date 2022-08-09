@@ -129,10 +129,10 @@ const styles = {
   modulePathIndexPanel: apply`hidden lg:block w-72 flex-shrink-0`,
   modulePathIndexPanelActive: apply`bg-gray-100 font-bold`,
   modulePathIndexPanelEntry:
-    apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:text-gray-500`,
+    apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:text-gray-500 children:last-child:(truncate flex-shrink-1)`,
   modulePathIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
   modulePathIndexPanelSymbol:
-    apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 children:flex-none`,
+    apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 children:(flex-none last-child:(truncate flex-shrink-1))`,
   modulePathIndexPanelToggle:
     apply`hidden checked:sibling:children:first-child:rotate-90 not-checked:siblings:last-child:hidden`,
   none,

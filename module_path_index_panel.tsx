@@ -55,7 +55,7 @@ function Folder({ children, base, parent }: {
   const href = services.resolveHref(url);
   const label = folderName.slice(parent === "/" ? 1 : parent.length + 1);
   return (
-    <a class={style("modulePathIndexPanelEntry")} href={href}>
+    <a class={style("modulePathIndexPanelEntry")} href={href} title={label}>
       <Icons.Dir />
       {label}
     </a>
@@ -92,6 +92,7 @@ function Module(
           ((active && !currentSymbol)
             ? " " + style("modulePathIndexPanelActive")
             : "")}
+        title={label}
       >
         <Icons.TriangleLeft />
         <a href={href}>
@@ -119,9 +120,10 @@ function Module(
                   ? " " + style("modulePathIndexPanelActive")
                   : "")}
               href={services.resolveHref(url, symbol.name)}
+              title={symbol.name}
             >
               <Icon />
-              {symbol.name}
+              <span>{symbol.name}</span>
             </a>
           );
         })}
