@@ -73,11 +73,12 @@ export function TriangleRight(
   props: {
     class?: string;
     tabindex?: number;
-    onKeyDown?: any;
+    onKeyDown?: string;
     "aria-label"?: string;
   },
 ) {
   return (
+    // @ts-ignore onKeyDown does support strings
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="10"
