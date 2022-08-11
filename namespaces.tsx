@@ -17,7 +17,7 @@ export function DocBlockNamespace(
 ) {
   const { name, namespaceDef: { elements } } = take(children);
   const namespace = parentNamespace ? `${parentNamespace}.${name}` : name;
-  const collection = asCollection(elements, namespace);
+  const collection = asCollection(elements);
   const context = { namespace, ...markdownContext };
   return (
     <div class={style("docBlockItems")}>

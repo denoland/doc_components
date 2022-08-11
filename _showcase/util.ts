@@ -1,7 +1,9 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import { type DocNode } from "../deps.ts";
-import { type ModuleIndexWithDoc } from "../module_path_index.tsx";
+
+// deno-lint-ignore no-explicit-any
+type ModuleIndexWithDoc = any;
 
 export async function getDocNodes(
   module: string,

@@ -19,7 +19,7 @@ import { CodeBlockFn, DocBlockFn } from "../functions.tsx";
 import { CodeBlockInterface, DocBlockInterface } from "../interfaces.tsx";
 import { MarkdownSummary } from "../markdown.tsx";
 import { ModuleDoc } from "../module_doc.tsx";
-import { ModuleIndexWithDoc, ModulePathIndex } from "../module_path_index.tsx";
+import { ModulePathIndex } from "../module_path_index.tsx";
 import { ModulePathIndexPanel } from "../module_path_index_panel.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../symbol_doc.tsx";
@@ -28,6 +28,9 @@ import { Usage } from "../usage.tsx";
 import { type Child, take } from "../utils.ts";
 import { CodeBlockVariable } from "../variables.tsx";
 import { DocBlockNamespace } from "../namespaces.tsx";
+
+// deno-lint-ignore no-explicit-any
+type ModuleIndexWithDoc = any;
 
 const app = css({
   ":global": {
@@ -86,6 +89,7 @@ export function Showcase(
       </ModulePathIndex>
       <ModulePathIndexPanel
         base="https://deno.land/std@0.142.0"
+        path="/"
         current="/version.ts"
       >
         {moduleIndex}
