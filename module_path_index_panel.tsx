@@ -78,23 +78,21 @@ function Module(
   const label = path.slice(parent === "/" ? 1 : parent.length + 1);
   const active = current ? current == path : isIndex;
   return (
-    <div>
-      <input
-        type="checkbox"
-        id={path}
-        class={style("modulePathIndexPanelToggle")}
-        autoComplete="off"
-        checked={!!(active && currentSymbol)}
-      />
-      <label
-        htmlFor={path}
+    <details
+      open={!!(active && currentSymbol)}
+      class={style("modulePathIndexPanelDetails")}
+    >
+      <summary
         class={style("modulePathIndexPanelEntry") +
           ((active && !currentSymbol)
             ? " " + style("modulePathIndexPanelActive")
             : "")}
         title={label}
       >
-        <Icons.TriangleLeft />
+        <Icons.TriangleRight
+          tabindex={0}
+          onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
+        />
         <a href={href}>
           {label}
           {isIndex && (
@@ -103,32 +101,30 @@ function Module(
             </span>
           )}
         </a>
-      </label>
+      </summary>
 
-      <div>
-        {items.filter((symbol) =>
-          symbol.kind !== "import" && symbol.kind !== "moduleDoc"
-        ).sort((a, b) =>
-          (docNodeKindOrder.indexOf(a.kind) -
-            docNodeKindOrder.indexOf(b.kind)) || a.name.localeCompare(b.name)
-        ).map((symbol) => {
-          const Icon = docNodeKindMap[symbol.kind];
-          return (
-            <a
-              class={style("modulePathIndexPanelSymbol") +
-                ((active && currentSymbol === symbol.name)
-                  ? " " + style("modulePathIndexPanelActive")
-                  : "")}
-              href={services.resolveHref(url, symbol.name)}
-              title={symbol.name}
-            >
-              <Icon />
-              <span>{symbol.name}</span>
-            </a>
-          );
-        })}
-      </div>
-    </div>
+      {items.filter((symbol) =>
+        symbol.kind !== "import" && symbol.kind !== "moduleDoc"
+      ).sort((a, b) =>
+        (docNodeKindOrder.indexOf(a.kind) -
+          docNodeKindOrder.indexOf(b.kind)) || a.name.localeCompare(b.name)
+      ).map((symbol) => {
+        const Icon = docNodeKindMap[symbol.kind];
+        return (
+          <a
+            class={style("modulePathIndexPanelSymbol") +
+              ((active && currentSymbol === symbol.name)
+                ? " " + style("modulePathIndexPanelActive")
+                : "")}
+            href={services.resolveHref(url, symbol.name)}
+            title={symbol.name}
+          >
+            <Icon />
+            <span>{symbol.name}</span>
+          </a>
+        );
+      })}
+    </details>
   );
 }
 

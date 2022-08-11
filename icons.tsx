@@ -69,7 +69,14 @@ export function Index() {
   );
 }
 
-export function TriangleLeft(props: { class?: string }) {
+export function TriangleRight(
+  props: {
+    class?: string;
+    tabindex?: number;
+    onKeyDown?: any;
+    "aria-label"?: string;
+  },
+) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -79,7 +86,7 @@ export function TriangleLeft(props: { class?: string }) {
       fill="none"
       {...props}
     >
-      <path d="M2.5 10L7.5 5L2.5 0V10Z" fill="#6C6E78" />
+      <path d="M2.5 10L7.5 5L2.5 0V10Z" fill="currentColor" />
     </svg>
   );
 }
