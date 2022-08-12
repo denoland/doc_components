@@ -7,7 +7,7 @@ import { JsDoc } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
-import { TypeDef, TypeParams, TypeParamsDoc } from "./types.tsx";
+import { DocTypeParams, TypeDef, TypeParams } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";
 
 export function CodeBlockTypeAlias({ children, ...props }: {
@@ -49,9 +49,9 @@ export function DocBlockTypeAlias(
           {tags}
         </DocEntry>
       </div>
-      <TypeParamsDoc location={location} {...markdownContext}>
+      <DocTypeParams location={location} {...markdownContext}>
         {typeParams}
-      </TypeParamsDoc>
+      </DocTypeParams>
       <JsDoc
         tagKinds={["template", "deprecated"]}
         tagsWithDoc

@@ -16,6 +16,7 @@ import {
   type TsTypeParamDef,
   type TsTypeTupleDef,
   type TsTypeUnionDef,
+  tw,
 } from "./deps.ts";
 import { Anchor, DocEntry, SectionTitle } from "./doc_common.tsx";
 import { MarkdownContext } from "./markdown.tsx";
@@ -326,7 +327,7 @@ export function TypeDef({ children, terminate, ...props }: {
       const { keyword } = def;
       return (
         <>
-          <span class={style(code ? "codeTypeKeyword" : "typeKeyword")}>
+          <span class={tw`text-[#056CF0]`}>
             {keyword}
           </span>
           {terminalChar}
@@ -480,7 +481,7 @@ export function TypeDef({ children, terminate, ...props }: {
                 {typeName}
               </a>
             )
-            : typeName}
+            : <span class={tw`text-[#056CF0]`}>{typeName}</span>}
           <TypeArguments {...props}>{typeParams}</TypeArguments>
           {terminalChar}
         </>
@@ -696,31 +697,38 @@ export function TypeParams(
   return <>&lt;{items}&gt;</>;
 }
 
-export function TypeParamsDoc(
-  { children, location, ...markdownContext }: {
-    children: Child<TsTypeParamDef[]>;
-    location: Location;
-  } & MarkdownContext,
+export function DocTypeParams(
+  { children }: { children: Child<TsTypeParamDef[]> },
 ) {
-  const defs = take(children, true);
-  if (!defs.length) {
-    return null;
+  const typeParams = take(children, true);
+  if (typeParams.length === 0) {
+    return <></>;
   }
-  const items = defs.map((def) => {
-    const id = `typedef_${def.name}`;
-    return (
-      <div class={style("docItem")} id={id}>
-        <Anchor>{id}</Anchor>
-        <DocEntry location={location}>
-          <TypeParam {...markdownContext}>{def}</TypeParam>
-        </DocEntry>
-      </div>
-    );
-  });
+
   return (
-    <div>
-      <SectionTitle>Type Parameters</SectionTitle>
-      {items}
-    </div>
+    <span>
+      {"<"}
+      {typeParams.map((typeParam, i) => (
+        <>
+          <span>
+            <span class={tw`text-[#056CF0]`}>{typeParam.name}</span>
+            {typeParam.constraint && (
+              <span>
+                <span>{" extends "}</span>
+                <TypeDef>{typeParam.constraint}</TypeDef>
+              </span>
+            )}
+            {typeParam.default && (
+              <span>
+                <span>{" = "}</span>
+                <TypeDef>{typeParam.default}</TypeDef>
+              </span>
+            )}
+          </span>
+          {i !== (typeParams.length - 1) && <span>,{" "}</span>}
+        </>
+      ))}
+      {">"}
+    </span>
   );
 }

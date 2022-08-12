@@ -1,77 +1,22 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { CodeBlockClass } from "./classes.tsx";
 import {
   type DocNode,
-  type DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
+  tw,
 } from "./deps.ts";
 import { byKind, isAbstract, isDeprecated } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
 import { Tag } from "./doc_common.tsx";
-import { CodeBlockEnum } from "./enums.tsx";
-import { CodeBlockFn } from "./functions.tsx";
-import { CodeBlockInterface } from "./interfaces.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import * as Icons from "./icons.tsx";
-import { type MarkdownContext } from "./markdown.tsx";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
-import { CodeBlockTypeAlias } from "./type_aliases.tsx";
 import { Usage } from "./usage.tsx";
 import { type Child, maybe, take } from "./utils.ts";
-import { CodeBlockVariable } from "./variables.tsx";
-
-function CodeBlock(
-  { children, ...markdownContext }:
-    & { children: Child<DocNode[]> }
-    & MarkdownContext,
-) {
-  const docNodes = take(children, true);
-  const elements = [];
-  for (const docNode of docNodes) {
-    switch (docNode.kind) {
-      case "class":
-        elements.push(
-          <CodeBlockClass {...markdownContext}>{docNode}</CodeBlockClass>,
-        );
-        break;
-      case "enum":
-        elements.push(
-          <CodeBlockEnum {...markdownContext}>{docNode}</CodeBlockEnum>,
-        );
-        break;
-      case "interface":
-        elements.push(
-          <CodeBlockInterface {...markdownContext}>
-            {docNode}
-          </CodeBlockInterface>,
-        );
-        break;
-      case "typeAlias":
-        elements.push(
-          <CodeBlockTypeAlias {...markdownContext}>
-            {docNode}
-          </CodeBlockTypeAlias>,
-        );
-        break;
-      case "variable":
-        elements.push(
-          <CodeBlockVariable {...markdownContext}>{docNode}</CodeBlockVariable>,
-        );
-        break;
-    }
-  }
-  const fnNodes = docNodes.filter(({ kind }) =>
-    kind === "function"
-  ) as DocNodeFunction[];
-  if (fnNodes.length) {
-    elements.push(<CodeBlockFn {...markdownContext}>{fnNodes}</CodeBlockFn>);
-  }
-  return <div>{elements}</div>;
-}
+import { DocTitle } from "./doc_title.tsx";
 
 function isTypeOnly(
   docNodes: DocNode[],
@@ -98,7 +43,11 @@ export function SymbolDoc(
   return (
     <article class={style("main")}>
       <div class={style("symbolDocHeader")}>
-        <h1 class={style("title")}>{title}</h1>
+        <div>
+          <DocTitle>{docNodes}</DocTitle>
+          {maybe(isAbstract(docNodes[0]), <Tag color="yellow">abstract</Tag>)}
+          {maybe(isDeprecated(docNodes[0]), <Tag color="gray">deprecated</Tag>)}
+        </div>
         <a
           href={services.resolveSourceHref(location.filename, location.line)}
           class={style("sourceButton")}
@@ -106,16 +55,15 @@ export function SymbolDoc(
           <Icons.SourceFile />
         </a>
       </div>
-      {maybe(
-        !(url.endsWith(".d.ts") || library),
-        <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
-      )}
-      {maybe(isAbstract(docNodes[0]), <Tag color="yellow">abstract</Tag>)}
-      {maybe(isDeprecated(docNodes[0]), <Tag color="gray">deprecated</Tag>)}
-      <JsDoc tagKinds="deprecated" tagsWithDoc {...markdownContext}>
-        {jsDoc}
-      </JsDoc>
-      <CodeBlock {...markdownContext}>{docNodes}</CodeBlock>
+      <div class={tw`space-y-3`}>
+        {maybe(
+          !(url.endsWith(".d.ts") || library),
+          <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
+        )}
+        <JsDoc tagKinds="deprecated" tagsWithDoc {...markdownContext}>
+          {jsDoc}
+        </JsDoc>
+      </div>
       <DocBlock {...markdownContext}>{docNodes}</DocBlock>
     </article>
   );

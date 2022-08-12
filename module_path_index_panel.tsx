@@ -3,12 +3,12 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { DocNode, DocNodeKind, JsDoc, tw } from "./deps.ts";
-import { getIndex } from "./doc.ts";
+import { byKindValue, getIndex } from "./doc.ts";
 import { runtime, services } from "./services.ts";
 import { style } from "./styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "./icons.tsx";
-import { docNodeKindMap, docNodeKindOrder } from "./symbol_kind.tsx";
+import { docNodeKindMap } from "./symbol_kind.tsx";
 
 interface DocPageDirItem {
   kind: "dir";
@@ -106,8 +106,7 @@ function Module(
       {items.filter((symbol) =>
         symbol.kind !== "import" && symbol.kind !== "moduleDoc"
       ).sort((a, b) =>
-        (docNodeKindOrder.indexOf(a.kind) -
-          docNodeKindOrder.indexOf(b.kind)) || a.name.localeCompare(b.name)
+        byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
       ).map((symbol) => {
         const Icon = docNodeKindMap[symbol.kind];
         return (

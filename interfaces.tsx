@@ -24,7 +24,7 @@ import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
-import { TypeDef, TypeParams, TypeParamsDoc } from "./types.tsx";
+import { DocTypeParams, TypeDef, TypeParams } from "./types.tsx";
 import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 
 type IndexSignatureDef =
@@ -153,9 +153,9 @@ export function DocBlockInterface(
   } = take(children);
   return (
     <div class={style("docBlockItems")}>
-      <TypeParamsDoc location={location} {...markdownContext}>
+      <DocTypeParams location={location} {...markdownContext}>
         {typeParams}
-      </TypeParamsDoc>
+      </DocTypeParams>
       <ExtendsDoc location={location} {...markdownContext}>{exts}</ExtendsDoc>
       <IndexSignaturesDoc {...markdownContext}>
         {indexSignatures}

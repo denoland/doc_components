@@ -3,9 +3,6 @@
 import { apply, css, type Directive, tw } from "./deps.ts";
 
 const anchorStyles = css({
-  ":global": {
-    ":target, :target > *": apply`bg-gray(200 dark:800)`,
-  },
   "margin-left": "-1em",
   "padding-right": "0.5em",
 });
@@ -62,8 +59,7 @@ const styles = {
   codeBlock:
     apply`font-mono my-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 overflow-x-auto`,
   codeBoolean: apply`text-cyan(600 dark:400)`,
-  copyButton:
-    apply`float-right bg-gray-50 px-2 font-sans focus-visible:ring-2 text-sm text-gray(500 dark:300) border border-gray(300 dark:500) rounded hover:shadow`,
+  copyButton: apply`float-right rounded border border-[#D2D2DC] p-1.5`,
   codeClassMethod: apply`text-green(700 dark:300)`,
   codeDecorator: apply`text-green(600 dark:400) italic`,
   codeFnName: apply`text-green(700 dark:300)`,
@@ -74,10 +70,10 @@ const styles = {
   codeTypeLink: apply`underline`,
   codeTypeParam: apply`text-blue(600 dark:400)`,
   decorator: none,
-  docBlockItems: none,
+  docBlockItems: apply`space-y-7`,
   docEntry: apply`flex justify-between`,
-  docEntryChildren: apply`overflow-auto font-mono break-words`,
-  docItem: apply`group relative py-2 px-1`,
+  docEntryChildren: apply`break-words flex items-center gap-2`,
+  docItem: apply`group relative`,
   docSubItem: apply`group relative py-2 px-1 ml-2.5`,
   entryClass: apply`text-green(800 dark:400) mx-2 font-bold truncate`,
   entryEnum: apply`text-green(700 dark:500) mx-2 font-bold truncate`,
@@ -93,9 +89,9 @@ const styles = {
   linkPadRight:
     apply`pr-4 text([#056CF0] dark:300) hover:(underline text-blue-500)`,
   linkType: apply`underline`,
-  main: apply`md:(col-span-3)`,
+  main: apply`space-y-7 md:(col-span-3)`,
   markdown:
-    apply`p-4 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
+    apply`flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
   usage:
     apply`flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
   markdownSummary: apply`text-gray(600 dark:400) ${
@@ -147,8 +143,8 @@ const styles = {
     "& > input:checked ~ label > svg": apply`rotate-0`,
   }),
   panelTitle: apply`block p-2 border(b gray(400 dark:600)) cursor-pointer`,
-  section: apply`text-sm font-semibold text-[#9CA0AA] py-1`,
-  symbolDocHeader: apply`flex justify-between items-center py-3.5`,
+  section: apply`text-sm leading-6 font-bold text-gray-400 py-1`,
+  symbolDocHeader: apply`flex justify-between items-center`,
   symbolKind:
     apply`rounded-full w-6 h-6 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0`,
   sourceButton: apply`rounded-md border border-[#DDDDDD] p-2`,
@@ -169,7 +165,7 @@ const styles = {
   symbolTypeAlias: apply`text-yellow(700 dark:500) font-bold hover:underline`,
   symbolVariable: apply`text-blue(700 dark:500) font-bold hover:underline`,
   tag:
-    apply`px-4 py-2 inline-flex leading-4 font-medium lowercase rounded-full`,
+    apply`inline py-1 px-2 rounded-full font-medium text-sm leading-none font-sans`,
   tagKind: apply`italic`,
   tagName: apply`font-medium`,
   title:

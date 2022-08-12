@@ -12,15 +12,11 @@ export function nameToId(kind: string, name: string) {
   return `${kind}_${name.replaceAll(TARGET_RE, "_")}`;
 }
 
-export function AccessibilityTag(
-  { children }: { children: Child<Accessibility | undefined> },
-) {
-  const accessibility = take(children);
+export function getAccessibilityTag(accessibility?: Accessibility) {
   if (!accessibility || accessibility === "public") {
     return null;
   }
-  const color = accessibility === "private" ? "pink" : "indigo";
-  return <Tag color={color}>{accessibility}</Tag>;
+  return <Tag color="purple">{accessibility}</Tag>;
 }
 
 export function Anchor({ children: name }: { children: string }) {
@@ -37,15 +33,23 @@ export function Anchor({ children: name }: { children: string }) {
 }
 
 export function DocEntry(
-  { children, location: { filename, line } }: {
+  { children, tags, name, location: { filename, line } }: {
     children: unknown;
+    tags?: unknown[];
+    name: string;
     location: Location;
   },
 ) {
   const href = services.resolveSourceHref(filename, line);
   return (
     <div class={style("docEntry")}>
-      <div class={style("docEntryChildren")}>{children}</div>
+      <span class={style("docEntryChildren")}>
+        {!!tags?.length && <span>{tags}</span>}
+        <span class={tw`font-mono`}>
+          <span class={tw`font-bold`}>{name}</span>
+          <span class={tw`font-medium`}>{children}</span>
+        </span>
+      </span>
       {href && (
         <a href={href} target="_blank" class={style("sourceLink")}>[src]</a>
       )}
@@ -78,19 +82,20 @@ export function SectionTitle({ children }: { children: Child<string> }) {
   );
 }
 
+export const tagColors = {
+  purple: ["#7B61FF1A", "#7B61FF"],
+} as const;
+
 export function Tag(
-  { children, color = "gray" }: { children: unknown; color: string },
+  { children, color }: {
+    children: unknown;
+    color: keyof typeof tagColors;
+  },
 ) {
+  const [bg, text] = tagColors[color];
   return (
-    <span>
-      {" "}
-      <span
-        class={tw`bg-${color}(100 dark:800) whitespace-nowrap text-${color}(800 dark:100) ${
-          style("tag", true)
-        }`}
-      >
-        {children}
-      </span>
-    </span>
+    <div class={tw`bg-[${bg}] text-[${text}] ${style("tag", true)}`}>
+      {children}
+    </div>
   );
 }

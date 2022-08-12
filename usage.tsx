@@ -4,6 +4,7 @@
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
 import { camelize, maybe, parseURL } from "./utils.ts";
+import * as Icons from "./icons.tsx";
 
 interface ParsedUsage {
   /** The symbol that the item should be imported as. If `usageSymbol` and
@@ -57,8 +58,6 @@ export function parseUsage(
   return { importSymbol, usageSymbol, localVar, importStatement };
 }
 
-let guid = 1;
-
 export function Usage(
   { url, name, isType }: { url: string; name?: string; isType?: boolean },
 ) {
@@ -68,17 +67,17 @@ export function Usage(
     usageSymbol,
     localVar,
   } = parseUsage(url, name, isType);
-  const fnName = `cis${guid++}`;
   return (
     <div class={style("usage")}>
-      <pre>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: `<button id="${fnName}" class="${
-              style("copyButton")
-            }" type="button" onclick="${fnName}()">Copy</button>`,
-          }}
-        />
+            <pre>
+
+      <button
+        class={style("copyButton")}
+        // @ts-ignore onClick does support strings
+        onClick={`navigator?.clipboard?.writeText("${importStatement}");`}
+      >
+        <Icons.Copy />
+      </button>
         <code>
           <span class="code-keyword">import</span>
           {name
@@ -108,17 +107,6 @@ export function Usage(
           )}
         </code>
       </pre>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `function ${fnName}() { 
-              navigator?.clipboard?.writeText(\`${importStatement}\`); 
-              document.querySelector(\'#${fnName}\').innerHTML = "✅ Copied"; 
-              setTimeout(() => {
-                document.querySelector(\'#${fnName}\').innerHTML = "Copy";
-              }, 5000);
-            }`,
-        }}
-      />
     </div>
   );
 }

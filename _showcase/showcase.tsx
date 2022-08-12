@@ -3,7 +3,7 @@
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
 import { Tag } from "../doc_common.tsx";
-import { CodeBlockClass, DocBlockClass } from "../classes.tsx";
+import { DocBlockClass } from "../classes.tsx";
 import {
   type DocNode,
   type DocNodeClass,
@@ -190,7 +190,6 @@ export function ShowcaseCodeBlocks(
       <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
       <hr />
       <ComponentTitle module="/classes.tsx">CodeBlockClass</ComponentTitle>
-      <CodeBlockClass url={url}>{classNode}</CodeBlockClass>
       <ComponentTitle module="/enums.tsx">CodeBlockEnum</ComponentTitle>
       <CodeBlockEnum url={url}>{enumNode}</CodeBlockEnum>
       <ComponentTitle module="/functions.tsx">CodeBlockFn</ComponentTitle>
