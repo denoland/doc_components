@@ -106,31 +106,13 @@ export const theme: ThemeConfiguration = {
   },
   extend: {
     colors: {
-      primary: "#FFFFFFE5",
       secondary: "#E5E7EB",
-      main: "#333333",
       "default-highlight": "#333333C0",
-      light: "#999999",
-      default: "#232323",
-      ultralight: "#F8F7F6",
-      "light-border": "#EEEEEE",
-      "dark-border": "#DDDDDD",
-
-      "tag-blue-bg": "#056CF025",
-      "tag-blue": "#056CF0",
-      "tag-blue2": "#448bef",
     },
     spacing: {
-      1.75: "0.4375rem",
       4.5: "1.125rem",
-      5.5: "1.375rem",
-      15: "3.75rem",
       18: "4.5rem",
-      22: "5.5rem",
       72: "18rem",
-      76: "19rem",
-      88: "22rem",
-      136: "34rem",
     },
   },
 };
