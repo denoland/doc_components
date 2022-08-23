@@ -49,6 +49,7 @@ export {
   apply,
   type Configuration,
   type Directive,
+  type Plugin,
   setup,
   type ThemeConfiguration,
   tw,

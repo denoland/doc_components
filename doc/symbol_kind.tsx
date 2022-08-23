@@ -1,9 +1,9 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { tw } from "./deps.ts";
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { tw } from "../deps.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 
 export const colors = {
   "namespace": ["#D25646", "#D256461A"],

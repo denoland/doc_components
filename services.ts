@@ -1,13 +1,16 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import {
+  apply,
   comrak,
   type Configuration as TwConfiguration,
+  css,
+  type Plugin,
   setup as twSetup,
   type ThemeConfiguration,
   twColors,
 } from "./deps.ts";
-import { mdToHtml } from "./markdown.tsx";
+import { mdToHtml } from "./doc/markdown.tsx";
 
 interface JsxRuntime {
   Fragment: (props: Record<string, unknown>) => unknown;
@@ -101,6 +104,52 @@ export const theme: ThemeConfiguration = {
       "monospace",
     ],
   },
+  extend: {
+    colors: {
+      primary: "#FFFFFFE5",
+      secondary: "#E5E7EB",
+      main: "#333333",
+      "default-highlight": "#333333C0",
+      light: "#999999",
+      default: "#232323",
+      ultralight: "#F8F7F6",
+      "light-border": "#EEEEEE",
+      "dark-border": "#DDDDDD",
+
+      "tag-blue-bg": "#056CF025",
+      "tag-blue": "#056CF0",
+      "tag-blue2": "#448bef",
+    },
+    spacing: {
+      1.75: "0.4375rem",
+      4.5: "1.125rem",
+      5.5: "1.375rem",
+      15: "3.75rem",
+      18: "4.5rem",
+      22: "5.5rem",
+      72: "18rem",
+      76: "19rem",
+      88: "22rem",
+      136: "34rem",
+    },
+  },
+};
+
+export const plugins: Record<string, Plugin> = {
+  "section-x-inset": (parts) =>
+    parts[0] === "none"
+      ? apply`max-w-none mx-0 px-0`
+      : apply`max-w-screen-${parts[0]} mx-auto px-4 sm:px-6 md:px-8`,
+  "divide-incl-y": (parts) =>
+    css({
+      "& > *": {
+        "&:first-child": {
+          "border-top-width": (parts[0] ?? 1) + "px",
+        },
+        "border-top-width": "0px",
+        "border-bottom-width": (parts[0] ?? 1) + "px",
+      },
+    }),
 };
 
 const runtimeConfig: Required<

@@ -11,7 +11,7 @@ import {
   type InterfacePropertyDef,
   type Location,
   type TsTypeDef,
-} from "./deps.ts";
+} from "../deps.ts";
 import {
   Anchor,
   DocEntry,
@@ -22,8 +22,8 @@ import {
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 import { TypeDef, TypeParams, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 
