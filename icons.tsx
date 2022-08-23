@@ -3,7 +3,6 @@
 /** @jsx runtime.h */
 import { runtime } from "./services.ts";
 import { tw } from "./deps.ts";
-import { h } from "https://esm.sh/v87/preact@10.8.1/deno/preact.js";
 
 export function Dir(props: { class?: string }) {
   return (
