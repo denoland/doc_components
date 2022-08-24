@@ -2,8 +2,8 @@
 
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
-import { Tag } from "../doc_common.tsx";
-import { CodeBlockClass, DocBlockClass } from "../classes.tsx";
+import { Tag } from "../doc/doc_common.tsx";
+import { CodeBlockClass, DocBlockClass } from "../doc/classes.tsx";
 import {
   type DocNode,
   type DocNodeClass,
@@ -14,20 +14,20 @@ import {
   type DocNodeTypeAlias,
   type DocNodeVariable,
 } from "../deps.ts";
-import { CodeBlockEnum, DocBlockEnum } from "../enums.tsx";
-import { CodeBlockFn, DocBlockFn } from "../functions.tsx";
-import { CodeBlockInterface, DocBlockInterface } from "../interfaces.tsx";
-import { MarkdownSummary } from "../markdown.tsx";
-import { ModuleDoc } from "../module_doc.tsx";
-import { ModulePathIndex } from "../module_path_index.tsx";
-import { ModulePathIndexPanel } from "../module_path_index_panel.tsx";
+import { CodeBlockEnum, DocBlockEnum } from "../doc/enums.tsx";
+import { CodeBlockFn, DocBlockFn } from "../doc/functions.tsx";
+import { CodeBlockInterface, DocBlockInterface } from "../doc/interfaces.tsx";
+import { MarkdownSummary } from "../doc/markdown.tsx";
+import { ModuleDoc } from "../doc/module_doc.tsx";
+import { ModulePathIndex } from "../doc/module_path_index.tsx";
+import { ModulePathIndexPanel } from "../doc/module_path_index_panel.tsx";
 import { runtime } from "../services.ts";
-import { SymbolDoc } from "../symbol_doc.tsx";
-import { CodeBlockTypeAlias, DocBlockTypeAlias } from "../type_aliases.tsx";
-import { Usage } from "../usage.tsx";
-import { type Child, take } from "../utils.ts";
-import { CodeBlockVariable } from "../variables.tsx";
-import { DocBlockNamespace } from "../namespaces.tsx";
+import { SymbolDoc } from "../doc/symbol_doc.tsx";
+import { CodeBlockTypeAlias, DocBlockTypeAlias } from "../doc/type_aliases.tsx";
+import { Usage } from "../doc/usage.tsx";
+import { type Child, take } from "../doc/utils.ts";
+import { CodeBlockVariable } from "../doc/variables.tsx";
+import { DocBlockNamespace } from "../doc/namespaces.tsx";
 
 // deno-lint-ignore no-explicit-any
 type ModuleIndexWithDoc = any;

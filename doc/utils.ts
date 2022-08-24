@@ -12,7 +12,7 @@ import {
   type DocNodeTypeAlias,
   type DocNodeVariable,
   type JsDoc,
-} from "./deps.ts";
+} from "../deps.ts";
 
 /** Some JSX libraries (notably nano-jsx) have strange handling of the
  * child element and don't have good typings when creating a functional

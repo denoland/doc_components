@@ -3,10 +3,10 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { MarkdownSummary } from "./markdown.tsx";
-import { runtime, services } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime, services } from "../services.ts";
+import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
-import * as Icons from "./icons.tsx";
+import * as Icons from "../icons.tsx";
 
 export interface IndexItem {
   kind: "dir" | "module" | "file";

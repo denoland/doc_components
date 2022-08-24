@@ -7,7 +7,7 @@ import {
   type DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
-} from "./deps.ts";
+} from "../deps.ts";
 import { byKind, isAbstract, isDeprecated } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
 import { Tag } from "./doc_common.tsx";
@@ -15,10 +15,10 @@ import { CodeBlockEnum } from "./enums.tsx";
 import { CodeBlockFn } from "./functions.tsx";
 import { CodeBlockInterface } from "./interfaces.tsx";
 import { JsDoc } from "./jsdoc.tsx";
-import * as Icons from "./icons.tsx";
+import * as Icons from "../icons.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
-import { runtime, services } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime, services } from "../services.ts";
+import { style } from "../styles.ts";
 import { CodeBlockTypeAlias } from "./type_aliases.tsx";
 import { Usage } from "./usage.tsx";
 import { type Child, maybe, take } from "./utils.ts";

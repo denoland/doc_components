@@ -2,12 +2,12 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type DocNodeEnum } from "./deps.ts";
+import { type DocNodeEnum } from "../deps.ts";
 import { Anchor, DocEntry, nameToId, SectionTitle } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, maybe, take } from "./utils.ts";
 

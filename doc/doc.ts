@@ -5,7 +5,7 @@
  * @module
  */
 
-import { type DocNode, type DocNodeClass, type DocNodeKind } from "./deps.ts";
+import { type DocNode, type DocNodeClass, type DocNodeKind } from "../deps.ts";
 
 const EXT = [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"];
 const INDEX_MODULES = ["mod", "lib", "main", "index"].flatMap((idx) =>

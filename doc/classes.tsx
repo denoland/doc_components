@@ -10,7 +10,7 @@ import {
   type DocNodeClass,
   type Location,
   type TsTypeDef,
-} from "./deps.ts";
+} from "../deps.ts";
 import {
   AccessibilityTag,
   Anchor,
@@ -23,8 +23,8 @@ import { IndexSignatures, IndexSignaturesDoc } from "./interfaces.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
-import { runtime, services } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime, services } from "../services.ts";
+import { style } from "../styles.ts";
 import { TypeArguments, TypeDef, TypeParams, TypeParamsDoc } from "./types.tsx";
 import { assert, type Child, isDeprecated, maybe, take } from "./utils.ts";
 

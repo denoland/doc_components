@@ -1,12 +1,12 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { type DocNodeTypeAlias } from "./deps.ts";
+import { type DocNodeTypeAlias } from "../deps.ts";
 import { Anchor, DocEntry, nameToId, Tag } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 import { TypeDef, TypeParams, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";
 
