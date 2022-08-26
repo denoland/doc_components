@@ -65,9 +65,6 @@ export interface Configuration {
 }
 
 export const theme: ThemeConfiguration = {
-  backgroundSize: {
-    "4": "1rem",
-  },
   colors: {
     transparent: "transparent",
     current: "currentColor",
@@ -113,6 +110,9 @@ export const theme: ThemeConfiguration = {
       4.5: "1.125rem",
       18: "4.5rem",
       72: "18rem",
+    },
+    backgroundSize: {
+      "4": "1rem",
     },
   },
 };
