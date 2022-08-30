@@ -7,8 +7,8 @@ import {
   Anchor,
   DocEntry,
   nameToId,
+  Section,
   SectionSubTitle,
-  SectionTitle,
 } from "./doc_common.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
@@ -87,12 +87,8 @@ export function DecoratorDoc(
       </div>
     );
   });
-  return (
-    <>
-      <SectionTitle>Decorators</SectionTitle>
-      {items}
-    </>
-  );
+
+  return <Section title="Decorators">{items}</Section>;
 }
 
 export function DecoratorSubDoc(

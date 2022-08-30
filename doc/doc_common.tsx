@@ -82,6 +82,20 @@ export function SectionTitle({ children }: { children: Child<string> }) {
   );
 }
 
+export function Section(
+  { children, title }: { children: Child<any[]>; title: string },
+) {
+  const entries = take(children, true);
+  return (
+    <div>
+      <SectionTitle>{title}</SectionTitle>
+      <div class={tw`mt-2 space-y-3`}>
+        {entries}
+      </div>
+    </div>
+  );
+}
+
 export const tagColors = {
   purple: ["[#7B61FF1A]", "[#7B61FF]"],
   cyan: ["[#0CAFC619]", "[#0CAFC6]"],

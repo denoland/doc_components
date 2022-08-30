@@ -1,6 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+/** @jsxFrag runtime.Fragment */
 import { type DocNode, tw } from "../deps.ts";
 import { getDocSummary } from "./doc.ts";
 import { SectionTitle, Tag } from "./doc_common.tsx";
@@ -15,14 +16,13 @@ import {
   asCollection,
   byName,
   type Child,
+  DocNodeCollection,
   DocNodeTupleArray,
   isAbstract,
   isDeprecated,
   maybe,
   take,
 } from "./utils.ts";
-
-export const TARGET_RE = /(\s|[\[\]])/g;
 
 function Entry<Node extends DocNode>(
   { children, icon, ...context }: {
@@ -31,12 +31,17 @@ function Entry<Node extends DocNode>(
   } & MarkdownContext,
 ) {
   const [label, node] = take(children, true);
+  const href = services.resolveHref(
+    context.url,
+    context.namespace ? `${context.namespace}.${label}` : label,
+  );
+
   return (
     <tr class={style("symbolListRow")}>
       <td class={style("symbolListCellSymbol")}>
         <div>
           {icon}
-          <DocLink {...context}>{label}</DocLink>
+          <a href={href}>{label}</a>
           {maybe(isAbstract(node), <Tag color="cyan" large>Abstract</Tag>)}
           {maybe(isDeprecated(node), <Tag color="gray" large>Deprecated</Tag>)}
         </div>
@@ -50,22 +55,7 @@ function Entry<Node extends DocNode>(
   );
 }
 
-export function DocLink(
-  { children, url, namespace }: {
-    children: Child<string>;
-    url: string;
-    namespace?: string;
-  },
-) {
-  const label = take(children);
-  const href = services.resolveHref(
-    url,
-    namespace ? `${namespace}.${label}` : label,
-  );
-  return <a href={href}>{label}</a>;
-}
-
-export function Section<Node extends DocNode>(
+function Section<Node extends DocNode>(
   { children, title, icon, ...markdownContext }: {
     children: Child<DocNodeTupleArray<Node>>;
     title: string;
@@ -86,6 +76,81 @@ export function Section<Node extends DocNode>(
       <SectionTitle>{title}</SectionTitle>
       <table class={style("symbolListTable")}>{items}</table>
     </div>
+  );
+}
+
+export function DocTypeSections(
+  { children, ...markdownContext }: {
+    children: Child<DocNodeCollection>;
+  } & MarkdownContext,
+) {
+  const collection = take(children);
+  return (
+    <>
+      {collection.namespace && (
+        <Section
+          title="Namespaces"
+          icon={<SymbolKind.Namespace />}
+          {...markdownContext}
+        >
+          {collection.namespace}
+        </Section>
+      )}
+      {collection.class && (
+        <Section
+          title="Classes"
+          icon={<SymbolKind.Class />}
+          {...markdownContext}
+        >
+          {collection.class}
+        </Section>
+      )}
+      {collection.enum && (
+        <Section
+          title="Enums"
+          icon={<SymbolKind.Enum />}
+          {...markdownContext}
+        >
+          {collection.enum}
+        </Section>
+      )}
+      {collection.variable && (
+        <Section
+          title="Variables"
+          icon={<SymbolKind.Variable />}
+          {...markdownContext}
+        >
+          {collection.variable}
+        </Section>
+      )}
+      {collection.function && (
+        <Section
+          title="Functions"
+          icon={<SymbolKind.Function />}
+          {...markdownContext}
+        >
+          {collection.function}
+        </Section>
+      )}
+      {collection.interface && (
+        <Section
+          title="Interfaces"
+          icon={<SymbolKind.Interface />}
+          {...markdownContext}
+        >
+          {collection.interface}
+        </Section>
+      )}
+      {collection.typeAlias && (
+        <Section
+          title="Type Aliases"
+          icon={<SymbolKind.TypeAlias />}
+          {...markdownContext}
+        >
+          {collection.typeAlias}
+        </Section>
+      )}
+    </>
   );
 }
 
@@ -121,69 +186,9 @@ export function ModuleDoc(
                 </JsDocModule>
               )}
             </div>
-            {collection.namespace && (
-              <Section
-                title="Namespaces"
-                icon={<SymbolKind.Namespace />}
-                {...markdownContext}
-              >
-                {collection.namespace}
-              </Section>
-            )}
-            {collection.class && (
-              <Section
-                title="Classes"
-                icon={<SymbolKind.Class />}
-                {...markdownContext}
-              >
-                {collection.class}
-              </Section>
-            )}
-            {collection.enum && (
-              <Section
-                title="Enums"
-                icon={<SymbolKind.Enum />}
-                {...markdownContext}
-              >
-                {collection.enum}
-              </Section>
-            )}
-            {collection.variable && (
-              <Section
-                title="Variables"
-                icon={<SymbolKind.Variable />}
-                {...markdownContext}
-              >
-                {collection.variable}
-              </Section>
-            )}
-            {collection.function && (
-              <Section
-                title="Functions"
-                icon={<SymbolKind.Function />}
-                {...markdownContext}
-              >
-                {collection.function}
-              </Section>
-            )}
-            {collection.interface && (
-              <Section
-                title="Interfaces"
-                icon={<SymbolKind.Interface />}
-                {...markdownContext}
-              >
-                {collection.interface}
-              </Section>
-            )}
-            {collection.typeAlias && (
-              <Section
-                title="Type Aliases"
-                icon={<SymbolKind.TypeAlias />}
-                {...markdownContext}
-              >
-                {collection.typeAlias}
-              </Section>
-            )}
+            <DocTypeSections {...markdownContext}>
+              {collection}
+            </DocTypeSections>
           </div>,
         )}
       </article>

@@ -16,7 +16,7 @@ import {
   DocEntry,
   getAccessibilityTag,
   nameToId,
-  SectionTitle,
+  Section,
   Tag,
 } from "./doc_common.tsx";
 import { IndexSignaturesDoc } from "./interfaces.tsx";
@@ -211,7 +211,7 @@ function ClassMethodDoc(
       tags.push(<Tag color="gray">deprecated</Tag>);
     }
 
-    return [(
+    return [
       <>
         <DocEntry location={location} tags={tags} name={name}>
           <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>
@@ -234,25 +234,28 @@ function ClassMethodDoc(
             {decorators}
           </DecoratorSubDoc>
         )}
-      </>
-    ), jsDoc];
+      </>,
+      jsDoc,
+    ];
   });
 
-  const jsDocEntries = items.filter(x => x[1]);
+  const jsDocEntries = items.filter((x) => x[1]);
   if (jsDocEntries.length === 1) {
     const lastItem = items.at(-1)!;
-    lastItem[0] = <>
-      {lastItem[0]}
-      <JsDoc
-        tagKinds={["param", "return", "template", "deprecated"]}
-        tagsWithDoc
-        {...markdownContext}
-      >
-        {jsDocEntries[0][1]}
-      </JsDoc>
-    </>
+    lastItem[0] = (
+      <>
+        {lastItem[0]}
+        <JsDoc
+          tagKinds={["param", "return", "template", "deprecated"]}
+          tagsWithDoc
+          {...markdownContext}
+        >
+          {jsDocEntries[0][1]}
+        </JsDoc>
+      </>
+    );
   } else {
-    items.map(item => (
+    items.map((item) => (
       <>
         {item[0]}
         <JsDoc
@@ -269,7 +272,7 @@ function ClassMethodDoc(
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>
-      {items.map(item => item[0])}
+      {items.map((item) => item[0])}
     </div>
   );
 }
@@ -387,36 +390,14 @@ function ClassItemsDoc(
   return (
     <>
       {properties.length !== 0 && (
-        <div>
-          <SectionTitle>Properties</SectionTitle>
-          <div class={tw`mt-2 space-y-3`}>
-            {properties}
-          </div>
-        </div>
+        <Section title="Properties">{properties}</Section>
       )}
-      {methods.length !== 0 && (
-        <div>
-          <SectionTitle>Methods</SectionTitle>
-          <div class={tw`mt-2 space-y-3`}>
-            {methods}
-          </div>
-        </div>
-      )}
+      {methods.length !== 0 && <Section title="Methods">{methods}</Section>}
       {staticProperties.length !== 0 && (
-        <div>
-          <SectionTitle>Static Properties</SectionTitle>
-          <div class={tw`mt-2 space-y-3`}>
-            {staticProperties}
-          </div>
-        </div>
+        <Section title="Static Properties">{staticProperties}</Section>
       )}
       {staticMethods.length !== 0 && (
-        <div>
-          <SectionTitle>Static Methods</SectionTitle>
-          <div class={tw`mt-2 space-y-3`}>
-            {staticMethods}
-          </div>
-        </div>
+        <Section title="Static Methods">{staticMethods}</Section>
       )}
     </>
   );
@@ -458,23 +439,19 @@ function ConstructorsDoc(
       </div>
     );
   });
-  return (
-    <div>
-      <SectionTitle>Constructors</SectionTitle>
-      {items}
-    </div>
-  );
+
+  return <Section title="Constructors">{items}</Section>;
 }
 
-export function DocTitleClass({ children }: { children: Child<DocNodeClass> }) {
+export function DocSubTitleClass(
+  { children }: { children: Child<DocNodeClass> },
+) {
   const { classDef } = take(children);
 
   return (
     <>
-      <DocTypeParams>{classDef.typeParams}</DocTypeParams>
-
       {classDef.implements.length !== 0 && (
-        <span>
+        <div>
           <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
           {classDef.implements.map((typeDef, i) => (
             <>
@@ -482,11 +459,11 @@ export function DocTitleClass({ children }: { children: Child<DocNodeClass> }) {
               {i !== (classDef.implements.length - 1) && <span>,{" "}</span>}
             </>
           ))}
-        </span>
+        </div>
       )}
 
       {classDef.extends && (
-        <span>
+        <div>
           <span class={tw`text-[#9CA0AA] italic`}>{" extends "}</span>
           <span>{classDef.extends}</span>
           <span>
@@ -505,7 +482,7 @@ export function DocTitleClass({ children }: { children: Child<DocNodeClass> }) {
               </span>
             )}
           </span>
-        </span>
+        </div>
       )}
     </>
   );

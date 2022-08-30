@@ -127,8 +127,8 @@ const styles = {
     "& > input:checked ~ label > svg": apply`rotate-0`,
   }),
   panelTitle: apply`block p-2 border(b gray(400 dark:600)) cursor-pointer`,
-  section: apply`text-sm leading-6 font-bold text-gray-400 py-1`,
-  symbolDocHeader: apply`flex justify-between items-center`,
+  section: apply`text-sm leading-6 font-semibold text-gray-400 py-1`,
+  symbolDocHeader: apply`flex justify-between items-start`,
   symbolKind:
     apply`rounded-full w-6 h-6 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0 select-none`,
   sourceButton: apply`rounded-md border border-[#DDDDDD] p-2`,
@@ -148,7 +148,8 @@ const styles = {
   symbolNamespace: apply`text-yellow(800 dark:400) font-bold hover:underline`,
   symbolTypeAlias: apply`text-yellow(700 dark:500) font-bold hover:underline`,
   symbolVariable: apply`text-blue(700 dark:500) font-bold hover:underline`,
-  tag: apply`inline rounded-full font-medium text-sm leading-none font-sans`,
+  tag:
+    apply`inline-block rounded-full font-medium text-sm leading-none font-sans`,
   tagKind: apply`italic`,
   tagName: apply`font-medium`,
   title:

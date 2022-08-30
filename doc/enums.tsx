@@ -3,7 +3,7 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { type DocNodeEnum, tw } from "../deps.ts";
-import { Anchor, DocEntry, nameToId, SectionTitle } from "./doc_common.tsx";
+import { Anchor, DocEntry, nameToId, Section } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
@@ -29,7 +29,8 @@ export function DocBlockEnum(
         <DocEntry location={location} name={name}>
           {init && (
             <>
-              {" "} = <TypeDef inline {...markdownContext}>{init}</TypeDef>
+              {" = "}
+              <TypeDef inline {...markdownContext}>{init}</TypeDef>
             </>
           )}
         </DocEntry>
@@ -41,12 +42,7 @@ export function DocBlockEnum(
   });
   return (
     <div class={style("docBlockItems")}>
-      <div>
-        <SectionTitle>Members</SectionTitle>
-        <div class={tw`mt-2 space-y-3`}>
-          {items}
-        </div>
-      </div>
+      <Section title="Members">{items}</Section>
     </div>
   );
 }

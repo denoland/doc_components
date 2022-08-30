@@ -42,43 +42,46 @@ export function SymbolDoc(
   const title = namespace ? `${namespace}.${name}` : name;
   const markdownContext = { url, namespace };
 
+  let labels = [];
+
   const tags: string[] = docNodes.flatMap(({ jsDoc }) =>
     jsDoc?.tags?.filter(({ kind }) => kind === "tags").flatMap(({ tags }) =>
       tags
     ) ?? []
   );
+  if (tags.length !== 0) {
+    labels.push(
+      <Tag color="cyan" large>
+        <span class={tw`space-x-2`}>
+          {tags.map((tag, i) => (
+            <>
+              {i !== 0 && <div class={tw`inline border-l-2 border-gray-300`} />}
+              <span>{tag}</span>
+            </>
+          ))}
+        </span>
+      </Tag>,
+    );
+  }
+
+  if (isAbstract(docNodes[0])) {
+    labels.push(<Tag color="cyan" large>Abstract</Tag>);
+  }
+  if (isDeprecated(docNodes[0])) {
+    labels.push(<Tag color="gray" large>Deprecated</Tag>);
+  }
 
   return (
     <article class={style("main")}>
       <div class={style("symbolDocHeader")}>
-        <div>
+        <div class={tw`space-y-2`}>
           <DocTitle>{docNodes}</DocTitle>
 
-          <div class={tw`pt-1`}>
-            {tags.length !== 0 && (
-              <Tag color="cyan" large>
-                <span class={tw`space-x-2`}>
-                  {tags.map((tag, i) => (
-                    <>
-                      {i !== 0 && (
-                        <div class={tw`inline border-l-2 border-gray-300`} />
-                      )}
-                      <span>{tag}</span>
-                    </>
-                  ))}
-                </span>
-              </Tag>
-            )}
-
-            {maybe(
-              isAbstract(docNodes[0]),
-              <Tag color="cyan" large>Abstract</Tag>,
-            )}
-            {maybe(
-              isDeprecated(docNodes[0]),
-              <Tag color="gray" large>Deprecated</Tag>,
-            )}
-          </div>
+          {labels.length !== 0 && (
+            <div>
+              {labels}
+            </div>
+          )}
         </div>
         <a
           href={services.resolveSourceHref(location.filename, location.line)}

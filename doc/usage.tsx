@@ -77,9 +77,7 @@ export function Usage(
             ? (
               <span>
                 {" "}&#123;{" "}
-                {isType
-                  ? <span class="code-keyword">type{" "}</span>
-                  : undefined}
+                {isType && <span class="code-keyword">type{" "}</span>}
                 {importSymbol} &#125;{" "}
               </span>
             )

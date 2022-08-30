@@ -8,7 +8,6 @@ import {
   type LiteralIndexSignatureDef,
   type LiteralMethodDef,
   type LiteralPropertyDef,
-  type Location,
   type TruePlusMinus,
   type TsTypeDef,
   type TsTypeIntersectionDef,
@@ -18,8 +17,6 @@ import {
   type TsTypeUnionDef,
   tw,
 } from "../deps.ts";
-import { Anchor, DocEntry, SectionTitle } from "./doc_common.tsx";
-import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";

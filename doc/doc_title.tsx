@@ -1,33 +1,32 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { DocTitleClass } from "./classes.tsx";
+import { DocSubTitleClass } from "./classes.tsx";
 import { type DocNode, type DocNodeFunction, tw } from "../deps.ts";
-import { DocBlockEnum } from "./enums.tsx";
 import { DocTitleFn } from "./functions.tsx";
 import { DocTitleInterface } from "./interfaces.tsx";
-import { DocBlockNamespace } from "./namespaces.tsx";
 import { runtime } from "../services.ts";
 import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
 import { docNodeKindColors } from "./symbol_kind.tsx";
+import { DocTypeParams } from "./types.tsx";
 
 export function DocTitle({ children }: { children: Child<DocNode[]> }) {
   const docNodes = take(children, true);
   const elements = [];
   for (const docNode of docNodes) {
-    let fn;
+    let title;
+    let subTitle;
     switch (docNode.kind) {
       case "class":
-        fn = <DocTitleClass>{docNode}</DocTitleClass>;
+        title = <DocTypeParams>{docNode.classDef.typeParams}</DocTypeParams>;
+        subTitle = <DocSubTitleClass>{docNode}</DocSubTitleClass>;
         break;
       case "interface":
-        fn = <DocTitleInterface>{docNode}</DocTitleInterface>;
-        break;
-      case "namespace":
-        elements.push(
-          <DocBlockNamespace {...markdownContext}>{docNode}</DocBlockNamespace>,
+        title = (
+          <DocTypeParams>{docNode.interfaceDef.typeParams}</DocTypeParams>
         );
+        subTitle = <DocTitleInterface>{docNode}</DocTitleInterface>;
         break;
       case "typeAlias":
         elements.push(
@@ -37,12 +36,19 @@ export function DocTitle({ children }: { children: Child<DocNode[]> }) {
     }
 
     elements.push(
-      <div class={tw`text-xl leading-8 font-medium`}>
-        <span class={tw`text-[${docNodeKindColors[docNode.kind][0]}]`}>
-          {docNode.kind}
-        </span>{" "}
-        <span class={tw`font-bold`}>{docNode.name}</span>
-        {fn}
+      <div class={tw`font-medium space-y-1`}>
+        <div class={tw`text-xl`}>
+          <span class={tw`text-[${docNodeKindColors[docNode.kind][0]}]`}>
+            {docNode.kind}
+          </span>{" "}
+          <span class={tw`font-bold`}>{docNode.name}</span>
+          {title}
+        </div>
+        {subTitle && (
+          <div class={tw`text-sm leading-4 space-y-0.5`}>
+            {subTitle}
+          </div>
+        )}
       </div>,
     );
   }
