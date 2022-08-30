@@ -8,10 +8,10 @@ import {
   type ClassMethodDef,
   type ClassPropertyDef,
   type DocNodeClass,
+  type JsDoc as JsDocType,
   tw,
 } from "./deps.ts";
 import {
-  AccessibilityTag,
   Anchor,
   DocEntry,
   getAccessibilityTag,
@@ -31,7 +31,6 @@ import { assert, type Child, isDeprecated, take } from "./utils.ts";
 type ClassAccessorDef = ClassMethodDef & { kind: "getter" | "setter" };
 type ClassGetterDef = ClassMethodDef & { kind: "getter" };
 type ClassSetterDef = ClassMethodDef & { kind: "setter" };
-type ClassItemType = "prop" | "method" | "static_prop" | "static_method";
 type ClassItemDef = ClassMethodDef | ClassPropertyDef;
 
 function compareAccessibility(
@@ -185,7 +184,7 @@ function ClassMethodDoc(
 ) {
   const defs = take(children, true);
   const id = nameToId("method", defs[0].name);
-  const items = defs.map((
+  const items: [unknown, JsDocType | undefined][] = defs.map((
     {
       location,
       name,
@@ -211,7 +210,8 @@ function ClassMethodDoc(
     if (isDeprecated({ jsDoc })) {
       tags.push(<Tag color="gray">deprecated</Tag>);
     }*/
-    return (
+
+    return [(
       <>
         <DocEntry location={location} tags={tags} name={name}>
           <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>
@@ -229,26 +229,47 @@ function ClassMethodDoc(
             </span>
           )}
         </DocEntry>
-        <JsDoc
-          tagKinds={["param", "return", "template", "deprecated"]}
-          tagsWithDoc
-          {...markdownContext}
-        >
-          {jsDoc}
-        </JsDoc>
         {decorators && (
           <DecoratorSubDoc id={id} {...markdownContext}>
             {decorators}
           </DecoratorSubDoc>
         )}
       </>
-    );
+    ), jsDoc];
   });
+
+  const jsDocEntries = items.filter(x => x[1]);
+  if (jsDocEntries.length === 1) {
+    const lastItem = items.at(-1)!;
+    lastItem[0] = <>
+      {lastItem[0]}
+      <JsDoc
+        tagKinds={["param", "return", "template", "deprecated"]}
+        tagsWithDoc
+        {...markdownContext}
+      >
+        {jsDocEntries[0][1]}
+      </JsDoc>
+    </>
+  } else {
+    items.map(item => (
+      <>
+        {item[0]}
+        <JsDoc
+          tagKinds={["param", "return", "template", "deprecated"]}
+          tagsWithDoc
+          {...markdownContext}
+        >
+          {item[1]}
+        </JsDoc>
+      </>
+    ));
+  }
 
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>
-      {items}
+      {items.map(item => item[0])}
     </div>
   );
 }
@@ -278,11 +299,11 @@ function ClassPropertyDoc(
   if (accessibilityTag) {
     tags.push(accessibilityTag);
   }
-  if (optional) {
-    tags.push(<Tag color="cyan">optional</Tag>);
-  }
   if (readonly) {
     tags.push(<Tag color="purple">readonly</Tag>);
+  }
+  if (optional) {
+    tags.push(<Tag color="cyan">optional</Tag>);
   }
   if (isDeprecated({ jsDoc })) {
     tags.push(<Tag color="gray">deprecated</Tag>);
@@ -408,7 +429,7 @@ function ConstructorsDoc(
 ) {
   const defs = take(children, true);
   if (!defs.length) {
-    return <></>;
+    return null;
   }
   const items = defs.map(({ location, params, jsDoc, accessibility }, i) => {
     const id = nameToId("ctor", String(i));

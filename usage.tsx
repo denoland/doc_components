@@ -5,6 +5,7 @@ import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
 import { camelize, maybe, parseURL } from "./utils.ts";
 import * as Icons from "./icons.tsx";
+import { tw } from "./deps.ts";
 
 interface ParsedUsage {
   /** The symbol that the item should be imported as. If `usageSymbol` and
@@ -69,16 +70,8 @@ export function Usage(
   } = parseUsage(url, name, isType);
   return (
     <div class={style("usage")}>
-            <pre>
-
-      <button
-        class={style("copyButton")}
-        // @ts-ignore onClick does support strings
-        onClick={`navigator?.clipboard?.writeText("${importStatement}");`}
-      >
-        <Icons.Copy />
-      </button>
-        <code>
+      <pre class={tw`flex items-center justify-between gap-2.5`}>
+        <code class={tw`overflow-scroll`}>
           <span class="code-keyword">import</span>
           {name
             ? (
@@ -106,6 +99,13 @@ export function Usage(
             </div>,
           )}
         </code>
+        <button
+          class={style("copyButton")}
+          // @ts-ignore onClick does support strings
+          onClick={`navigator?.clipboard?.writeText("${importStatement}");`}
+        >
+          <Icons.Copy />
+        </button>
       </pre>
     </div>
   );

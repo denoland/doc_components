@@ -285,10 +285,10 @@ export function IndexSignaturesDoc(
     );
   });
   return (
-    <>
+    <div>
       <SectionTitle>Index Signatures</SectionTitle>
       {items}
-    </>
+    </div>
   );
 }
 

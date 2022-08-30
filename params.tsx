@@ -6,6 +6,9 @@ import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, maybe, take } from "./utils.ts";
+import { Anchor, DocEntry, nameToId } from "./doc_common.tsx";
+import { JsDoc } from "./jsdoc.tsx";
+import { DecoratorSubDoc } from "./decorators.tsx";
 
 function ObjectPat(
   { children, ...props }: {
@@ -165,6 +168,66 @@ export function Params(
           <Param {...props}>{param}</Param>,
         </div>
       ))}
+    </div>
+  );
+}
+
+function paramName(param: ParamDef): string {
+  switch (param.kind) {
+    case "array":
+      return param.elements.map((param) => {
+        if (param) {
+          return paramName(param);
+        } else {
+          return " ";
+        }
+      }).join(", ");
+    case "assign":
+      return paramName(param.left); // TODO: doc default value
+    case "identifier":
+      return param.name;
+    case "object":
+      // TODO
+      break;
+    case "rest":
+      return `...${paramName(param.arg)}`;
+      break;
+  }
+
+}
+
+export function DocParamDef(
+  { children, ...props }: {
+    children: Child<ParamDef>;
+    url: string;
+    namespace?: string;
+    code?: boolean;
+    inline?: boolean;
+  },
+) {
+  const param = take(children, true);
+
+  const name = paramName(param);
+  const id = nameToId("arg", name);
+
+  return (
+    <div class={style("docItem")} id={id}>
+      <Anchor>{id}</Anchor>
+      <DocEntry name={name}>
+        {param.tsType && (
+          <span>
+            : <TypeDef inline {...markdownContext}>{param.tsType}</TypeDef>
+          </span>
+        )}
+      </DocEntry>
+      <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
+        {jsDoc}
+      </JsDoc>
+      {decorators && (
+        <DecoratorSubDoc id={id} {...markdownContext}>
+          {decorators}
+        </DecoratorSubDoc>
+      )}
     </div>
   );
 }

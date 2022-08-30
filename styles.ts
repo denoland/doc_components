@@ -59,7 +59,7 @@ const styles = {
   codeBlock:
     apply`font-mono my-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 overflow-x-auto`,
   codeBoolean: apply`text-cyan(600 dark:400)`,
-  copyButton: apply`float-right rounded border border-[#D2D2DC] p-1.5`,
+  copyButton: apply`rounded border border-[#D2D2DC] p-1.5`,
   codeClassMethod: apply`text-green(700 dark:300)`,
   codeDecorator: apply`text-green(600 dark:400) italic`,
   codeFnName: apply`text-green(700 dark:300)`,

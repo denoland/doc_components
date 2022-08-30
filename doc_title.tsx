@@ -4,7 +4,7 @@
 import { DocTitleClass } from "./classes.tsx";
 import { type DocNode, type DocNodeFunction, tw } from "./deps.ts";
 import { DocBlockEnum } from "./enums.tsx";
-import { DocBlockFn } from "./functions.tsx";
+import { DocBlockFn, DocTitleFn } from "./functions.tsx";
 import { DocBlockInterface } from "./interfaces.tsx";
 import { DocBlockNamespace } from "./namespaces.tsx";
 import { runtime } from "./services.ts";
@@ -57,7 +57,7 @@ export function DocTitle({ children }: { children: Child<DocNode[]> }) {
     kind === "function"
   ) as DocNodeFunction[];
   if (fnNodes.length) {
-    elements.push(<DocBlockFn {...markdownContext}>{fnNodes}</DocBlockFn>);
+    elements.push(<DocTitleFn>{fnNodes}</DocTitleFn>);
   }
   return <div>{elements}</div>;
 }

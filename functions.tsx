@@ -2,14 +2,14 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type DocNodeFunction } from "./deps.ts";
+import { DocNodeClass, type DocNodeFunction, tw } from "./deps.ts";
 import { Anchor, DocEntry, nameToId, Tag } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
-import { Params } from "./params.tsx";
+import { DocParamDef, Params } from "./params.tsx";
 import { runtime } from "./services.ts";
 import { style } from "./styles.ts";
-import { TypeDef, TypeParams } from "./types.tsx";
+import { DocTypeParams, TypeDef, TypeParams } from "./types.tsx";
 import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 
 export function CodeBlockFn({ children, ...props }: {
@@ -44,6 +44,16 @@ export function CodeBlockFn({ children, ...props }: {
   return <div class={style("codeBlock")}>{items}</div>;
 }
 
+export function DocTitleFn({ children }: { children: Child<DocNodeFunction[]> }) {
+  const [{ functionDef }] = take(children, true);
+
+  return (
+    <>
+      <DocTypeParams>{functionDef.typeParams}</DocTypeParams>
+    </>
+  );
+}
+
 export function DocBlockFn(
   { children, ...markdownContext }:
     & { children: Child<DocNodeFunction[]> }
@@ -74,14 +84,10 @@ export function DocBlockFn(
       return (
         <div class={style("docItem")} id={id}>
           <Anchor>{id}</Anchor>
-          <DocEntry location={location}>
-            {name}
-            <TypeParams {...markdownContext}>{typeParams}</TypeParams>(<Params
-              inline
-              {...markdownContext}
-            >
-              {params}
-            </Params>){returnType && (
+          <DocEntry location={location} name={name} tags={tags}>
+            <DocParamDef>{params}</DocParamDef>
+
+            {returnType && (
               <>
                 : <TypeDef {...markdownContext}>{returnType}</TypeDef>
               </>
@@ -102,5 +108,10 @@ export function DocBlockFn(
       );
     },
   );
-  return <div class={style("docBlockItems")}>{items}</div>;
+
+  return (
+    <div class={style("docBlockItems")}>
+      {items}
+    </div>
+  );
 }
