@@ -18,7 +18,7 @@ interface DocPageDirItem {
 interface SymbolItem {
   name: string;
   kind: DocNodeKind;
-  jsDoc?: JsDoc;
+  jsDoc?: JsDoc | null;
 }
 
 interface DocPageModuleItem {
@@ -55,7 +55,7 @@ function Folder({ children, base, parent }: {
   const href = services.resolveHref(url);
   const label = folderName.slice(parent === "/" ? 1 : parent.length + 1);
   return (
-    <a class={style("modulePathIndexPanelEntry")} href={href} title={label}>
+    <a class={style("moduleIndexPanelEntry")} href={href} title={label}>
       <Icons.Dir />
       {label}
     </a>
@@ -80,12 +80,12 @@ function Module(
   return (
     <details
       open={!!(active && currentSymbol)}
-      class={style("modulePathIndexPanelDetails")}
+      class={style("moduleIndexPanelDetails")}
     >
       <summary
-        class={style("modulePathIndexPanelEntry") +
+        class={style("moduleIndexPanelEntry") +
           ((active && !currentSymbol)
-            ? " " + style("modulePathIndexPanelActive")
+            ? " " + style("moduleIndexPanelActive")
             : "")}
         title={label}
       >
@@ -96,7 +96,7 @@ function Module(
         <a href={href}>
           {label}
           {isIndex && (
-            <span class={style("modulePathIndexPanelModuleIndex")}>
+            <span class={style("moduleIndexPanelModuleIndex")}>
               {" "}(default module)
             </span>
           )}
@@ -112,9 +112,9 @@ function Module(
         const Icon = docNodeKindMap[symbol.kind];
         return (
           <a
-            class={style("modulePathIndexPanelSymbol") +
+            class={style("moduleIndexPanelSymbol") +
               ((active && currentSymbol === symbol.name)
-                ? " " + style("modulePathIndexPanelActive")
+                ? " " + style("moduleIndexPanelActive")
                 : "")}
             href={services.resolveHref(url, symbol.name)}
             title={symbol.name}
@@ -128,7 +128,7 @@ function Module(
   );
 }
 
-export function ModulePathIndexPanel(
+export function ModuleIndexPanel(
   { children, path = "/", base, current, currentSymbol }: {
     children: Child<DocPageNavItem[]>;
     base: string;
@@ -181,17 +181,7 @@ export function ModulePathIndexPanel(
     return <></>;
   }
   return (
-    <div class={style("modulePathIndexPanel")}>
-      {
-        /*<input
-        type="text"
-        class={tw
-          `rounded-lg border border-[#DDDDDD] text-sm w-full py-2.5 pl-4`}
-        placeholder="Jump to..."
-      />
-      <div class={tw`mt-4`}>
-      </div>*/
-      }
+    <div class={style("moduleIndexPanel")}>
       {entries}
     </div>
   );

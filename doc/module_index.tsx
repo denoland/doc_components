@@ -34,12 +34,12 @@ function Folder({ children, base, parent }: {
   const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
   return (
-    <tr class={style("modulePathIndexRow")}>
-      <td class={style("modulePathIndexLinkCell")}>
-        <Icons.Dir class={style("modulePathIndexLinkCellIcon")} />
+    <tr class={style("moduleIndexRow")}>
+      <td class={style("moduleIndexLinkCell")}>
+        <Icons.Dir class={style("moduleIndexLinkCellIcon")} />
         <a href={href} class={style("link")}>{label}</a>
       </td>
-      <td class={style("modulePathIndexDocCell")}>
+      <td class={style("moduleIndexDocCell")}>
         <MarkdownSummary url={url}>{summary}</MarkdownSummary>
       </td>
     </tr>
@@ -57,12 +57,12 @@ function Module({ children, base, parent }: {
   const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
   return (
-    <tr class={style("modulePathIndexRow")}>
-      <td class={style("modulePathIndexLinkCell")}>
-        <Icons.SourceFile class={style("modulePathIndexLinkCellIcon")} />
+    <tr class={style("moduleIndexRow")}>
+      <td class={style("moduleIndexLinkCell")}>
+        <Icons.SourceFile class={style("moduleIndexLinkCellIcon")} />
         <a href={href} class={style("link")}>{label}</a>
       </td>
-      <td class={style("modulePathIndexDocCell")}>
+      <td class={style("moduleIndexDocCell")}>
         <MarkdownSummary url={url}>{summary}</MarkdownSummary>
       </td>
     </tr>
@@ -71,7 +71,7 @@ function Module({ children, base, parent }: {
 
 const order = ["dir", "module", "file"] as const;
 
-export function ModulePathIndex(
+export function ModuleIndex(
   { children, path = "/", base, skipMods = false, sourceUrl }: {
     children: Child<IndexItem[]>;
     base: string;
@@ -101,11 +101,11 @@ export function ModulePathIndex(
     return <></>;
   }
   return (
-    <div class={style("modulePathIndex")}>
-      <div class={style("modulePathIndexHeader")}>
-        <div class={style("modulePathIndexHeaderTitle")}>
+    <div class={style("moduleIndex")}>
+      <div class={style("moduleIndexHeader")}>
+        <div class={style("moduleIndexHeaderTitle")}>
           <Icons.Index />
-          <span class={style("modulePathIndexHeaderTitleSpan")}>Index</span>
+          <span class={style("moduleIndexHeaderTitleSpan")}>Index</span>
         </div>
         <a
           href={services.resolveSourceHref(sourceUrl)}
@@ -114,7 +114,7 @@ export function ModulePathIndex(
           <Icons.SourceFile />
         </a>
       </div>
-      <table class={style("modulePathIndexTable")}>{entries}</table>
+      <table class={style("moduleIndexTable")}>{entries}</table>
     </div>
   );
 }
