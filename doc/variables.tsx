@@ -20,7 +20,7 @@ export function CodeBlockVariable({ children, ...props }: {
       {tsType
         ? (
           <>
-            : <TypeDef terminate code {...props}>{tsType}</TypeDef>
+            : <TypeDef {...props}>{tsType}</TypeDef>
           </>
         )
         : ";"}

@@ -17,7 +17,7 @@ import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
-import { DocTypeParams, TypeDef, TypeParams } from "./types.tsx";
+import { DocTypeParams, TypeDef } from "./types.tsx";
 import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 
 type IndexSignatureDef =
@@ -44,7 +44,7 @@ function CallSignaturesDoc(
         <div class={style("docItem")} id={id}>
           <Anchor>{id}</Anchor>
           <DocEntry location={location}>
-            <TypeParams {...markdownContext}>{typeParams}</TypeParams>(<Params
+            <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>(<Params
               inline
               {...markdownContext}
             >
@@ -230,7 +230,7 @@ function PropertiesDoc(
   return <Section title="Properties">{items}</Section>;
 }
 
-export function DocTitleInterface(
+export function DocSubTitleInterface(
   { children }: { children: Child<DocNodeInterface> },
 ) {
   const { interfaceDef } = take(children);

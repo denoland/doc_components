@@ -71,7 +71,7 @@ function LiteralCallSignatures({ children, ...props }: {
   const items = signatures.map(({ typeParams, params, tsType }) => {
     const item = (
       <>
-        <TypeParams {...props}>{typeParams}</TypeParams>(<Params {...props}>
+        <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params {...props}>
           {params}
         </Params>){tsType && (
           <>
@@ -114,7 +114,7 @@ function LiteralProperties(
           {tsType
             ? (
               <>
-                : <TypeDef {...props} terminate>{tsType}</TypeDef>
+                : <TypeDef {...props}>{tsType}</TypeDef>
               </>
             )
             : "; "}
@@ -154,12 +154,12 @@ function LiteralMethods({ children, ...props }: {
             ? `[${name}]`
             : name}
           {maybe(optional, "?")}
-          <TypeParams {...props}>{typeParams}</TypeParams>(<Params {...props}>
+          <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params {...props}>
             {params}
           </Params>){returnType
             ? (
               <>
-                : <TypeDef {...props} terminate>{returnType}</TypeDef>
+                : <TypeDef {...props}>{returnType}</TypeDef>
               </>
             )
             : "; "}
@@ -230,24 +230,19 @@ export function TypeArguments(
   return <>&lt;{items}&gt;</>;
 }
 
-export function TypeDef({ children, terminate, ...props }: {
+export function TypeDef({ children, ...props }: {
   children: Child<TsTypeDef>;
   url: string;
   namespace?: string;
-  code?: boolean;
   inline?: boolean;
-  terminate?: boolean;
 }) {
   const def = take(children);
-  const terminalChar = terminate ? ";" : "";
-  const { code } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
+  const keyword = style("keyword");
   switch (def.kind) {
     case "array":
       return (
         <>
           <TypeDef {...props} inline>{def.array}</TypeDef>[]
-          {terminalChar}
         </>
       );
     case "conditional": {
@@ -261,7 +256,6 @@ export function TypeDef({ children, terminate, ...props }: {
           <TypeDef {...props}>{extendsType}</TypeDef> ?{" "}
           <TypeDef {...props}>{trueType}</TypeDef> :{" "}
           <TypeDef {...props}>{falseType}</TypeDef>
-          {terminalChar}
         </>
       );
     }
@@ -272,10 +266,9 @@ export function TypeDef({ children, terminate, ...props }: {
       return (
         <>
           {maybe(constructor, <span class={keyword}>new{" "}</span>)}
-          <TypeParams {...props}>{typeParams}</TypeParams>(<Params {...props}>
+          <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params {...props}>
             {params}
           </Params>) =&gt; <TypeDef {...props}>{tsType}</TypeDef>
-          {terminalChar}
         </>
       );
     }
@@ -287,7 +280,6 @@ export function TypeDef({ children, terminate, ...props }: {
             <span>.{qualifier}</span>
           )}
           <TypeArguments {...props}>{typeParams}</TypeArguments>
-          {terminalChar}
         </>
       );
     }
@@ -300,7 +292,7 @@ export function TypeDef({ children, terminate, ...props }: {
             inline
           >
             {indexType}
-          </TypeDef>]{terminalChar}
+          </TypeDef>]
         </>
       );
     }
@@ -310,25 +302,21 @@ export function TypeDef({ children, terminate, ...props }: {
         <>
           <span class={keyword}>infer{" "}</span>
           <TypeParam {...props}>{typeParam}</TypeParam>
-          {terminalChar}
         </>
       );
     }
     case "intersection":
       return (
-        <TypeDefIntersection {...props} terminate={terminate}>
+        <TypeDefIntersection {...props}>
           {def}
         </TypeDefIntersection>
       );
     case "keyword": {
       const { keyword } = def;
       return (
-        <>
-          <span class={tw`text-[#056CF0]`}>
+        <span class={tw`text-[#056CF0]`}>
             {keyword}
           </span>
-          {terminalChar}
-        </>
       );
     }
     case "literal": {
@@ -337,26 +325,26 @@ export function TypeDef({ children, terminate, ...props }: {
       switch (kind) {
         case "bigInt":
           item = (
-            <span class={style(code ? "codeNumberLiteral" : "numberLiteral")}>
+            <span class={style("numberLiteral")}>
               {repr}
             </span>
           );
           break;
         case "boolean":
           item = (
-            <span class={style(code ? "codeBoolean" : "boolean")}>{repr}</span>
+            <span class={style("boolean")}>{repr}</span>
           );
           break;
         case "number":
           item = (
-            <span class={style(code ? "codeNumberLiteral" : "numberLiteral")}>
+            <span class={style("numberLiteral")}>
               {repr}
             </span>
           );
           break;
         case "string":
           item = (
-            <span class={style(code ? "codeStringLiteral" : "stringLiteral")}>
+            <span class={style("stringLiteral")}>
               {JSON.stringify(repr)}
             </span>
           );
@@ -364,32 +352,29 @@ export function TypeDef({ children, terminate, ...props }: {
         case "template":
           // TODO(@kitsonk) do this properly and escape properly
           item = (
-            <span class={style(code ? "codeStringLiteral" : "stringLiteral")}>
+            <span class={style("stringLiteral")}>
               `{repr}`
             </span>
           );
           break;
       }
-      return <>{item}{terminalChar}</>;
+      return <>{item}</>;
     }
     case "mapped":
       return (
-        <TypeDefMapped {...props} terminate={terminate}>{def}</TypeDefMapped>
+        <TypeDefMapped {...props}>{def}</TypeDefMapped>
       );
     case "optional": {
       const { optional } = def;
       return (
-        <>
-          <TypeDef {...props}>{optional}</TypeDef>
-          {terminalChar}
-        </>
+        <TypeDef {...props}>{optional}</TypeDef>
       );
     }
     case "parenthesized": {
       const { parenthesized } = def;
       return (
         <>
-          (<TypeDef {...props}>{parenthesized}</TypeDef>){terminalChar}
+          (<TypeDef {...props}>{parenthesized}</TypeDef>)
         </>
       );
     }
@@ -398,21 +383,17 @@ export function TypeDef({ children, terminate, ...props }: {
       return (
         <>
           ...<TypeDef {...props}>{rest}</TypeDef>
-          {terminalChar}
         </>
       );
     }
     case "this": {
       return (
-        <>
-          <span class={keyword}>this</span>
-          {terminalChar}
-        </>
+        <span class={keyword}>this</span>
       );
     }
     case "tuple": {
       return (
-        <TypeDefTuple {...props} terminate={terminate}>
+        <TypeDefTuple {...props}>
           {def}
         </TypeDefTuple>
       );
@@ -431,7 +412,7 @@ export function TypeDef({ children, terminate, ...props }: {
           </LiteralCallSignatures>
           <LiteralProperties {...props}>{properties}</LiteralProperties>
           <LiteralMethods {...props}>{methods}
-          </LiteralMethods>&#125;{terminalChar}
+          </LiteralMethods>&#125;
         </>
       );
     }
@@ -441,7 +422,6 @@ export function TypeDef({ children, terminate, ...props }: {
         <>
           <span class={keyword}>{operator}</span>{" "}
           <TypeDef {...props}>{tsType}</TypeDef>
-          {terminalChar}
         </>
       );
     }
@@ -459,13 +439,12 @@ export function TypeDef({ children, terminate, ...props }: {
               <TypeDef {...props}>{type}</TypeDef>
             </>
           )}
-          {terminalChar}
         </>
       );
     }
     case "typeQuery": {
       const { typeQuery } = def;
-      return <>{typeQuery}{terminalChar}</>;
+      return <>{typeQuery}</>;
     }
     case "typeRef": {
       const { typeRef: { typeName, typeParams } } = def;
@@ -474,19 +453,18 @@ export function TypeDef({ children, terminate, ...props }: {
         <>
           {href
             ? (
-              <a href={href} class={style(code ? "codeTypeLink" : "typeLink")}>
+              <a href={href} class={style("typeLink")}>
                 {typeName}
               </a>
             )
             : <span class={tw`text-[#056CF0]`}>{typeName}</span>}
           <TypeArguments {...props}>{typeParams}</TypeArguments>
-          {terminalChar}
         </>
       );
     }
     case "union":
       return (
-        <TypeDefUnion {...props} terminate={terminate}>
+        <TypeDefUnion {...props}>
           {def}
         </TypeDefUnion>
       );
@@ -494,20 +472,18 @@ export function TypeDef({ children, terminate, ...props }: {
       return (
         <>
           {htmlEntities.encode((def as TsTypeDef).repr)}
-          {terminalChar}
         </>
       );
   }
 }
 
 function TypeDefIntersection(
-  { children, terminate, ...props }: {
+  { children, ...props }: {
     children: Child<TsTypeIntersectionDef>;
     url: string;
     namespace?: string;
     code?: boolean;
     inline?: boolean;
-    terminate?: boolean;
   },
 ) {
   const { intersection } = take(children);
@@ -521,29 +497,24 @@ function TypeDefIntersection(
         items.push(<span class={keyword}>{" & "}</span>);
       }
     }
-    if (terminate) {
-      items.push(";");
-    }
     return <>{items}</>;
   }
   const items = intersection.map((def, i) => (
     <div>
       <span class={keyword}>{" & "}</span>
       <TypeDef {...props}>{def}</TypeDef>
-      {maybe(terminate && i === lastIndex, ";")}
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
 }
 
 function TypeDefMapped(
-  { children, terminate, ...props }: {
+  { children, ...props }: {
     children: Child<TsTypeMappedDef>;
     url: string;
     namespace?: string;
     code?: boolean;
     inline?: boolean;
-    terminate?: boolean;
   },
 ) {
   const {
@@ -570,7 +541,6 @@ function TypeDefMapped(
           : <TypeDef {...props}>{tsType}</TypeDef>
         </>
       )}
-      {maybe(terminate, ";")}
     </>
   );
 }
@@ -582,7 +552,6 @@ function TypeDefTuple(
     namespace?: string;
     code?: boolean;
     inline?: boolean;
-    terminate?: boolean;
   },
 ) {
   const { tuple } = take(children);
@@ -606,13 +575,12 @@ function TypeDefTuple(
 }
 
 function TypeDefUnion(
-  { children, terminate, ...props }: {
+  { children, ...props }: {
     children: Child<TsTypeUnionDef>;
     url: string;
     namespace?: string;
     code?: boolean;
     inline?: boolean;
-    terminate?: boolean;
   },
 ) {
   const { union } = take(children);
@@ -626,16 +594,12 @@ function TypeDefUnion(
         items.push(<span class={keyword}>{" | "}</span>);
       }
     }
-    if (terminate) {
-      items.push(";");
-    }
     return <span>{items}</span>;
   }
-  const items = union.map((def, i) => (
+  const items = union.map((def) => (
     <div>
       <span class={keyword}>{" | "}</span>
       <TypeDef {...props}>{def}</TypeDef>
-      {maybe(terminate && i === lastIndex, ";")}
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
@@ -670,28 +634,6 @@ export function TypeParam(
       )}
     </>
   );
-}
-
-export function TypeParams(
-  { children, ...props }: {
-    children: Child<TsTypeParamDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-  },
-) {
-  const params = take(children, true);
-  if (!params.length) {
-    return null;
-  }
-  const items = [];
-  for (let i = 0; i < params.length; i++) {
-    items.push(<TypeParam {...props}>{params[i]}</TypeParam>);
-    if (i < params.length - 1) {
-      items.push(<>,{" "}</>);
-    }
-  }
-  return <>&lt;{items}&gt;</>;
 }
 
 export function DocTypeParams(

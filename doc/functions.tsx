@@ -2,47 +2,15 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { DocNodeClass, type DocNodeFunction, tw } from "../deps.ts";
+import { type DocNodeFunction, tw } from "../deps.ts";
 import { Anchor, DocEntry, nameToId, Tag } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { DocParamDef, Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
-import { DocTypeParams, TypeDef, TypeParams } from "./types.tsx";
+import { DocTypeParams, TypeDef } from "./types.tsx";
 import { type Child, isDeprecated, maybe, take } from "./utils.ts";
-
-export function CodeBlockFn({ children, ...props }: {
-  children: Child<DocNodeFunction[]>;
-  url: string;
-  namespace?: string;
-}) {
-  const fns = take(children, true);
-  const items = fns.map(({
-    name,
-    functionDef: { isAsync, isGenerator, typeParams, params, returnType },
-  }) => (
-    <div>
-      <span class={style("codeKeyword")}>
-        {isAsync ? "async " : undefined}function{isGenerator ? "* " : " "}
-      </span>
-      <span class={style("codeFnName")}>{name}</span>
-      <TypeParams code {...props}>{typeParams}</TypeParams>(<Params
-        code
-        {...props}
-      >
-        {params}
-      </Params>){returnType
-        ? (
-          <>
-            : <TypeDef code terminate {...props}>{returnType}</TypeDef>
-          </>
-        )
-        : ";"}
-    </div>
-  ));
-  return <div class={style("codeBlock")}>{items}</div>;
-}
 
 export function DocTitleFn(
   { children }: { children: Child<DocNodeFunction[]> },

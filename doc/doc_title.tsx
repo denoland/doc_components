@@ -4,7 +4,7 @@
 import { DocSubTitleClass } from "./classes.tsx";
 import { type DocNode, type DocNodeFunction, tw } from "../deps.ts";
 import { DocTitleFn } from "./functions.tsx";
-import { DocTitleInterface } from "./interfaces.tsx";
+import { DocSubTitleInterface } from "./interfaces.tsx";
 import { runtime } from "../services.ts";
 import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
@@ -26,7 +26,7 @@ export function DocTitle({ children }: { children: Child<DocNode[]> }) {
         title = (
           <DocTypeParams>{docNode.interfaceDef.typeParams}</DocTypeParams>
         );
-        subTitle = <DocTitleInterface>{docNode}</DocTitleInterface>;
+        subTitle = <DocSubTitleInterface>{docNode}</DocSubTitleInterface>;
         break;
       case "typeAlias":
         elements.push(

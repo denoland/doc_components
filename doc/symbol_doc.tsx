@@ -42,7 +42,7 @@ export function SymbolDoc(
   const title = namespace ? `${namespace}.${name}` : name;
   const markdownContext = { url, namespace };
 
-  let labels = [];
+  const labels = [];
 
   const tags: string[] = docNodes.flatMap(({ jsDoc }) =>
     jsDoc?.tags?.filter(({ kind }) => kind === "tags").flatMap(({ tags }) =>

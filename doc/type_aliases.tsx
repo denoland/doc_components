@@ -7,23 +7,8 @@ import { JsDoc } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
-import { DocTypeParams, TypeDef, TypeParams } from "./types.tsx";
+import { DocTypeParams, TypeDef } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";
-
-export function CodeBlockTypeAlias({ children, ...props }: {
-  children: Child<DocNodeTypeAlias>;
-  url: string;
-  namespace?: string;
-}) {
-  const { name, typeAliasDef: { typeParams, tsType } } = take(children);
-  return (
-    <div class={style("codeBlock")}>
-      <span class={style("codeKeyword")}>type</span> {name}
-      <TypeParams code {...props}>{typeParams}</TypeParams> ={" "}
-      <TypeDef code terminate {...props}>{tsType}</TypeDef>
-    </div>
-  );
-}
 
 export function DocBlockTypeAlias(
   { children, ...markdownContext }:
@@ -44,7 +29,7 @@ export function DocBlockTypeAlias(
         <Anchor>{id}</Anchor>
         <DocEntry location={location}>
           <span class={style("keyword")}>type</span> {name}
-          <TypeParams {...markdownContext}>{typeParams}</TypeParams> ={" "}
+          <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams> ={" "}
           <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
           {tags}
         </DocEntry>
