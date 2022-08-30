@@ -25,6 +25,7 @@ export type {
   InterfacePropertyDef,
   JsDoc,
   JsDocTag,
+  JsDocTagDoc,
   JsDocTagKind,
   LiteralCallSignatureDef,
   LiteralIndexSignatureDef,

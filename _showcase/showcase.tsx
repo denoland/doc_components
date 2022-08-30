@@ -19,8 +19,8 @@ import { CodeBlockFn, DocBlockFn } from "../doc/functions.tsx";
 import { CodeBlockInterface, DocBlockInterface } from "../doc/interfaces.tsx";
 import { MarkdownSummary } from "../doc/markdown.tsx";
 import { ModuleDoc } from "../doc/module_doc.tsx";
-import { ModulePathIndex } from "../doc/module_path_index.tsx";
-import { ModulePathIndexPanel } from "../doc/module_path_index_panel.tsx";
+import { ModuleIndex } from "../doc/module_index.tsx";
+import { ModuleIndexPanel } from "../doc/module_index_panel.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../doc/symbol_doc.tsx";
 import { CodeBlockTypeAlias, DocBlockTypeAlias } from "../doc/type_aliases.tsx";
@@ -81,19 +81,19 @@ export function Showcase(
         {docNodes}
       </ModuleDoc>
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
-      <ModulePathIndex
+      <ModuleIndex
         base="https://deno.land/std@0.142.0"
         sourceUrl="https://deno.land/std@0.142.0"
       >
         {moduleIndex}
-      </ModulePathIndex>
-      <ModulePathIndexPanel
+      </ModuleIndex>
+      <ModuleIndexPanel
         base="https://deno.land/std@0.142.0"
         path="/"
         current="/version.ts"
       >
         {moduleIndex}
-      </ModulePathIndexPanel>
+      </ModuleIndexPanel>
       <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
       <SymbolDoc url={url}>{itemNodes}</SymbolDoc>
       <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
