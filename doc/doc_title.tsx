@@ -2,12 +2,12 @@
 
 /** @jsx runtime.h */
 import { DocTitleClass } from "./classes.tsx";
-import { type DocNode, type DocNodeFunction, tw } from "./deps.ts";
+import { type DocNode, type DocNodeFunction, tw } from "../deps.ts";
 import { DocBlockEnum } from "./enums.tsx";
-import { DocBlockFn, DocTitleFn } from "./functions.tsx";
-import { DocBlockInterface } from "./interfaces.tsx";
+import { DocTitleFn } from "./functions.tsx";
+import { DocTitleInterface } from "./interfaces.tsx";
 import { DocBlockNamespace } from "./namespaces.tsx";
-import { runtime } from "./services.ts";
+import { runtime } from "../services.ts";
 import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
 import { docNodeKindColors } from "./symbol_kind.tsx";
@@ -21,15 +21,8 @@ export function DocTitle({ children }: { children: Child<DocNode[]> }) {
       case "class":
         fn = <DocTitleClass>{docNode}</DocTitleClass>;
         break;
-      case "enum":
-        elements.push(
-          <DocBlockEnum {...markdownContext}>{docNode}</DocBlockEnum>,
-        );
-        break;
       case "interface":
-        elements.push(
-          <DocBlockInterface {...markdownContext}>{docNode}</DocBlockInterface>,
-        );
+        fn = <DocTitleInterface>{docNode}</DocTitleInterface>;
         break;
       case "namespace":
         elements.push(

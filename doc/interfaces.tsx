@@ -3,18 +3,18 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import {
-  type ClassIndexSignatureDef,
+  type ClassIndexSignatureDef, DocNodeClass,
   type DocNodeInterface,
   type InterfaceCallSignatureDef,
   type InterfaceIndexSignatureDef,
   type InterfaceMethodDef,
   type InterfacePropertyDef,
   type Location,
-  type TsTypeDef,
+  type TsTypeDef, tw,
 } from "../deps.ts";
 import {
   Anchor,
-  DocEntry,
+  DocEntry, getAccessibilityTag,
   nameToId,
   SectionTitle,
   Tag,
@@ -30,34 +30,6 @@ import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 type IndexSignatureDef =
   | ClassIndexSignatureDef
   | InterfaceIndexSignatureDef;
-
-function CallSignatures(
-  { children, ...props }: {
-    children: Child<InterfaceCallSignatureDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-  },
-) {
-  const signatures = take(children, true);
-  if (!signatures.length) {
-    return null;
-  }
-  const items = signatures.map(({ typeParams, params, tsType }) => (
-    <div>
-      <TypeParams {...props}>{typeParams}</TypeParams>(<Params {...props}>
-        {params}
-      </Params>){tsType
-        ? (
-          <>
-            : <TypeDef {...props} terminate>{tsType}</TypeDef>
-          </>
-        )
-        : ";"}
-    </div>
-  ));
-  return <div class={style("indent")}>{items}</div>;
-}
 
 function CallSignaturesDoc(
   { children, ...markdownContext }: {
@@ -80,15 +52,15 @@ function CallSignaturesDoc(
           <Anchor>{id}</Anchor>
           <DocEntry location={location}>
             <TypeParams {...markdownContext}>{typeParams}</TypeParams>(<Params
-              inline
-              {...markdownContext}
-            >
-              {params}
-            </Params>){tsType && (
-              <>
-                : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
-              </>
-            )}
+            inline
+            {...markdownContext}
+          >
+            {params}
+          </Params>){tsType && (
+            <>
+              : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+            </>
+          )}
             {tags}
           </DocEntry>
           <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
@@ -106,163 +78,10 @@ function CallSignaturesDoc(
   );
 }
 
-export function CodeBlockInterface({ children, ...props }: {
-  children: Child<DocNodeInterface>;
-  url: string;
-  namespace?: string;
-}) {
-  const {
-    name,
-    interfaceDef: {
-      typeParams,
-      extends: ext,
-      indexSignatures,
-      callSignatures,
-      properties,
-      methods,
-    },
-  } = take(children);
-  return (
-    <div class={style("codeBlock")}>
-      <span class={style("codeKeyword")}>interface</span> {name}{" "}
-      <TypeParams code {...props}>{typeParams}</TypeParams>
-      <Extends {...props}>{ext}</Extends>{" "}
-      &#123;<IndexSignatures code {...props}>{indexSignatures}</IndexSignatures>
-      <CallSignatures code {...props}>{callSignatures}</CallSignatures>
-      <Properties code {...props}>{properties}</Properties>
-      <Methods code {...props}>{methods}</Methods>&#125;
-    </div>
-  );
-}
-
-export function DocBlockInterface(
-  { children, ...markdownContext }:
-    & { children: Child<DocNodeInterface> }
-    & MarkdownContext,
-) {
-  const {
-    location,
-    interfaceDef: {
-      typeParams,
-      extends: exts,
-      indexSignatures,
-      callSignatures,
-      properties,
-      methods,
-    },
-  } = take(children);
-  return (
-    <div class={style("docBlockItems")}>
-      <DocTypeParams location={location} {...markdownContext}>
-        {typeParams}
-      </DocTypeParams>
-      <ExtendsDoc location={location} {...markdownContext}>{exts}</ExtendsDoc>
-      <IndexSignaturesDoc {...markdownContext}>
-        {indexSignatures}
-      </IndexSignaturesDoc>
-      <CallSignaturesDoc {...markdownContext}>
-        {callSignatures}
-      </CallSignaturesDoc>
-      <PropertiesDoc {...markdownContext}>{properties}</PropertiesDoc>
-      <MethodsDoc {...markdownContext}>{methods}</MethodsDoc>
-    </div>
-  );
-}
-
-function Extends(
-  { children, ...props }: {
-    children: Child<TsTypeDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-  },
-) {
-  const extensions = take(children, true);
-  if (!extensions.length) {
-    return null;
-  }
-  const { code } = props;
-  const items = [];
-  for (let i = 0; i < extensions.length; i++) {
-    items.push(<TypeDef inline {...props}>{extensions[i]}</TypeDef>);
-    if (i < extensions.length - 1) {
-      items.push(", ");
-    }
-  }
-  return (
-    <>
-      <span class={style(code ? "codeKeyword" : "keyword")}>{" "}extends</span>
-      {" "}
-      {items}
-    </>
-  );
-}
-
-function ExtendsDoc(
-  { children, location, ...markdownContext }: {
-    children: Child<TsTypeDef[]>;
-    location: Location;
-  } & MarkdownContext,
-) {
-  const defs = take(children, true);
-  if (!defs.length) {
-    return null;
-  }
-  const items = defs.map((def) => {
-    const id = nameToId("extends", def.repr);
-    return (
-      <div class={style("docItem")} id={id}>
-        <Anchor>{id}</Anchor>
-        <DocEntry location={location}>
-          <TypeDef {...markdownContext}>{def}</TypeDef>
-        </DocEntry>
-      </div>
-    );
-  });
-  return (
-    <>
-      <SectionTitle>Extends</SectionTitle>
-      {items}
-    </>
-  );
-}
-
-export function IndexSignatures(
-  { children, ...props }: {
-    children: Child<IndexSignatureDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-  },
-) {
-  const signatures = take(children, true);
-  if (!signatures.length) {
-    return null;
-  }
-  const { code } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
-  const items = signatures.map(({ params, readonly, tsType }) => (
-    <div>
-      {maybe(readonly, <span class={keyword}>readonly{" "}</span>)}[<Params
-        {...props}
-      >
-        {params}
-      </Params>]{tsType
-        ? (
-          <>
-            : <TypeDef {...props} terminate>{tsType}</TypeDef>
-          </>
-        )
-        : ";"}
-    </div>
-  ));
-  return <div class={style("indent")}>{items}</div>;
-}
-
 export function IndexSignaturesDoc(
   { children, ...markdownContext }:
     & { children: Child<IndexSignatureDef[]> }
-    & MarkdownContext,
+      & MarkdownContext,
 ) {
   const defs = take(children, true);
   if (!defs.length) {
@@ -277,10 +96,10 @@ export function IndexSignaturesDoc(
           readonly,
           <span class={style("keyword")}>readonly{" "}</span>,
         )}[<Params {...markdownContext}>{params}</Params>]{tsType && (
-          <span>
+        <span>
             : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
           </span>
-        )}
+      )}
       </div>
     );
   });
@@ -290,49 +109,6 @@ export function IndexSignaturesDoc(
       {items}
     </div>
   );
-}
-
-function Methods(
-  { children, ...props }: {
-    children: Child<InterfaceMethodDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-  },
-) {
-  const methods = take(children, true);
-  if (!methods.length) {
-    return null;
-  }
-  const { code } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
-  const items = methods.map((
-    { name, kind, optional, computed, returnType, typeParams, params },
-  ) => (
-    <div>
-      {kind === "getter"
-        ? <span class={keyword}>get{" "}</span>
-        : kind === "setter"
-        ? <span class={keyword}>set{" "}</span>
-        : undefined}
-      {name === "new"
-        ? <span class={keyword}>{name}{" "}</span>
-        : computed
-        ? `[${name}]`
-        : name}
-      {optional ? "?" : undefined}
-      <TypeParams {...props}>{typeParams}</TypeParams>(<Params {...props}>
-        {params}
-      </Params>){returnType
-        ? (
-          <>
-            : <TypeDef {...props} terminate>{returnType}</TypeDef>
-          </>
-        )
-        : ";"}
-    </div>
-  ));
-  return <div class={style("indent")}>{items}</div>;
 }
 
 function MethodsDoc(
@@ -362,34 +138,37 @@ function MethodsDoc(
       const id = nameToId("method", `${name}_${i}`);
       const tags = [];
       if (kind !== "method") {
-        tags.push(<Tag color="purple">{kind}</Tag>);
+        tags.push(<Tag color="purple">{kind}</Tag>); // TODO
       }
-      if (optional) {
+      /*if (optional) {
         tags.push(<Tag color="cyan">optional</Tag>);
-      }
+      }*/
       if (isDeprecated({ jsDoc })) {
         tags.push(<Tag color="gray">deprecated</Tag>);
       }
+
       return (
         <div class={style("docItem")} id={id}>
           <Anchor>{id}</Anchor>
-          <DocEntry location={location}>
-            {name === "new"
-              ? <span class={style("keyword")}>new</span>
-              : computed
+          <DocEntry location={location} tags={tags} name={name === "new"
+            ? <span class={style("keyword")}>new</span>
+            : computed
               ? `[${name}]`
-              : name}
-            <TypeParams {...markdownContext}>{typeParams}</TypeParams>(<Params
+              : name}>
+            <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>
+            (
+            <Params
               inline
               {...markdownContext}
             >
               {params}
-            </Params>){returnType && (
-              <>
-                : <TypeDef inline {...markdownContext}>{returnType}</TypeDef>
-              </>
+            </Params>
+            )
+            {returnType && (
+              <span>
+              : <TypeDef {...markdownContext}>{returnType}</TypeDef>
+            </span>
             )}
-            {tags}
           </DocEntry>
           <JsDoc
             tagKinds={["param", "return", "template", "deprecated"]}
@@ -403,40 +182,13 @@ function MethodsDoc(
     },
   );
   return (
-    <>
-      <SectionTitle>Methods</SectionTitle>
-      {items}
-    </>
-  );
-}
-
-function Properties({ children, ...props }: {
-  children: Child<InterfacePropertyDef[]>;
-  url: string;
-  namespace?: string;
-  code?: boolean;
-}) {
-  const properties = take(children, true);
-  properties.sort((a, b) => a.name.localeCompare(b.name));
-  const { code } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
-  const items = properties.map((
-    { name, readonly, computed, optional, tsType },
-  ) => (
     <div>
-      {maybe(readonly, <span class={keyword}>readonly{" "}</span>)}
-      {maybe(computed, `[${name}]`, name)}
-      {maybe(optional, "?")}
-      {tsType
-        ? (
-          <>
-            : <TypeDef {...props} terminate>{tsType}</TypeDef>
-          </>
-        )
-        : ";"}
+      <SectionTitle>Methods</SectionTitle>
+      <div class={tw`mt-2 space-y-3`}>
+        {items}
+      </div>
     </div>
-  ));
-  return <div class={style("indent")}>{items}</div>;
+  );
 }
 
 function PropertiesDoc(
@@ -471,17 +223,16 @@ function PropertiesDoc(
       if (isDeprecated({ jsDoc })) {
         tags.push(<Tag color="gray">deprecated</Tag>);
       }
+
       return (
         <div class={style("docItem")} id={id}>
           <Anchor>{id}</Anchor>
-          <DocEntry location={location}>
-            {maybe(computed, `[${name}]`, name)}
+          <DocEntry location={location} tags={tags} name={maybe(computed, `[${name}]`, name)}>
             {tsType && (
               <>
                 : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
               </>
             )}
-            {tags}
           </DocEntry>
           <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
             {jsDoc}
@@ -490,10 +241,65 @@ function PropertiesDoc(
       );
     },
   );
+
+  return (
+    <div>
+      <SectionTitle>Properties</SectionTitle>
+      <div class={tw`mt-2 space-y-3`}>
+        {items}
+      </div>
+    </div>
+  );
+}
+
+export function DocTitleInterface({ children }: { children: Child<DocNodeInterface> }) {
+  const { interfaceDef } = take(children);
+
   return (
     <>
-      <SectionTitle>Properties</SectionTitle>
-      {items}
+      <DocTypeParams>{interfaceDef.typeParams}</DocTypeParams>
+
+      {interfaceDef.extends.length !== 0 && (
+        <span>
+          <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
+          {interfaceDef.extends.map((typeDef, i) => (
+            <>
+              <TypeDef>{typeDef}</TypeDef>
+              {i !== (interfaceDef.extends.length - 1) && <span>,{" "}</span>}
+            </>
+          ))}
+        </span>
+      )}
     </>
+  );
+}
+
+export function DocBlockInterface(
+  { children, ...markdownContext }:
+    & { children: Child<DocNodeInterface> }
+      & MarkdownContext,
+) {
+  const {
+    interfaceDef: {
+      indexSignatures,
+      callSignatures,
+      properties,
+      methods,
+    },
+  } = take(children);
+  return (
+    <div class={style("docBlockItems")}>
+      <IndexSignaturesDoc {...markdownContext}>
+        {indexSignatures}
+      </IndexSignaturesDoc>
+
+      <CallSignaturesDoc {...markdownContext}>
+        {callSignatures}
+      </CallSignaturesDoc>
+
+      <PropertiesDoc {...markdownContext}>{properties}</PropertiesDoc>
+
+      <MethodsDoc {...markdownContext}>{methods}</MethodsDoc>
+    </div>
   );
 }

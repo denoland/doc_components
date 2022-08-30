@@ -12,21 +12,19 @@ import {
   type DocNodeInterface,
   type DocNodeNamespace,
   type DocNodeTypeAlias,
-  type DocNodeVariable,
 } from "../deps.ts";
-import { CodeBlockEnum, DocBlockEnum } from "../doc/enums.tsx";
-import { CodeBlockFn, DocBlockFn } from "../doc/functions.tsx";
-import { CodeBlockInterface, DocBlockInterface } from "../doc/interfaces.tsx";
+import { DocBlockEnum } from "../doc/enums.tsx";
+import { DocBlockFn } from "../doc/functions.tsx";
+import { DocBlockInterface } from "../doc/interfaces.tsx";
 import { MarkdownSummary } from "../doc/markdown.tsx";
 import { ModuleDoc } from "../doc/module_doc.tsx";
 import { ModuleIndex } from "../doc/module_index.tsx";
 import { ModuleIndexPanel } from "../doc/module_index_panel.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../doc/symbol_doc.tsx";
-import { CodeBlockTypeAlias, DocBlockTypeAlias } from "../doc/type_aliases.tsx";
+import { DocBlockTypeAlias } from "../doc/type_aliases.tsx";
 import { Usage } from "../doc/usage.tsx";
 import { type Child, take } from "../doc/utils.ts";
-import { CodeBlockVariable } from "../doc/variables.tsx";
 import { DocBlockNamespace } from "../doc/namespaces.tsx";
 
 // deno-lint-ignore no-explicit-any
@@ -158,52 +156,6 @@ export function ShowcaseDocBlocks(
       <DocBlockTypeAlias url={url}>{typeAliasNode}</DocBlockTypeAlias>
       <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>
       <DocBlockNamespace url={url}>{namespaceNode}</DocBlockNamespace>
-    </div>
-  );
-}
-
-export function ShowcaseCodeBlocks(
-  { docNodes, url }: { docNodes: DocNode[]; url: string },
-) {
-  const classNode = docNodes.find(({ kind }) =>
-    kind === "class"
-  ) as DocNodeClass;
-  const enumNode = docNodes.find(({ kind }) => kind === "enum") as DocNodeEnum;
-  const interfaceNode = docNodes.find(({ kind }) =>
-    kind === "interface"
-  ) as DocNodeInterface;
-  const typeAliasNode = docNodes.find(({ kind }) =>
-    kind === "typeAlias"
-  ) as DocNodeTypeAlias;
-  const variableNode = docNodes.find(({ kind }) =>
-    kind === "variable"
-  ) as DocNodeVariable;
-  const fnName = docNodes.find(({ kind }) => kind === "function")?.name;
-  const fnNodes = docNodes.filter(({ kind, name }) =>
-    kind === "function" && name === fnName
-  ) as DocNodeFunction[];
-  return (
-    <div
-      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
-    >
-      <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
-      <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
-      <hr />
-      <ComponentTitle module="/classes.tsx">CodeBlockClass</ComponentTitle>
-      <ComponentTitle module="/enums.tsx">CodeBlockEnum</ComponentTitle>
-      <CodeBlockEnum url={url}>{enumNode}</CodeBlockEnum>
-      <ComponentTitle module="/functions.tsx">CodeBlockFn</ComponentTitle>
-      <CodeBlockFn url={url}>{fnNodes}</CodeBlockFn>
-      <ComponentTitle module="/interfaces.tsx">
-        CodeBlockInterface
-      </ComponentTitle>
-      <CodeBlockInterface url={url}>{interfaceNode}</CodeBlockInterface>
-      <ComponentTitle module="/type_aliases.tsx">
-        CodeBlockTypeAlias
-      </ComponentTitle>
-      <CodeBlockTypeAlias url={url}>{typeAliasNode}</CodeBlockTypeAlias>
-      <ComponentTitle module="/variables.tsx">CodeBlockVariable</ComponentTitle>
-      <CodeBlockVariable url={url}>{variableNode}</CodeBlockVariable>
     </div>
   );
 }

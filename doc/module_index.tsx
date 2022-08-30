@@ -7,6 +7,7 @@ import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "../icons.tsx";
+import { tw } from "../deps.ts";
 
 export interface IndexItem {
   kind: "dir" | "module" | "file";
@@ -59,7 +60,7 @@ function Module({ children, base, parent }: {
   return (
     <tr class={style("moduleIndexRow")}>
       <td class={style("moduleIndexLinkCell")}>
-        <Icons.SourceFile class={style("moduleIndexLinkCellIcon")} />
+        <Icons.Source class={style("moduleIndexLinkCellIcon")} />
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
@@ -109,9 +110,9 @@ export function ModuleIndex(
         </div>
         <a
           href={services.resolveSourceHref(sourceUrl)}
-          class={style("sourceButton")}
+          class={tw`icon-button`}
         >
-          <Icons.SourceFile />
+          <Icons.Source />
         </a>
       </div>
       <table class={style("moduleIndexTable")}>{entries}</table>

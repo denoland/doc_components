@@ -83,18 +83,25 @@ export function SectionTitle({ children }: { children: Child<string> }) {
 }
 
 export const tagColors = {
-  purple: ["#7B61FF1A", "#7B61FF"],
+  purple: ["[#7B61FF1A]", "[#7B61FF]"],
+  cyan: ["[#0CAFC619]", "[#0CAFC6]"],
+  gray: ["gray-100", "gray-400"],
 } as const;
 
 export function Tag(
-  { children, color }: {
+  { children, color, large }: {
     children: unknown;
     color: keyof typeof tagColors;
+    large?: boolean;
   },
 ) {
   const [bg, text] = tagColors[color];
   return (
-    <div class={tw`bg-[${bg}] text-[${text}] ${style("tag", true)}`}>
+    <div
+      class={tw`bg-${bg} text-${text} ${large ? "py-2 px-3" : "py-1 px-2"} ${
+        style("tag", true)
+      }`}
+    >
       {children}
     </div>
   );

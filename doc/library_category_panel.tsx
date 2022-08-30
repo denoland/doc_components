@@ -7,7 +7,8 @@ import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "../icons.tsx";
-import { docNodeKindMap, docNodeKindOrder } from "./symbol_kind.tsx";
+import { docNodeKindMap } from "./symbol_kind.tsx";
+import { byKindValue } from "./doc.ts";
 
 export interface SymbolItem {
   name: string;
@@ -75,8 +76,7 @@ function Category(
       {items.filter((symbol) =>
         symbol.kind !== "import" && symbol.kind !== "moduleDoc"
       ).sort((a, b) =>
-        (docNodeKindOrder.indexOf(a.kind) -
-          docNodeKindOrder.indexOf(b.kind)) || a.name.localeCompare(b.name)
+        byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
       ).map((symbol) => (
         <Symbol base={base} active={active} currentSymbol={currentSymbol}>
           {symbol}
@@ -138,8 +138,7 @@ export function LibraryCategoryPanel(
     const symbol of uncategorized.filter((symbol) =>
       symbol.kind !== "import" && symbol.kind !== "moduleDoc"
     ).sort((a, b) =>
-      (docNodeKindOrder.indexOf(a.kind) -
-        docNodeKindOrder.indexOf(b.kind)) || a.name.localeCompare(b.name)
+      byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
     )
   ) {
     entries.push(

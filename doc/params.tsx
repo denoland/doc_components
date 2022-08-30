@@ -193,7 +193,6 @@ function paramName(param: ParamDef): string {
       return `...${paramName(param.arg)}`;
       break;
   }
-
 }
 
 export function DocParamDef(

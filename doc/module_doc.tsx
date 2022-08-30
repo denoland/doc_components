@@ -37,8 +37,8 @@ function Entry<Node extends DocNode>(
         <div>
           {icon}
           <DocLink {...context}>{label}</DocLink>
-          {maybe(isAbstract(node), <Tag color="yellow">abstract</Tag>)}
-          {maybe(isDeprecated(node), <Tag color="gray">👎 deprecated</Tag>)}
+          {maybe(isAbstract(node), <Tag color="cyan" large>Abstract</Tag>)}
+          {maybe(isDeprecated(node), <Tag color="gray" large>Deprecated</Tag>)}
         </div>
       </td>
       <td class={style("symbolListCellDoc")}>
@@ -104,9 +104,9 @@ export function ModuleDoc(
         <div>{/* TODO: add module name */}</div>
         <a
           href={services.resolveSourceHref(sourceUrl)}
-          class={style("sourceButton")}
+          class={tw`icon-button`}
         >
-          <Icons.SourceFile />
+          <Icons.Source />
         </a>
       </div>
       <article class={style("main")}>

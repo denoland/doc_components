@@ -44,7 +44,9 @@ export function CodeBlockFn({ children, ...props }: {
   return <div class={style("codeBlock")}>{items}</div>;
 }
 
-export function DocTitleFn({ children }: { children: Child<DocNodeFunction[]> }) {
+export function DocTitleFn(
+  { children }: { children: Child<DocNodeFunction[]> },
+) {
   const [{ functionDef }] = take(children, true);
 
   return (

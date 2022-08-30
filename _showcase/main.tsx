@@ -84,29 +84,6 @@ router.get("/", async (ctx, next) => {
   await next();
 });
 
-router.get("/codeblocks", async (ctx, next) => {
-  sheet.reset();
-  const docNodes = await getDocNodes("oak", "v10.6.0", "/mod.ts");
-  const body = renderSSR(
-    <ShowcaseCodeBlocks
-      url="https://deno.land/x/oak@v10.6.0/mod.ts"
-      docNodes={docNodes}
-    />,
-  );
-  const styles = getStyleTag(sheet);
-  ctx.response.body = `<!DOCTYPE html>
-  <html lang="en">
-    <head>
-      ${styles}
-    </head>
-    <body>
-      ${body}
-    </body>
-  </html>`;
-  ctx.response.type = "html";
-  await next();
-});
-
 router.get("/docblocks", async (ctx, next) => {
   sheet.reset();
   const docNodes: DocNode[] = [

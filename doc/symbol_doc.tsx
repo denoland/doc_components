@@ -1,6 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+/** @jsxFrag runtime.Fragment */
 import {
   type DocNode,
   type DocNodeInterface,
@@ -40,19 +41,50 @@ export function SymbolDoc(
   const [{ name, location }] = docNodes;
   const title = namespace ? `${namespace}.${name}` : name;
   const markdownContext = { url, namespace };
+
+  const tags: string[] = docNodes.flatMap(({ jsDoc }) =>
+    jsDoc?.tags?.filter(({ kind }) => kind === "tags").flatMap(({ tags }) =>
+      tags
+    ) ?? []
+  );
+
   return (
     <article class={style("main")}>
       <div class={style("symbolDocHeader")}>
         <div>
           <DocTitle>{docNodes}</DocTitle>
-          {maybe(isAbstract(docNodes[0]), <Tag color="yellow">abstract</Tag>)}
-          {maybe(isDeprecated(docNodes[0]), <Tag color="gray">deprecated</Tag>)}
+
+          <div class={tw`pt-1`}>
+            {tags.length !== 0 && (
+              <Tag color="cyan" large>
+                <span class={tw`space-x-2`}>
+                  {tags.map((tag, i) => (
+                    <>
+                      {i !== 0 && (
+                        <div class={tw`inline border-l-2 border-gray-300`} />
+                      )}
+                      <span>{tag}</span>
+                    </>
+                  ))}
+                </span>
+              </Tag>
+            )}
+
+            {maybe(
+              isAbstract(docNodes[0]),
+              <Tag color="cyan" large>Abstract</Tag>,
+            )}
+            {maybe(
+              isDeprecated(docNodes[0]),
+              <Tag color="gray" large>Deprecated</Tag>,
+            )}
+          </div>
         </div>
         <a
           href={services.resolveSourceHref(location.filename, location.line)}
-          class={style("sourceButton")}
+          class={tw`icon-button`}
         >
-          <Icons.SourceFile />
+          <Icons.Source />
         </a>
       </div>
       <div class={tw`space-y-3`}>

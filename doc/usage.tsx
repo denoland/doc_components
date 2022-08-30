@@ -4,8 +4,8 @@
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { camelize, maybe, parseURL } from "./utils.ts";
-import * as Icons from "./icons.tsx";
-import { tw } from "./deps.ts";
+import * as Icons from "../icons.tsx";
+import { tw } from "../deps.ts";
 
 interface ParsedUsage {
   /** The symbol that the item should be imported as. If `usageSymbol` and

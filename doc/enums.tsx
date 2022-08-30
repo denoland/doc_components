@@ -2,43 +2,17 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type DocNodeEnum } from "../deps.ts";
+import { type DocNodeEnum, tw } from "../deps.ts";
 import { Anchor, DocEntry, nameToId, SectionTitle } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
-import { type Child, maybe, take } from "./utils.ts";
+import { type Child, take } from "./utils.ts";
 
 function byName(a: { name: string }, b: { name: string }): number {
   return a.name.localeCompare(b.name);
-}
-
-export function CodeBlockEnum(
-  { children, ...props }: {
-    children: Child<DocNodeEnum>;
-    url: string;
-    namespace?: string;
-  },
-) {
-  const { name, enumDef: { members } } = take(children);
-  const items = [...members].sort(byName).map(({ name, init }) => (
-    <>
-      {name}
-      {init && (
-        <>
-          {" "}= <TypeDef code inline {...props}>{init}</TypeDef>
-        </>
-      )},
-    </>
-  ));
-  return (
-    <div class={style("codeBlock")}>
-      <span class={style("codeKeyword")}>enum</span> {name} &#123;{" "}
-      {maybe(items.length, <div class={style("indent")}>{items}</div>)} &#125;
-    </div>
-  );
 }
 
 export function DocBlockEnum(
@@ -52,22 +26,27 @@ export function DocBlockEnum(
     return (
       <div class={style("docItem")} id={id}>
         <Anchor>{id}</Anchor>
-        <DocEntry location={location}>
-          {`${enumName}.${name}`}
+        <DocEntry location={location} name={name}>
           {init && (
             <>
               {" "} = <TypeDef inline {...markdownContext}>{init}</TypeDef>
             </>
           )}
         </DocEntry>
-        <JsDoc {...markdownContext}>{jsDoc}</JsDoc>
+        <JsDoc {...markdownContext}>
+          {jsDoc}
+        </JsDoc>
       </div>
     );
   });
   return (
     <div class={style("docBlockItems")}>
-      <SectionTitle>Members</SectionTitle>
-      {items}
+      <div>
+        <SectionTitle>Members</SectionTitle>
+        <div class={tw`mt-2 space-y-3`}>
+          {items}
+        </div>
+      </div>
     </div>
   );
 }

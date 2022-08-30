@@ -201,15 +201,15 @@ function ClassMethodDoc(
       tags.push(accessibilityTag);
     }
 
-    /*if (isAbstract) {
-      tags.push(<Tag color="yellow">abstract</Tag>);
+    if (isAbstract) {
+      tags.push(<Tag color="cyan">abstract</Tag>);
     }
-    if (optional) {
+    /*if (optional) {
       tags.push(<Tag color="cyan">optional</Tag>);
-    }
+    }*/
     if (isDeprecated({ jsDoc })) {
       tags.push(<Tag color="gray">deprecated</Tag>);
-    }*/
+    }
 
     return [(
       <>
@@ -524,7 +524,6 @@ export function DocBlockClass(
       decorators,
       indexSignatures,
     },
-    location,
   } = classNode;
   const classItems = getClassItems(classNode);
   return (
