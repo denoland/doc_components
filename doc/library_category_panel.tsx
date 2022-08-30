@@ -1,0 +1,165 @@
+// Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+
+/** @jsx runtime.h */
+/** @jsxFrag runtime.Fragment */
+import { DocNodeKind, JsDoc, JsDocTagDoc, tw } from "../deps.ts";
+import { runtime, services } from "../services.ts";
+import { style } from "../styles.ts";
+import { type Child, take } from "./utils.ts";
+import * as Icons from "../icons.tsx";
+import { docNodeKindMap, docNodeKindOrder } from "./symbol_kind.tsx";
+
+export interface SymbolItem {
+  name: string;
+  kind: DocNodeKind;
+  jsDoc?: JsDoc | null;
+}
+
+function Symbol(
+  { children, base, active, currentSymbol, uncategorized }: {
+    children: Child<SymbolItem>;
+    base: string;
+    active: boolean;
+    currentSymbol?: string;
+    uncategorized?: boolean;
+  },
+) {
+  const symbol = take(children);
+  const Icon = docNodeKindMap[symbol.kind];
+  return (
+    <a
+      class={`${style("moduleIndexPanelSymbol")} ${
+        uncategorized ? tw`pl-3` : ""
+      } ${
+        (active && currentSymbol === symbol.name)
+          ? style("moduleIndexPanelActive")
+          : ""
+      }`}
+      href={services.resolveHref(base, symbol.name)}
+      title={symbol.name}
+    >
+      <Icon />
+      <span>{symbol.name}</span>
+    </a>
+  );
+}
+
+function Category(
+  { children, base, name, currentSymbol }: {
+    children: Child<SymbolItem[]>;
+    name: string;
+    base: string;
+    currentSymbol?: string;
+  },
+) {
+  const items = take(children, true);
+  const active = !!items.find(({ name }) => name === currentSymbol);
+  return (
+    <details
+      open={active}
+      class={style("moduleIndexPanelDetails")}
+    >
+      <summary
+        class={style("moduleIndexPanelEntry")}
+        title={name}
+      >
+        <Icons.TriangleRight
+          tabindex={0}
+          onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
+        />
+        <span>
+          {name}
+        </span>
+      </summary>
+
+      {items.filter((symbol) =>
+        symbol.kind !== "import" && symbol.kind !== "moduleDoc"
+      ).sort((a, b) =>
+        (docNodeKindOrder.indexOf(a.kind) -
+          docNodeKindOrder.indexOf(b.kind)) || a.name.localeCompare(b.name)
+      ).map((symbol) => (
+        <Symbol base={base} active={active} currentSymbol={currentSymbol}>
+          {symbol}
+        </Symbol>
+      ))}
+    </details>
+  );
+}
+
+export function LibraryCategoryPanel(
+  { children, base, currentSymbol }: {
+    children: Child<SymbolItem[]>;
+    base: string;
+    currentSymbol?: string;
+  },
+) {
+  const items = take(children, true);
+
+  const categories: Record<string, SymbolItem[]> = {};
+  const uncategorized: SymbolItem[] = [];
+
+  for (const item of items) {
+    const category = (item.jsDoc?.tags?.find(({ kind }) =>
+      kind === "category"
+    ) as (JsDocTagDoc | undefined))?.doc?.trim();
+
+    if (category) {
+      if (!(category in categories)) {
+        categories[category] = [];
+      }
+
+      categories[category].push(item);
+    } else {
+      uncategorized.push(item);
+    }
+  }
+
+  const entries = [];
+  for (
+    const [name, symbols] of Object.entries(categories).sort(([a], [b]) =>
+      a.localeCompare(b)
+    )
+  ) {
+    entries.push(
+      <Category
+        name={name}
+        base={base}
+        currentSymbol={currentSymbol}
+      >
+        {symbols}
+      </Category>,
+    );
+  }
+
+  const uncategorizedActive = !!uncategorized.find(({ name }) =>
+    name === currentSymbol
+  );
+  for (
+    const symbol of uncategorized.filter((symbol) =>
+      symbol.kind !== "import" && symbol.kind !== "moduleDoc"
+    ).sort((a, b) =>
+      (docNodeKindOrder.indexOf(a.kind) -
+        docNodeKindOrder.indexOf(b.kind)) || a.name.localeCompare(b.name)
+    )
+  ) {
+    entries.push(
+      <Symbol
+        base={base}
+        active={uncategorizedActive}
+        currentSymbol={currentSymbol}
+        uncategorized
+      >
+        {symbol}
+      </Symbol>,
+    );
+  }
+
+  if (entries.length === 0) {
+    return <></>;
+  }
+  return (
+    <div class={style("moduleIndexPanel")}>
+      {entries}
+    </div>
+  );
+}

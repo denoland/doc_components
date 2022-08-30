@@ -2,13 +2,13 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { DocNodeClass, type DocNodeFunction, tw } from "./deps.ts";
+import { DocNodeClass, type DocNodeFunction, tw } from "../deps.ts";
 import { Anchor, DocEntry, nameToId, Tag } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { DocParamDef, Params } from "./params.tsx";
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 import { DocTypeParams, TypeDef, TypeParams } from "./types.tsx";
 import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 

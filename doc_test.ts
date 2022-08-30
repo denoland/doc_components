@@ -2,7 +2,7 @@
 
 import { assertEquals } from "./deps_test.ts";
 import { type DocNode } from "./deps.ts";
-import { byKind } from "./doc.ts";
+import { byKind } from "./doc/doc.ts";
 
 Deno.test({
   name: "doc - sort by kind",

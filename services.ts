@@ -1,13 +1,16 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import {
+  apply,
   comrak,
   type Configuration as TwConfiguration,
+  css,
+  type Plugin,
   setup as twSetup,
   type ThemeConfiguration,
   twColors,
 } from "./deps.ts";
-import { mdToHtml } from "./markdown.tsx";
+import { mdToHtml } from "./doc/markdown.tsx";
 
 interface JsxRuntime {
   Fragment: (props: Record<string, unknown>) => unknown;
@@ -62,9 +65,6 @@ export interface Configuration {
 }
 
 export const theme: ThemeConfiguration = {
-  backgroundSize: {
-    "4": "1rem",
-  },
   colors: {
     transparent: "transparent",
     current: "currentColor",
@@ -101,6 +101,37 @@ export const theme: ThemeConfiguration = {
       "monospace",
     ],
   },
+  extend: {
+    colors: {
+      secondary: "#E5E7EB",
+      "default-highlight": "#333333C0",
+    },
+    spacing: {
+      4.5: "1.125rem",
+      18: "4.5rem",
+      72: "18rem",
+    },
+    backgroundSize: {
+      "4": "1rem",
+    },
+  },
+};
+
+export const plugins: Record<string, Plugin> = {
+  "section-x-inset": (parts) =>
+    parts[0] === "none"
+      ? apply`max-w-none mx-0 px-0`
+      : apply`max-w-screen-${parts[0]} mx-auto px-4 sm:px-6 md:px-8`,
+  "divide-incl-y": (parts) =>
+    css({
+      "& > *": {
+        "&:first-child": {
+          "border-top-width": (parts[0] ?? 1) + "px",
+        },
+        "border-top-width": "0px",
+        "border-bottom-width": (parts[0] ?? 1) + "px",
+      },
+    }),
 };
 
 const runtimeConfig: Required<

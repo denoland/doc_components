@@ -1,9 +1,9 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { type ObjectPatPropDef, type ParamDef } from "./deps.ts";
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { type ObjectPatPropDef, type ParamDef } from "../deps.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, maybe, take } from "./utils.ts";
 import { Anchor, DocEntry, nameToId } from "./doc_common.tsx";

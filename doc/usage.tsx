@@ -1,8 +1,8 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 import { camelize, maybe, parseURL } from "./utils.ts";
 import * as Icons from "./icons.tsx";
 import { tw } from "./deps.ts";

@@ -6,14 +6,14 @@ import {
   type DocNodeInterface,
   type DocNodeTypeAlias,
   tw,
-} from "./deps.ts";
+} from "../deps.ts";
 import { byKind, isAbstract, isDeprecated } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
 import { Tag } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
-import * as Icons from "./icons.tsx";
-import { runtime, services } from "./services.ts";
-import { style } from "./styles.ts";
+import * as Icons from "../icons.tsx";
+import { runtime, services } from "../services.ts";
+import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import { type Child, maybe, take } from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";

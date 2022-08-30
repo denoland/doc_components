@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type DecoratorDef } from "./deps.ts";
+import { type DecoratorDef } from "../deps.ts";
 import {
   Anchor,
   DocEntry,
@@ -11,8 +11,8 @@ import {
   SectionTitle,
 } from "./doc_common.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
-import { runtime, services } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime, services } from "../services.ts";
+import { style } from "../styles.ts";
 import { type Child, maybe, take } from "./utils.ts";
 
 function Decorator(

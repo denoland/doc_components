@@ -10,7 +10,7 @@ import {
   type DocNodeClass,
   type JsDoc as JsDocType,
   tw,
-} from "./deps.ts";
+} from "../deps.ts";
 import {
   Anchor,
   DocEntry,
@@ -23,8 +23,8 @@ import { IndexSignaturesDoc } from "./interfaces.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 import { DocTypeParams, TypeDef } from "./types.tsx";
 import { assert, type Child, isDeprecated, take } from "./utils.ts";
 

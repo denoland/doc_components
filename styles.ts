@@ -31,11 +31,6 @@ const markdownStyles = css({
   ul: apply`lg:(list-disc list-inside)`,
 });
 
-const panelStyles = css({
-  "& > input:checked ~ .content": apply`hidden`,
-  "& > input:checked ~ label > svg": apply`rotate-0`,
-});
-
 const none = apply``;
 
 const syntaxHighlightingStyles = css({
@@ -102,40 +97,29 @@ const styles = {
   }`,
   moduleDoc: apply`space-y-6`,
   moduleDocHeader: apply`flex justify-between mb-8`,
-  moduleIndexTable: apply`block w-full lg:(table table-fixed)`,
-  moduleIndexTableBody: apply`block w-full lg:table-row-group`,
-  moduleIndexRow: apply`block lg:table-row`,
-  moduleIndexCell: apply`block ml-4 lg:(table-cell ml-0)`,
-  moduleIndexModuleCell:
-    apply`block pl-2 py-0.5 lg:(table-cell w-48 pl-4 pr-2 py-1.5)`,
-  moduleIndexPanelCell: apply`block lg:table-cell ${panelStyles}`,
-  modulePathIndex: apply`rounded-lg w-full border border-[#E5E7EB]`,
-  modulePathIndexHeader: apply`flex justify-between items-center py-3.5 pr-5`,
-  modulePathIndexHeaderTitle:
-    apply`ml-5 font-semibold text-lg flex items-center`,
-  modulePathIndexHeaderTitleSpan: apply`ml-2 leading-none`,
-  modulePathIndexTable: apply`block lg:table w-full`,
-  modulePathIndexRow: apply`block lg:table-row odd:bg-[#F8F7F6]`,
-  modulePathIndexLinkCell:
+  moduleIndex: apply`rounded-lg w-full border border-[#E5E7EB]`,
+  moduleIndexHeader: apply`flex justify-between items-center py-3.5 pr-5`,
+  moduleIndexHeaderTitle: apply`ml-5 font-semibold text-lg flex items-center`,
+  moduleIndexHeaderTitleSpan: apply`ml-2 leading-none`,
+  moduleIndexTable: apply`block lg:table w-full`,
+  moduleIndexRow: apply`block lg:table-row odd:bg-[#F8F7F6]`,
+  moduleIndexLinkCell:
     apply`block lg:table-cell pl-5 pr-3 py-2.5 font-semibold`,
-  modulePathIndexLinkCellIcon: apply`inline my-1.5 mr-3`,
-  modulePathIndexDocCell:
+  moduleIndexLinkCellIcon: apply`inline my-1.5 mr-3`,
+  moduleIndexDocCell:
     apply`block lg:(table-cell pl-0 pt-2.5 mt-0) pl-11 pr-[1.375rem] pb-2.5 -mt-2 text-[#9CA0AA]`,
-  modulePathIndexSymbolCell: apply`block lg:table-cell pl-5 pr-2 py-1`,
-  modulePathIndexPanel: apply`hidden lg:block w-72 flex-shrink-0`,
-  modulePathIndexPanelActive: apply`bg-gray-100 font-bold`,
-  modulePathIndexPanelDetails: css({
+  moduleIndexPanel: apply`lg:w-72 flex-shrink-0`,
+  moduleIndexPanelActive: apply`bg-gray-100 font-bold`,
+  moduleIndexPanelDetails: css({
     "& > summary": apply`list-none`,
     "& > summary::-webkit-details-marker": apply`hidden`,
     "&[open] svg": apply`rotate-90`,
   }),
-  modulePathIndexPanelEntry:
+  moduleIndexPanelEntry:
     apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:(text-gray-500  bg-gray-50) children:last-child:(truncate flex-shrink-1)`,
-  modulePathIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
-  modulePathIndexPanelSymbol:
+  moduleIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
+  moduleIndexPanelSymbol:
     apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50) children:(flex-none last-child:(truncate flex-shrink-1))`,
-  modulePathIndexPanelToggle:
-    apply`hidden checked:sibling:children:first-child:rotate-90 not-checked:siblings:last-child:hidden`,
   none,
   numberLiteral: none,
   panel: css({

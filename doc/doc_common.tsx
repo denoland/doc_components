@@ -1,9 +1,9 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { type Accessibility, type Location, tw } from "./deps.ts";
-import { runtime, services } from "./services.ts";
-import { style } from "./styles.ts";
+import { type Accessibility, type Location, tw } from "../deps.ts";
+import { runtime, services } from "../services.ts";
+import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 
 export const TARGET_RE = /(\s|[\[\]])/g;

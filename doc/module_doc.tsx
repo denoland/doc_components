@@ -1,14 +1,14 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { type DocNode, tw } from "./deps.ts";
+import { type DocNode, tw } from "../deps.ts";
 import { getDocSummary } from "./doc.ts";
 import { SectionTitle, Tag } from "./doc_common.tsx";
-import * as Icons from "./icons.tsx";
+import * as Icons from "../icons.tsx";
 import { JsDocModule } from "./jsdoc.tsx";
 import { type MarkdownContext, MarkdownSummary } from "./markdown.tsx";
-import { runtime, services } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime, services } from "../services.ts";
+import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import * as SymbolKind from "./symbol_kind.tsx";
 import {

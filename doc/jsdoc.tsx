@@ -7,10 +7,10 @@ import {
   type JsDocTag as JsDocTagNode,
   type JsDocTagKind,
   tw,
-} from "./deps.ts";
+} from "../deps.ts";
 import { Markdown, type MarkdownContext } from "./markdown.tsx";
-import { runtime } from "./services.ts";
-import { style } from "./styles.ts";
+import { runtime } from "../services.ts";
+import { style } from "../styles.ts";
 import { type Child, DocNodeTupleArray, take } from "./utils.ts";
 
 function hasDoc(tag: JsDocTagNode) {
