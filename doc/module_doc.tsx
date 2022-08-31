@@ -4,7 +4,7 @@
 /** @jsxFrag runtime.Fragment */
 import { type DocNode, tw } from "../deps.ts";
 import { getDocSummary } from "./doc.ts";
-import { SectionTitle, Tag } from "./doc_common.tsx";
+import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
 import { JsDocModule } from "./jsdoc.tsx";
 import { type MarkdownContext, MarkdownSummary } from "./markdown.tsx";
@@ -42,8 +42,8 @@ function Entry<Node extends DocNode>(
         <div>
           {icon}
           <a href={href}>{label}</a>
-          {maybe(isAbstract(node), <Tag color="cyan" large>Abstract</Tag>)}
-          {maybe(isDeprecated(node), <Tag color="gray" large>Deprecated</Tag>)}
+          {maybe(isAbstract(node), tagVariants.abstract())}
+          {maybe(isDeprecated(node), tagVariants.deprecated())}
         </div>
       </td>
       <td class={style("symbolListCellDoc")}>

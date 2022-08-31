@@ -11,12 +11,18 @@ import {
   type JsDocTagReturn,
   tw,
 } from "../deps.ts";
-import { Anchor, DocEntry, nameToId, Section, Tag } from "./doc_common.tsx";
+import {
+  Anchor,
+  DocEntry,
+  nameToId,
+  Section,
+  tagVariants,
+} from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import {
   getSummary,
   Markdown,
-  MarkdownContext,
+  type MarkdownContext,
   MarkdownSummary,
 } from "./markdown.tsx";
 import { DocParamDef, Params } from "./params.tsx";
@@ -98,7 +104,7 @@ function DocFunction(
   const overloadId = nameToId("function_overload", `${n}_${def.name}`);
   const tags = [];
   if (isDeprecated(def)) {
-    tags.push(<Tag color="gray">deprecated</Tag>);
+    tags.push(tagVariants.deprecated());
   }
 
   const paramDocs: JsDocTagParam[] =
@@ -140,7 +146,7 @@ function DocFunction(
           {[
             <div class={style("docItem")} id={"id"}>
               <Anchor>{"id"}</Anchor>
-              <DocEntry location={def.location} name={""}>
+              <DocEntry location={def.location} tags={tags} name={""}>
                 <TypeDef {...markdownContext}>
                   {def.functionDef.returnType}
                 </TypeDef>

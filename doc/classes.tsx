@@ -17,6 +17,7 @@ import {
   nameToId,
   Section,
   Tag,
+  tagVariants,
 } from "./doc_common.tsx";
 import { IndexSignaturesDoc } from "./interfaces.tsx";
 import { JsDoc } from "./jsdoc.tsx";
@@ -138,22 +139,23 @@ function ClassAccessorDoc(
   const accessibility = get?.accessibility ?? set?.accessibility;
   const isAbstract = get?.isAbstract ?? set?.isAbstract;
   const tags = [];
-  /*if (isAbstract) {
-    tags.push(<Tag color="yellow">abstract</Tag>);
-  }
-  if (isDeprecated(get ?? set)) {
-    tags.push(<Tag color="gray">deprecated</Tag>);
-  }*/
 
   const accessibilityTag = getAccessibilityTag(accessibility);
   if (accessibilityTag) {
     tags.push(accessibilityTag);
   }
 
+  if (isAbstract) {
+    tags.push(tagVariants.abstract());
+  }
+  if (isDeprecated(get ?? set)) {
+    tags.push(tagVariants.deprecated());
+  }
+
   if (get && !set) {
-    tags.push(<Tag color="purple">readonly</Tag>);
+    tags.push(tagVariants.readonly());
   } else if (!get && set) {
-    tags.push(<Tag color="purple">writeonly</Tag>);
+    tags.push(tagVariants.writeonly());
   }
 
   return (
@@ -202,13 +204,13 @@ function ClassMethodDoc(
     }
 
     if (isAbstract) {
-      tags.push(<Tag color="cyan">abstract</Tag>);
+      tags.push(tagVariants.abstract());
     }
-    /*if (optional) {
-      tags.push(<Tag color="cyan">optional</Tag>);
-    }*/
+    if (optional) {
+      tags.push(tagVariants.optional());
+    }
     if (isDeprecated({ jsDoc })) {
-      tags.push(<Tag color="gray">deprecated</Tag>);
+      tags.push(tagVariants.deprecated());
     }
 
     return [
@@ -267,23 +269,25 @@ function ClassPropertyDoc(
     readonly,
   } = take(children);
   const id = nameToId("prop", name);
+
   const tags = [];
-  if (isAbstract) {
-    tags.push(<Tag color="yellow">abstract</Tag>);
-  }
   const accessibilityTag = getAccessibilityTag(accessibility);
   if (accessibilityTag) {
     tags.push(accessibilityTag);
   }
+  if (isAbstract) {
+    tags.push(tagVariants.abstract());
+  }
   if (readonly) {
-    tags.push(<Tag color="purple">readonly</Tag>);
+    tags.push(tagVariants.readonly());
   }
   if (optional) {
-    tags.push(<Tag color="cyan">optional</Tag>);
+    tags.push(tagVariants.optional());
   }
   if (isDeprecated({ jsDoc })) {
-    tags.push(<Tag color="gray">deprecated</Tag>);
+    tags.push(tagVariants.deprecated());
   }
+
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>

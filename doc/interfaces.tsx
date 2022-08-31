@@ -11,7 +11,14 @@ import {
   type InterfacePropertyDef,
   tw,
 } from "../deps.ts";
-import { Anchor, DocEntry, nameToId, Section, Tag } from "./doc_common.tsx";
+import {
+  Anchor,
+  DocEntry,
+  nameToId,
+  Section,
+  Tag,
+  tagVariants,
+} from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
@@ -38,7 +45,7 @@ function CallSignaturesDoc(
       const id = nameToId("call_sig", String(i));
       const tags = [];
       if (isDeprecated({ jsDoc })) {
-        tags.push(<Tag color="gray">deprecated</Tag>);
+        tags.push(tagVariants.deprecated());
       }
       return (
         <div class={style("docItem")} id={id}>
@@ -116,15 +123,16 @@ function MethodsDoc(
       i,
     ) => {
       const id = nameToId("method", `${name}_${i}`);
+
       const tags = [];
       if (kind !== "method") {
         tags.push(<Tag color="purple">{kind}</Tag>);
       }
-      /*if (optional) {
-        tags.push(<Tag color="cyan">optional</Tag>);
-      }*/
+      if (optional) {
+        tags.push(tagVariants.optional());
+      }
       if (isDeprecated({ jsDoc })) {
-        tags.push(<Tag color="gray">deprecated</Tag>);
+        tags.push(tagVariants.deprecated());
       }
 
       return (
@@ -181,15 +189,16 @@ function PropertiesDoc(
       },
     ) => {
       const id = nameToId("prop", name);
+
       const tags = [];
       if (readonly) {
-        tags.push(<Tag color="purple">readonly</Tag>);
+        tags.push(tagVariants.readonly());
       }
       if (optional) {
-        tags.push(<Tag color="cyan">optional</Tag>);
+        tags.push(tagVariants.optional());
       }
       if (isDeprecated({ jsDoc })) {
-        tags.push(<Tag color="gray">deprecated</Tag>);
+        tags.push(tagVariants.deprecated());
       }
 
       return (

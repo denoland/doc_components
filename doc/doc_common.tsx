@@ -107,3 +107,13 @@ export function Tag(
     </div>
   );
 }
+
+export const tagVariants = {
+  deprecatedLg: () => <Tag color="gray" large>Deprecated</Tag>,
+  deprecated: () => <Tag color="gray">deprecated</Tag>,
+  abstractLg: () => <Tag color="cyan" large>Abstract</Tag>,
+  abstract: () => <Tag color="cyan">abstract</Tag>,
+  readonly: () => <Tag color="purple">readonly</Tag>,
+  writeonly: () => <Tag color="purple">readonly</Tag>,
+  optional: () => <Tag color="cyan">optional</Tag>,
+} as const;

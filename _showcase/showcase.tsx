@@ -95,8 +95,6 @@ export function Showcase(
       <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
       <SymbolDoc url={url}>{itemNodes}</SymbolDoc>
       <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
-      <Tag color="yellow">abstract</Tag>
-      <Tag color="gray">👎 deprecated</Tag>
       <ComponentTitle module="/usage.tsx">Usage</ComponentTitle>
       <Usage url="https://deno.land/x/example@v1.0.0/mod.ts" />
       <Usage

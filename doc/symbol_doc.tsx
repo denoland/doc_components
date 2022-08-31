@@ -10,7 +10,7 @@ import {
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
-import { Tag } from "./doc_common.tsx";
+import { Tag, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import * as Icons from "../icons.tsx";
 import { runtime, services } from "../services.ts";
@@ -65,10 +65,10 @@ export function SymbolDoc(
   }
 
   if (isAbstract(docNodes[0])) {
-    tags.push(<Tag color="cyan" large>Abstract</Tag>);
+    tags.push(tagVariants.abstractLg());
   }
   if (isDeprecated(docNodes[0])) {
-    tags.push(<Tag color="gray" large>Deprecated</Tag>);
+    tags.push(tagVariants.deprecatedLg());
   }
 
   const isFunction = docNodes[0].kind === "function";

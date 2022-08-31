@@ -2,8 +2,7 @@
 
 /** @jsx runtime.h */
 import { type DocNodeTypeAlias } from "../deps.ts";
-import { Anchor, DocEntry, nameToId, Tag } from "./doc_common.tsx";
-import { JsDoc } from "./jsdoc.tsx";
+import { Anchor, DocEntry, nameToId, tagVariants } from "./doc_common.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
@@ -19,7 +18,7 @@ export function DocBlockTypeAlias(
   const id = nameToId("typeAlias", name);
   const tags = [];
   if (isDeprecated({ jsDoc })) {
-    tags.push(<Tag color="gray">Deprecated</Tag>);
+    tags.push(tagVariants.deprecated());
   }
   return (
     <div class={style("docBlockItems")}>
