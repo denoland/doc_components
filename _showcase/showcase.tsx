@@ -14,7 +14,7 @@ import {
   type DocNodeTypeAlias,
 } from "../deps.ts";
 import { DocBlockEnum } from "../doc/enums.tsx";
-import { DocBlockFn } from "../doc/functions.tsx";
+import { DocBlockFunction } from "../doc/functions.tsx";
 import { DocBlockInterface } from "../doc/interfaces.tsx";
 import { MarkdownSummary } from "../doc/markdown.tsx";
 import { ModuleDoc } from "../doc/module_doc.tsx";
@@ -151,7 +151,7 @@ export function ShowcaseDocBlocks(
       </ComponentTitle>
       <DocBlockInterface url={url}>{interfaceNode}</DocBlockInterface>
       <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
-      <DocBlockFn url={url}>{fnNodes}</DocBlockFn>
+      <DocBlockFunction url={url}>{fnNodes}</DocBlockFunction>
       <ComponentTitle module="/type_alias.tsx">DocNodeTypeAlias</ComponentTitle>
       <DocBlockTypeAlias url={url}>{typeAliasNode}</DocBlockTypeAlias>
       <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>

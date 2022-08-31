@@ -133,6 +133,13 @@ export function Markdown(
     : null;
 }
 
+export function getSummary(doc: string | undefined): string | undefined {
+  if (doc) {
+    const [summary] = doc.split("\n\n");
+    return summary;
+  }
+}
+
 export function MarkdownSummary(
   { children, url, namespace, markdownStyle = "markdownSummary" }: {
     children: Child<string | undefined>;

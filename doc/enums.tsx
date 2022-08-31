@@ -30,7 +30,7 @@ export function DocBlockEnum(
           {init && (
             <>
               {" = "}
-              <TypeDef inline {...markdownContext}>{init}</TypeDef>
+              <TypeDef {...markdownContext}>{init}</TypeDef>
             </>
           )}
         </DocEntry>

@@ -3,7 +3,6 @@
 /** @jsx runtime.h */
 import { DocSubTitleClass } from "./classes.tsx";
 import { type DocNode, type DocNodeFunction, tw } from "../deps.ts";
-import { DocTitleFn } from "./functions.tsx";
 import { DocSubTitleInterface } from "./interfaces.tsx";
 import { runtime } from "../services.ts";
 import { DocBlockTypeAlias } from "./type_aliases.tsx";
@@ -14,7 +13,7 @@ import { DocTypeParams } from "./types.tsx";
 export function DocTitle({ children }: { children: Child<DocNode[]> }) {
   const docNodes = take(children, true);
   const elements = [];
-  for (const docNode of docNodes) {
+  for (const docNode of [docNodes[0]]) {
     let title;
     let subTitle;
     switch (docNode.kind) {
@@ -52,11 +51,6 @@ export function DocTitle({ children }: { children: Child<DocNode[]> }) {
       </div>,
     );
   }
-  const fnNodes = docNodes.filter(({ kind }) =>
-    kind === "function"
-  ) as DocNodeFunction[];
-  if (fnNodes.length) {
-    elements.push(<DocTitleFn>{fnNodes}</DocTitleFn>);
-  }
+
   return <div>{elements}</div>;
 }

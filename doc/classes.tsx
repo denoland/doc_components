@@ -2,7 +2,6 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { DecoratorDoc, DecoratorSubDoc } from "./decorators.tsx";
 import {
   type ClassConstructorDef,
   type ClassMethodDef,
@@ -27,6 +26,7 @@ import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { DocTypeParams, TypeDef } from "./types.tsx";
 import { assert, type Child, isDeprecated, take } from "./utils.ts";
+import { DocFunctionSummary } from "./functions.tsx";
 
 type ClassAccessorDef = ClassMethodDef & { kind: "getter" | "setter" };
 type ClassGetterDef = ClassMethodDef & { kind: "getter" };
@@ -164,7 +164,7 @@ function ClassAccessorDoc(
           <span>
             :{" "}
             <span class={tw`font-medium`}>
-              <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+              <TypeDef {...markdownContext}>{tsType}</TypeDef>
             </span>
           </span>
         )}
@@ -192,7 +192,7 @@ function ClassMethodDoc(
       accessibility,
       optional,
       isAbstract,
-      functionDef: { typeParams, params, returnType, decorators },
+      functionDef,
     },
   ) => {
     const tags = [];
@@ -212,29 +212,9 @@ function ClassMethodDoc(
     }
 
     return [
-      <>
-        <DocEntry location={location} tags={tags} name={name}>
-          <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>
-          (
-          <Params
-            inline
-            {...markdownContext}
-          >
-            {params}
-          </Params>
-          )
-          {returnType && (
-            <span>
-              : <TypeDef {...markdownContext}>{returnType}</TypeDef>
-            </span>
-          )}
-        </DocEntry>
-        {decorators && (
-          <DecoratorSubDoc id={id} {...markdownContext}>
-            {decorators}
-          </DecoratorSubDoc>
-        )}
-      </>,
+      <DocEntry location={location} tags={tags} name={name}>
+        <DocFunctionSummary>{functionDef}</DocFunctionSummary>
+      </DocEntry>,
       jsDoc,
     ];
   });
@@ -287,7 +267,6 @@ function ClassPropertyDoc(
     name,
     tsType,
     jsDoc,
-    decorators,
     accessibility,
     isAbstract,
     optional,
@@ -317,18 +296,13 @@ function ClassPropertyDoc(
       <DocEntry location={location} tags={tags} name={name}>
         {tsType && (
           <span>
-            : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+            : <TypeDef {...markdownContext}>{tsType}</TypeDef>
           </span>
         )}
       </DocEntry>
       <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
         {jsDoc}
       </JsDoc>
-      {decorators && (
-        <DecoratorSubDoc id={id} {...markdownContext}>
-          {decorators}
-        </DecoratorSubDoc>
-      )}
     </div>
   );
 }
@@ -425,7 +399,7 @@ function ConstructorsDoc(
           ]}
           name={name}
         >
-          (<Params inline {...markdownContext}>
+          (<Params {...markdownContext}>
             {params}
           </Params>)
         </DocEntry>
@@ -498,17 +472,12 @@ export function DocBlockClass(
     name,
     classDef: {
       constructors,
-      decorators,
       indexSignatures,
     },
   } = classNode;
   const classItems = getClassItems(classNode);
   return (
     <div class={style("docBlockItems")}>
-      {decorators && (
-        <DecoratorDoc {...markdownContext}>{decorators}</DecoratorDoc>
-      )}
-
       <ConstructorsDoc name={name} {...markdownContext}>
         {constructors}
       </ConstructorsDoc>

@@ -27,60 +27,51 @@ function LiteralIndexSignatures(
     children: Child<LiteralIndexSignatureDef[]>;
     url: string;
     namespace?: string;
-    inline?: boolean;
   },
 ) {
   const signatures = take(children, true);
   if (!signatures.length) {
     return null;
   }
-  const { inline } = props;
-  const items = signatures.map(({ params, readonly, tsType }) => {
-    const item = (
-      <>
-        {maybe(
-          readonly,
-          <span class={style("keyword")}>
-            readonly{" "}
-          </span>,
-        )}[<Params {...props}>{params}</Params>]{tsType && (
-          <>
-            : <TypeDef {...props} inline>{tsType}</TypeDef>
-          </>
-        )};{" "}
-      </>
-    );
-    return inline ? item : <div>{item}</div>;
-  });
-  return inline ? <>{items}</> : <div class={style("indent")}>{items}</div>;
+  const items = signatures.map(({ params, readonly, tsType }) => (
+    <>
+      {maybe(
+        readonly,
+        <span class={style("keyword")}>
+          readonly{" "}
+        </span>,
+      )}[<Params {...props}>{params}</Params>]{tsType && (
+        <>
+          : <TypeDef {...props}>{tsType}</TypeDef>
+        </>
+      )};{" "}
+    </>
+  ));
+
+  return <>{items}</>;
 }
 
 function LiteralCallSignatures({ children, ...props }: {
   children: Child<LiteralCallSignatureDef[]>;
   url: string;
   namespace?: string;
-  inline?: boolean;
 }) {
   const signatures = take(children, true);
   if (!signatures.length) {
     return null;
   }
-  const { inline } = props;
-  const items = signatures.map(({ typeParams, params, tsType }) => {
-    const item = (
-      <>
-        <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params {...props}>
-          {params}
-        </Params>){tsType && (
-          <>
-            : <TypeDef {...props} inline>{tsType}</TypeDef>
-          </>
-        )};{" "}
-      </>
-    );
-    return inline ? item : <div>{item}</div>;
-  });
-  return inline ? <>{items}</> : <div class={style("indent")}>{items}</div>;
+  const items = signatures.map(({ typeParams, params, tsType }) => (
+    <>
+      <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params {...props}>
+        {params}
+      </Params>){tsType && (
+        <>
+          : <TypeDef {...props}>{tsType}</TypeDef>
+        </>
+      )};{" "}
+    </>
+  ));
+  return <>{items}</>;
 }
 
 function LiteralProperties(
@@ -88,83 +79,75 @@ function LiteralProperties(
     children: Child<LiteralPropertyDef[]>;
     url: string;
     namespace?: string;
-    inline?: boolean;
   },
 ) {
   const properties = take(children, true);
   if (!properties.length) {
     return null;
   }
-  const { inline } = props;
   const items = properties.map(
-    ({ name, readonly, computed, optional, tsType }) => {
-      const item = (
-        <>
-          {maybe(
-            readonly,
-            <span class={style("keyword")}>
-              readonly{" "}
-            </span>,
-          )}
-          {maybe(computed, `[${name}]`, name)}
-          {maybe(optional, "?")}
-          {tsType
-            ? (
-              <>
-                : <TypeDef {...props}>{tsType}</TypeDef>
-              </>
-            )
-            : "; "}
-        </>
-      );
-      return inline ? item : <div>{item}</div>;
-    },
+    ({ name, readonly, computed, optional, tsType }) => (
+      <>
+        {maybe(
+          readonly,
+          <span class={style("keyword")}>
+            readonly{" "}
+          </span>,
+        )}
+        {maybe(computed, `[${name}]`, name)}
+        {maybe(optional, "?")}
+        {tsType
+          ? (
+            <>
+              : <TypeDef {...props}>{tsType}</TypeDef>
+            </>
+          )
+          : "; "}
+      </>
+    ),
   );
-  return inline ? <>{items}</> : <div class={style("indent")}>{items}</div>;
+  return <>{items}</>;
 }
 
 function LiteralMethods({ children, ...props }: {
   children: Child<LiteralMethodDef[]>;
   url: string;
   namespace?: string;
-  inline?: boolean;
 }) {
   const methods = take(children, true);
   if (!methods.length) {
     return null;
   }
-  const { inline } = props;
   const keyword = style("keyword");
   const items = methods.map(
-    ({ name, kind, optional, computed, returnType, typeParams, params }) => {
-      const item = (
-        <>
-          {kind === "getter"
-            ? <span class={keyword}>get{" "}</span>
-            : kind === "setter"
-            ? <span class={keyword}>set{" "}</span>
-            : undefined}
-          {name === "new"
-            ? <span class={keyword}>{name}{" "}</span>
-            : computed
-            ? `[${name}]`
-            : name}
-          {maybe(optional, "?")}
-          <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params {...props}>
-            {params}
-          </Params>){returnType
-            ? (
-              <>
-                : <TypeDef {...props}>{returnType}</TypeDef>
-              </>
-            )
-            : "; "}
-        </>
-      );
-      return inline ? item : <div>{item}</div>;
-    },
+    ({ name, kind, optional, computed, returnType, typeParams, params }) => (
+      <>
+        {kind === "getter"
+          ? <span class={keyword}>get{" "}</span>
+          : kind === "setter"
+          ? <span class={keyword}>set{" "}</span>
+          : undefined}
+        {name === "new"
+          ? <span class={keyword}>{name}{" "}</span>
+          : computed
+          ? `[${name}]`
+          : name}
+        {maybe(optional, "?")}
+        <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params
+          {...props}
+        >
+          {params}
+        </Params>){returnType
+          ? (
+            <>
+              : <TypeDef {...props}>{returnType}</TypeDef>
+            </>
+          )
+          : "; "}
+      </>
+    ),
   );
-  return inline ? <>{items}</> : <div class={style("indent")}>{items}</div>;
+  return <>{items}</>;
 }
 
 function MappedOptional(
@@ -207,7 +190,6 @@ export function TypeArguments(
     children: Child<TsTypeDef[] | undefined>;
     url: string;
     namespace?: string;
-    inline?: boolean;
   },
 ) {
   const args = take(children, true);
@@ -216,7 +198,7 @@ export function TypeArguments(
   }
   const items = [];
   for (let i = 0; i < args.length; i++) {
-    items.push(<TypeDef {...props} inline>{args[i]}</TypeDef>);
+    items.push(<TypeDef {...props}>{args[i]}</TypeDef>);
     if (i < args.length - 1) {
       items.push(<>{", "}</>);
     }
@@ -228,7 +210,6 @@ export function TypeDef({ children, ...props }: {
   children: Child<TsTypeDef>;
   url: string;
   namespace?: string;
-  inline?: boolean;
 }) {
   const def = take(children);
   const keyword = style("keyword");
@@ -236,7 +217,7 @@ export function TypeDef({ children, ...props }: {
     case "array":
       return (
         <>
-          <TypeDef {...props} inline>{def.array}</TypeDef>[]
+          <TypeDef {...props}>{def.array}</TypeDef>[]
         </>
       );
     case "conditional": {
@@ -260,7 +241,9 @@ export function TypeDef({ children, ...props }: {
       return (
         <>
           {maybe(constructor, <span class={keyword}>new{" "}</span>)}
-          <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params {...props}>
+          <DocTypeParams {...props}>{typeParams}</DocTypeParams>(<Params
+            {...props}
+          >
             {params}
           </Params>) =&gt; <TypeDef {...props}>{tsType}</TypeDef>
         </>
@@ -281,10 +264,7 @@ export function TypeDef({ children, ...props }: {
       const { indexedAccess: { objType, indexType } } = def;
       return (
         <>
-          <TypeDef {...props} inline>{objType}</TypeDef>[<TypeDef
-            {...props}
-            inline
-          >
+          <TypeDef {...props}>{objType}</TypeDef>[<TypeDef {...props}>
             {indexType}
           </TypeDef>]
         </>
@@ -309,8 +289,8 @@ export function TypeDef({ children, ...props }: {
       const { keyword } = def;
       return (
         <span class={tw`text-[#056CF0]`}>
-            {keyword}
-          </span>
+          {keyword}
+        </span>
       );
     }
     case "literal": {
@@ -325,9 +305,7 @@ export function TypeDef({ children, ...props }: {
           );
           break;
         case "boolean":
-          item = (
-            <span class={style("boolean")}>{repr}</span>
-          );
+          item = <span class={style("boolean")}>{repr}</span>;
           break;
         case "number":
           item = (
@@ -355,14 +333,10 @@ export function TypeDef({ children, ...props }: {
       return <>{item}</>;
     }
     case "mapped":
-      return (
-        <TypeDefMapped {...props}>{def}</TypeDefMapped>
-      );
+      return <TypeDefMapped {...props}>{def}</TypeDefMapped>;
     case "optional": {
       const { optional } = def;
-      return (
-        <TypeDef {...props}>{optional}</TypeDef>
-      );
+      return <TypeDef {...props}>{optional}</TypeDef>;
     }
     case "parenthesized": {
       const { parenthesized } = def;
@@ -381,9 +355,7 @@ export function TypeDef({ children, ...props }: {
       );
     }
     case "this": {
-      return (
-        <span class={keyword}>this</span>
-      );
+      return <span class={keyword}>this</span>;
     }
     case "tuple": {
       return (
@@ -405,8 +377,7 @@ export function TypeDef({ children, ...props }: {
             {callSignatures}
           </LiteralCallSignatures>
           <LiteralProperties {...props}>{properties}</LiteralProperties>
-          <LiteralMethods {...props}>{methods}
-          </LiteralMethods>&#125;
+          <LiteralMethods {...props}>{methods}</LiteralMethods>&#125;
         </>
       );
     }
@@ -476,13 +447,12 @@ function TypeDefIntersection(
     children: Child<TsTypeIntersectionDef>;
     url: string;
     namespace?: string;
-    inline?: boolean;
   },
 ) {
   const { intersection } = take(children);
   const keyword = style("keyword");
   const lastIndex = intersection.length - 1;
-  if (props.inline || intersection.length <= 3) {
+  if (intersection.length <= 3) {
     const items = [];
     for (let i = 0; i < intersection.length; i++) {
       items.push(<TypeDef {...props}>{intersection[i]}</TypeDef>);
@@ -506,7 +476,6 @@ function TypeDefMapped(
     children: Child<TsTypeMappedDef>;
     url: string;
     namespace?: string;
-    inline?: boolean;
   },
 ) {
   const {
@@ -542,12 +511,10 @@ function TypeDefTuple(
     children: Child<TsTypeTupleDef>;
     url: string;
     namespace?: string;
-    inline?: boolean;
   },
 ) {
   const { tuple } = take(children);
-  const { inline } = props;
-  if (inline || tuple.length <= 3) {
+  if (tuple.length <= 3) {
     const items = [];
     for (let i = 0; i < tuple.length; i++) {
       items.push(<TypeDef {...props}>{tuple[i]}</TypeDef>);
@@ -570,13 +537,12 @@ function TypeDefUnion(
     children: Child<TsTypeUnionDef>;
     url: string;
     namespace?: string;
-    inline?: boolean;
   },
 ) {
   const { union } = take(children);
   const keyword = style("keyword");
   const lastIndex = union.length - 1;
-  if (props.inline || union.length <= 3) {
+  if (union.length <= 3) {
     const items = [];
     for (let i = 0; i < union.length; i++) {
       items.push(<TypeDef {...props}>{union[i]}</TypeDef>);
@@ -595,7 +561,7 @@ function TypeDefUnion(
   return <div class={style("indent")}>{items}</div>;
 }
 
-export function TypeParam(
+function TypeParam(
   { children, constraintKind = "extends", ...props }: {
     children: Child<TsTypeParamDef>;
     url: string;
@@ -611,13 +577,13 @@ export function TypeParam(
       {constraint && (
         <>
           <span class={keyword}>{` ${constraintKind} `}</span>
-          <TypeDef {...props} inline>{constraint}</TypeDef>
+          <TypeDef {...props}>{constraint}</TypeDef>
         </>
       )}
       {def && (
         <>
           <span class={keyword}>{` = `}</span>
-          <TypeDef {...props} inline>{def}</TypeDef>
+          <TypeDef {...props}>{def}</TypeDef>
         </>
       )}
     </>

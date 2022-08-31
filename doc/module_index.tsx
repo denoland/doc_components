@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { MarkdownSummary } from "./markdown.tsx";
+import { getSummary, MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
@@ -15,13 +15,6 @@ export interface IndexItem {
   size: number;
   ignored: boolean;
   doc?: string;
-}
-
-function getSummary(doc: string | undefined): string | undefined {
-  if (doc) {
-    const [summary] = doc.split("\n\n");
-    return summary;
-  }
 }
 
 function Folder({ children, base, parent }: {

@@ -16,16 +16,15 @@ import { style } from "../styles.ts";
 import { type Child, maybe, take } from "./utils.ts";
 
 function Decorator(
-  { children, code, url, namespace }: {
+  { children, url, namespace }: {
     children: Child<DecoratorDef>;
-    code?: boolean;
     url: string;
     namespace?: string;
   },
 ) {
   const { name, args } = take(children);
   const href = services.lookupHref(url, namespace, name);
-  const cl = code ? "codeDecorator" : "decorator";
+  const cl = "decorator";
   return (
     <div>
       @<span class={style(cl)}>
@@ -61,7 +60,7 @@ export function Decorators(
   return (
     <div>
       {decorators.map((decorator) => (
-        <Decorator code {...props}>{decorator}</Decorator>
+        <Decorator {...props}>{decorator}</Decorator>
       ))}
     </div>
   );

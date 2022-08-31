@@ -71,6 +71,8 @@ export function SymbolDoc(
     labels.push(<Tag color="gray" large>Deprecated</Tag>);
   }
 
+  const isFunction = docNodes[0].kind === "function";
+
   return (
     <article class={style("main")}>
       <div class={style("symbolDocHeader")}>
@@ -95,9 +97,11 @@ export function SymbolDoc(
           !(url.endsWith(".d.ts") || library),
           <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
         )}
-        <JsDoc tagKinds="deprecated" tagsWithDoc {...markdownContext}>
-          {jsDoc}
-        </JsDoc>
+        {!isFunction && (
+          <JsDoc tagKinds="deprecated" tagsWithDoc {...markdownContext}>
+            {jsDoc}
+          </JsDoc>
+        )}
       </div>
       <DocBlock {...markdownContext}>{docNodes}</DocBlock>
     </article>

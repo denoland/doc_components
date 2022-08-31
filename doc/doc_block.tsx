@@ -4,7 +4,7 @@
 import { DocBlockClass } from "./classes.tsx";
 import { type DocNode, type DocNodeFunction } from "../deps.ts";
 import { DocBlockEnum } from "./enums.tsx";
-import { DocBlockFn } from "./functions.tsx";
+import { DocBlockFunction } from "./functions.tsx";
 import { DocBlockInterface } from "./interfaces.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { DocBlockNamespace } from "./namespaces.tsx";
@@ -52,7 +52,9 @@ export function DocBlock(
     kind === "function"
   ) as DocNodeFunction[];
   if (fnNodes.length) {
-    elements.push(<DocBlockFn {...markdownContext}>{fnNodes}</DocBlockFn>);
+    elements.push(
+      <DocBlockFunction {...markdownContext}>{fnNodes}</DocBlockFunction>,
+    );
   }
   return <div>{elements}</div>;
 }

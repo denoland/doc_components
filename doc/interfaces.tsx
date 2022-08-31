@@ -44,14 +44,12 @@ function CallSignaturesDoc(
         <div class={style("docItem")} id={id}>
           <Anchor>{id}</Anchor>
           <DocEntry location={location}>
-            <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>(<Params
-              inline
-              {...markdownContext}
-            >
+            <DocTypeParams {...markdownContext}>{typeParams}
+            </DocTypeParams>(<Params {...markdownContext}>
               {params}
             </Params>){tsType && (
               <>
-                : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+                : <TypeDef {...markdownContext}>{tsType}</TypeDef>
               </>
             )}
             {tags}
@@ -85,7 +83,7 @@ export function IndexSignaturesDoc(
           <span class={style("keyword")}>readonly{" "}</span>,
         )}[<Params {...markdownContext}>{params}</Params>]{tsType && (
           <span>
-            : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+            : <TypeDef {...markdownContext}>{tsType}</TypeDef>
           </span>
         )}
       </div>
@@ -145,10 +143,7 @@ function MethodsDoc(
           >
             <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>
             (
-            <Params
-              inline
-              {...markdownContext}
-            >
+            <Params {...markdownContext}>
               {params}
             </Params>
             )
@@ -215,7 +210,7 @@ function PropertiesDoc(
           >
             {tsType && (
               <>
-                : <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
+                : <TypeDef {...markdownContext}>{tsType}</TypeDef>
               </>
             )}
           </DocEntry>

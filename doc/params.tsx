@@ -18,7 +18,6 @@ function ObjectPat(
     url: string;
     namespace?: string;
     code?: boolean;
-    inline?: boolean;
   },
 ) {
   const pattern = take(children);
@@ -58,7 +57,6 @@ function Param(
     url: string;
     namespace?: string;
     code?: boolean;
-    inline?: boolean;
   },
 ) {
   const param = take(children);
@@ -146,14 +144,13 @@ export function Params(
     url: string;
     namespace?: string;
     code?: boolean;
-    inline?: boolean;
   },
 ) {
   const params = take(children, true);
   if (!params.length) {
     return null;
   }
-  if (params.length < 3 || props.inline) {
+  if (params.length < 3) {
     const items = [];
     for (let i = 0; i < params.length; i++) {
       items.push(<Param {...props}>{params[i]}</Param>);
@@ -202,12 +199,11 @@ export function DocParamDef(
     children: Child<ParamDef>;
     location: Location;
     namespace?: string;
-    inline?: boolean;
   },
 ) {
   const param = take(children, true);
 
-  const name = paramName(param) || "foo";
+  const name = paramName(param);
   const id = nameToId("arg", name);
 
   return (
@@ -216,7 +212,7 @@ export function DocParamDef(
       <DocEntry name={name} location={props.location}>
         {param.tsType && (
           <span>
-            : <TypeDef inline {...props}>{param.tsType}</TypeDef>
+            : <TypeDef {...props}>{param.tsType}</TypeDef>
           </span>
         )}
       </DocEntry>
@@ -224,13 +220,6 @@ export function DocParamDef(
         /*<JsDoc tagKinds={["deprecated"]} tagsWithDoc {...props}>
         {jsDoc}
       </JsDoc>*/
-      }
-      {
-        /*{decorators && (
-        <DecoratorSubDoc id={id} {...props}>
-          {decorators}
-        </DecoratorSubDoc>
-      )}*/
       }
     </div>
   );

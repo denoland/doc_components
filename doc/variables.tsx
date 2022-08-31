@@ -16,7 +16,7 @@ export function CodeBlockVariable({ children, ...props }: {
   const { name, variableDef: { kind, tsType } } = take(children);
   return (
     <div class={style("codeBlock")}>
-      <span class={style("codeKeyword")}>{kind}</span> {name}
+      <span class={style("keyword")}>{kind}</span> {name}
       {tsType
         ? (
           <>
