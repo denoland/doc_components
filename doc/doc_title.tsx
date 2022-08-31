@@ -2,15 +2,20 @@
 
 /** @jsx runtime.h */
 import { DocSubTitleClass } from "./classes.tsx";
-import { type DocNode, type DocNodeFunction, tw } from "../deps.ts";
+import { type DocNode, tw } from "../deps.ts";
 import { DocSubTitleInterface } from "./interfaces.tsx";
 import { runtime } from "../services.ts";
 import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
 import { docNodeKindColors } from "./symbol_kind.tsx";
 import { DocTypeParams } from "./types.tsx";
+import { MarkdownContext } from "./markdown.tsx";
 
-export function DocTitle({ children }: { children: Child<DocNode[]> }) {
+export function DocTitle(
+  { children, ...markdownContext }:
+    & { children: Child<DocNode[]> }
+    & MarkdownContext,
+) {
   const docNodes = take(children, true);
   const elements = [];
   for (const docNode of [docNodes[0]]) {
@@ -19,7 +24,9 @@ export function DocTitle({ children }: { children: Child<DocNode[]> }) {
     switch (docNode.kind) {
       case "class":
         title = <DocTypeParams>{docNode.classDef.typeParams}</DocTypeParams>;
-        subTitle = <DocSubTitleClass>{docNode}</DocSubTitleClass>;
+        subTitle = (
+          <DocSubTitleClass {...markdownContext}>{docNode}</DocSubTitleClass>
+        );
         break;
       case "interface":
         title = (

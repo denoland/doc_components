@@ -43,7 +43,7 @@ function CallSignaturesDoc(
       return (
         <div class={style("docItem")} id={id}>
           <Anchor>{id}</Anchor>
-          <DocEntry location={location}>
+          <DocEntry location={location} name={""}>
             <DocTypeParams {...markdownContext}>{typeParams}
             </DocTypeParams>(<Params {...markdownContext}>
               {params}
@@ -226,7 +226,9 @@ function PropertiesDoc(
 }
 
 export function DocSubTitleInterface(
-  { children }: { children: Child<DocNodeInterface> },
+  { children, ...markdownContext }:
+    & { children: Child<DocNodeInterface> }
+    & MarkdownContext,
 ) {
   const { interfaceDef } = take(children);
 
@@ -239,7 +241,7 @@ export function DocSubTitleInterface(
       <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
       {interfaceDef.extends.map((typeDef, i) => (
         <>
-          <TypeDef>{typeDef}</TypeDef>
+          <TypeDef {...markdownContext}>{typeDef}</TypeDef>
           {i !== (interfaceDef.extends.length - 1) && <span>,{" "}</span>}
         </>
       ))}

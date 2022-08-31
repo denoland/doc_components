@@ -24,7 +24,7 @@ import { type MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
-import { DocTypeParams, TypeDef } from "./types.tsx";
+import { TypeDef } from "./types.tsx";
 import { assert, type Child, isDeprecated, take } from "./utils.ts";
 import { DocFunctionSummary } from "./functions.tsx";
 
@@ -213,7 +213,9 @@ function ClassMethodDoc(
 
     return [
       <DocEntry location={location} tags={tags} name={name}>
-        <DocFunctionSummary>{functionDef}</DocFunctionSummary>
+        <DocFunctionSummary {...markdownContext}>
+          {functionDef}
+        </DocFunctionSummary>
       </DocEntry>,
       jsDoc,
     ];
@@ -418,7 +420,9 @@ function ConstructorsDoc(
 }
 
 export function DocSubTitleClass(
-  { children }: { children: Child<DocNodeClass> },
+  { children, ...markdownContext }:
+    & { children: Child<DocNodeClass> }
+    & MarkdownContext,
 ) {
   const { classDef } = take(children);
 
@@ -429,7 +433,7 @@ export function DocSubTitleClass(
           <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
           {classDef.implements.map((typeDef, i) => (
             <>
-              <TypeDef>{typeDef}</TypeDef>
+              <TypeDef {...markdownContext}>{typeDef}</TypeDef>
               {i !== (classDef.implements.length - 1) && <span>,{" "}</span>}
             </>
           ))}
@@ -446,7 +450,7 @@ export function DocSubTitleClass(
                 {"<"}
                 {classDef.superTypeParams.map((typeDef, i) => (
                   <>
-                    <TypeDef>{typeDef}</TypeDef>
+                    <TypeDef {...markdownContext}>{typeDef}</TypeDef>
                     {i !== (classDef.superTypeParams.length - 1) && (
                       <span>,{" "}</span>
                     )}

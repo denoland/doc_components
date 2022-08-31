@@ -6,9 +6,9 @@ import {
   apply,
   css,
   type DocNodeFunction,
-  FunctionDef,
-  JsDocTagParam,
-  JsDocTagReturn,
+  type FunctionDef,
+  type JsDocTagParam,
+  type JsDocTagReturn,
   tw,
 } from "../deps.ts";
 import { Anchor, DocEntry, nameToId, Section, Tag } from "./doc_common.tsx";
@@ -27,35 +27,37 @@ import { type Child, isDeprecated, take } from "./utils.ts";
 
 export function DocFunctionSummary({
   children,
+  ...markdownContext
 }: {
   children: Child<FunctionDef>;
-}) {
+} & MarkdownContext) {
   const def = take(children, true);
 
   return (
     <>
       <DocTypeParams>{def.typeParams}</DocTypeParams>
       (
-      <Params>
+      <Params {...markdownContext}>
         {def.params}
       </Params>
       )
       {def.returnType && (
         <span>
-          : <TypeDef>{def.returnType}</TypeDef>
+          : <TypeDef {...markdownContext}>{def.returnType}</TypeDef>
         </span>
       )}
     </>
   );
 }
 
-function DocBlockShortFunction({
+function DocFunctionOverload({
   children,
   i,
+  ...markdownContext
 }: {
   children: Child<DocNodeFunction>;
   i: number;
-}) {
+} & MarkdownContext) {
   const def = take(children, true);
 
   if (def.functionDef.hasBody) {
@@ -73,12 +75,14 @@ function DocBlockShortFunction({
       <div class={tw`font-mono`}>
         <span class={tw`font-bold`}>{def.name}</span>
         <span class={tw`font-medium`}>
-          <DocFunctionSummary>{def.functionDef}</DocFunctionSummary>
+          <DocFunctionSummary {...markdownContext}>
+            {def.functionDef}
+          </DocFunctionSummary>
         </span>
       </div>
 
       <div class={tw`w-full`}>
-        <MarkdownSummary url={""}>{summary}</MarkdownSummary>
+        <MarkdownSummary {...markdownContext}>{summary}</MarkdownSummary>
       </div>
     </label>
   );
@@ -146,7 +150,9 @@ export function DocBlockFunction(
                 <div class={style("docItem")} id={"id"}>
                   <Anchor>{"id"}</Anchor>
                   <DocEntry location={location} name={""}>
-                    <TypeDef>{functionDef.returnType}</TypeDef>
+                    <TypeDef {...markdownContext}>
+                      {functionDef.returnType}
+                    </TypeDef>
                   </DocEntry>
                   {returnDoc?.doc && (
                     <Markdown {...markdownContext}>{returnDoc?.doc}</Markdown>
@@ -191,7 +197,9 @@ export function DocBlockFunction(
 
           <div class={tw`space-y-4`}>
             {defs.map((def, i) => (
-              <DocBlockShortFunction i={i}>{def}</DocBlockShortFunction>
+              <DocFunctionOverload i={i} {...markdownContext}>
+                {def}
+              </DocFunctionOverload>
             ))}
           </div>
         </>

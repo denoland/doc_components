@@ -11,14 +11,12 @@ import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, maybe, take } from "./utils.ts";
 import { Anchor, DocEntry, nameToId } from "./doc_common.tsx";
+import { MarkdownContext } from "./markdown.tsx";
 
 function ObjectPat(
-  { children, ...props }: {
+  { children, ...markdownContext }: {
     children: Child<ObjectPatPropDef>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-  },
+  } & MarkdownContext,
 ) {
   const pattern = take(children);
   switch (pattern.kind) {
@@ -35,7 +33,7 @@ function ObjectPat(
       const { key, value } = pattern;
       return (
         <span>
-          {key}: <Param {...props}>{value}</Param>
+          {key}: <Param {...markdownContext}>{value}</Param>
         </span>
       );
     }
@@ -43,7 +41,7 @@ function ObjectPat(
       const { arg } = pattern;
       return (
         <span>
-          ...<Param {...props}>{arg}</Param>
+          ...<Param {...markdownContext}>{arg}</Param>
         </span>
       );
     }
@@ -51,25 +49,24 @@ function ObjectPat(
 }
 
 function Param(
-  { children, optional, ...props }: {
+  { children, optional, ...markdownContext }: {
     children: Child<ParamDef>;
     optional?: boolean;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-  },
+  } & MarkdownContext,
 ) {
   const param = take(children);
   switch (param.kind) {
     case "array": {
       const { elements, optional: paramOptional, tsType } = param;
-      const items = elements.map((e) => e && <Param {...props}>{e}</Param>);
+      const items = elements.map((e) =>
+        e && <Param {...markdownContext}>{e}</Param>
+      );
       return (
         <span>
           [{items}]{paramOptional || optional ? "?" : ""}
           {tsType && (
             <span>
-              : <TypeDef {...props}>{tsType}</TypeDef>
+              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -79,10 +76,10 @@ function Param(
       const { left, tsType } = param;
       return (
         <span>
-          <Param {...props} optional>{left}</Param>
+          <Param {...markdownContext} optional>{left}</Param>
           {tsType && (
             <span>
-              : <TypeDef {...props}>{tsType}</TypeDef>
+              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -96,18 +93,18 @@ function Param(
           {paramOptional || optional ? "?" : ""}
           {tsType && (
             <span>
-              : <TypeDef {...props}>{tsType}</TypeDef>
+              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
       );
     }
     case "object": {
-      const { props: objProps, optional: paramOptional, tsType } = param;
+      const { props, optional: paramOptional, tsType } = param;
       const items = [];
-      for (let i = 0; i < objProps.length; i++) {
-        items.push(<ObjectPat {...props}>{objProps[i]}</ObjectPat>);
-        if (i < objProps.length - 1) {
+      for (let i = 0; i < props.length; i++) {
+        items.push(<ObjectPat {...markdownContext}>{props[i]}</ObjectPat>);
+        if (i < props.length - 1) {
           items.push(<span>{", "}</span>);
         }
       }
@@ -116,7 +113,7 @@ function Param(
           &#123; {items} &#125;{paramOptional || optional ? "?" : ""}
           {tsType && (
             <span>
-              : <TypeDef {...props}>{tsType}</TypeDef>
+              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -126,10 +123,10 @@ function Param(
       const { arg, tsType } = param;
       return (
         <span>
-          ...<Param {...props}>{arg}</Param>
+          ...<Param {...markdownContext}>{arg}</Param>
           {tsType && (
             <span>
-              : <TypeDef {...props}>{tsType}</TypeDef>
+              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -139,12 +136,9 @@ function Param(
 }
 
 export function Params(
-  { children, ...props }: {
+  { children, ...markdownContext }: {
     children: Child<ParamDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-  },
+  } & MarkdownContext,
 ) {
   const params = take(children, true);
   if (!params.length) {
@@ -153,7 +147,7 @@ export function Params(
   if (params.length < 3) {
     const items = [];
     for (let i = 0; i < params.length; i++) {
-      items.push(<Param {...props}>{params[i]}</Param>);
+      items.push(<Param {...markdownContext}>{params[i]}</Param>);
       if (i < params.length - 1) {
         items.push(<span>{", "}</span>);
       }
@@ -164,7 +158,7 @@ export function Params(
     <div class={style("indent")}>
       {params.map((param) => (
         <div>
-          <Param {...props}>{param}</Param>,
+          <Param {...markdownContext}>{param}</Param>,
         </div>
       ))}
     </div>
@@ -190,16 +184,14 @@ function paramName(param: ParamDef): string {
       break;
     case "rest":
       return `...${paramName(param.arg)}`;
-      break;
   }
 }
 
 export function DocParamDef(
-  { children, ...props }: {
+  { children, location, ...markdownContext }: {
     children: Child<ParamDef>;
     location: Location;
-    namespace?: string;
-  },
+  } & MarkdownContext,
 ) {
   const param = take(children, true);
 
@@ -209,15 +201,15 @@ export function DocParamDef(
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>
-      <DocEntry name={name} location={props.location}>
+      <DocEntry name={name} location={location}>
         {param.tsType && (
           <span>
-            : <TypeDef {...props}>{param.tsType}</TypeDef>
+            : <TypeDef {...markdownContext}>{param.tsType}</TypeDef>
           </span>
         )}
       </DocEntry>
       {
-        /*<JsDoc tagKinds={["deprecated"]} tagsWithDoc {...props}>
+        /*<JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
         {jsDoc}
       </JsDoc>*/
       }

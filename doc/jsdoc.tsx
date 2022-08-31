@@ -6,7 +6,6 @@ import {
   type JsDoc as JsDocNode,
   type JsDocTag as JsDocTagNode,
   type JsDocTagKind,
-  tw,
 } from "../deps.ts";
 import { Markdown, type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";

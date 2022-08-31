@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type DocNodeEnum, tw } from "../deps.ts";
+import { type DocNodeEnum } from "../deps.ts";
 import { Anchor, DocEntry, nameToId, Section } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";

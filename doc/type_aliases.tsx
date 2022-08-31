@@ -27,7 +27,7 @@ export function DocBlockTypeAlias(
     <div class={style("docBlockItems")}>
       <div class={style("docItem")} id={id}>
         <Anchor>{id}</Anchor>
-        <DocEntry location={location}>
+        <DocEntry location={location} name={""}>
           <span class={style("keyword")}>type</span> {name}
           <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams> =
           {" "}
@@ -35,7 +35,7 @@ export function DocBlockTypeAlias(
           {tags}
         </DocEntry>
       </div>
-      <DocTypeParams location={location} {...markdownContext}>
+      <DocTypeParams {...markdownContext}>
         {typeParams}
       </DocTypeParams>
       <JsDoc
