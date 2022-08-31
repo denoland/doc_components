@@ -55,7 +55,7 @@ export function DocBlockFn(
         <div class={style("docItem")} id={id}>
           <Anchor>{id}</Anchor>
           <DocEntry location={location} name={name} tags={tags}>
-            <DocParamDef>{params}</DocParamDef>
+            <DocParamDef location={location}>{params}</DocParamDef>
 
             {returnType && (
               <>

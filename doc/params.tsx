@@ -1,14 +1,16 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { type ObjectPatPropDef, type ParamDef } from "../deps.ts";
+import {
+  type Location,
+  type ObjectPatPropDef,
+  type ParamDef,
+} from "../deps.ts";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, maybe, take } from "./utils.ts";
 import { Anchor, DocEntry, nameToId } from "./doc_common.tsx";
-import { JsDoc } from "./jsdoc.tsx";
-import { DecoratorSubDoc } from "./decorators.tsx";
 
 function ObjectPat(
   { children, ...props }: {
@@ -198,35 +200,38 @@ function paramName(param: ParamDef): string {
 export function DocParamDef(
   { children, ...props }: {
     children: Child<ParamDef>;
-    url: string;
+    location: Location;
     namespace?: string;
-    code?: boolean;
     inline?: boolean;
   },
 ) {
   const param = take(children, true);
 
-  const name = paramName(param);
+  const name = paramName(param) || "foo";
   const id = nameToId("arg", name);
 
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>
-      <DocEntry name={name}>
+      <DocEntry name={name} location={props.location}>
         {param.tsType && (
           <span>
-            : <TypeDef inline {...markdownContext}>{param.tsType}</TypeDef>
+            : <TypeDef inline {...props}>{param.tsType}</TypeDef>
           </span>
         )}
       </DocEntry>
-      <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
+      {
+        /*<JsDoc tagKinds={["deprecated"]} tagsWithDoc {...props}>
         {jsDoc}
-      </JsDoc>
-      {decorators && (
-        <DecoratorSubDoc id={id} {...markdownContext}>
+      </JsDoc>*/
+      }
+      {
+        /*{decorators && (
+        <DecoratorSubDoc id={id} {...props}>
           {decorators}
         </DecoratorSubDoc>
-      )}
+      )}*/
+      }
     </div>
   );
 }

@@ -27,7 +27,6 @@ function LiteralIndexSignatures(
     children: Child<LiteralIndexSignatureDef[]>;
     url: string;
     namespace?: string;
-    code?: boolean;
     inline?: boolean;
   },
 ) {
@@ -35,13 +34,13 @@ function LiteralIndexSignatures(
   if (!signatures.length) {
     return null;
   }
-  const { code, inline } = props;
+  const { inline } = props;
   const items = signatures.map(({ params, readonly, tsType }) => {
     const item = (
       <>
         {maybe(
           readonly,
-          <span class={style(code ? "codeKeyword" : "keyword")}>
+          <span class={style("keyword")}>
             readonly{" "}
           </span>,
         )}[<Params {...props}>{params}</Params>]{tsType && (
@@ -60,7 +59,6 @@ function LiteralCallSignatures({ children, ...props }: {
   children: Child<LiteralCallSignatureDef[]>;
   url: string;
   namespace?: string;
-  code?: boolean;
   inline?: boolean;
 }) {
   const signatures = take(children, true);
@@ -90,7 +88,6 @@ function LiteralProperties(
     children: Child<LiteralPropertyDef[]>;
     url: string;
     namespace?: string;
-    code?: boolean;
     inline?: boolean;
   },
 ) {
@@ -98,14 +95,14 @@ function LiteralProperties(
   if (!properties.length) {
     return null;
   }
-  const { code, inline } = props;
+  const { inline } = props;
   const items = properties.map(
     ({ name, readonly, computed, optional, tsType }) => {
       const item = (
         <>
           {maybe(
             readonly,
-            <span class={style(code ? "codeKeyword" : "keyword")}>
+            <span class={style("keyword")}>
               readonly{" "}
             </span>,
           )}
@@ -130,15 +127,14 @@ function LiteralMethods({ children, ...props }: {
   children: Child<LiteralMethodDef[]>;
   url: string;
   namespace?: string;
-  code?: boolean;
   inline?: boolean;
 }) {
   const methods = take(children, true);
   if (!methods.length) {
     return null;
   }
-  const { code, inline } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
+  const { inline } = props;
+  const keyword = style("keyword");
   const items = methods.map(
     ({ name, kind, optional, computed, returnType, typeParams, params }) => {
       const item = (
@@ -188,13 +184,12 @@ function MappedOptional(
 }
 
 function MappedReadOnly(
-  { children, code }: {
+  { children }: {
     children: Child<TruePlusMinus | undefined>;
-    code?: boolean;
   },
 ) {
   const readonly = take(children);
-  const keyword = style(code ? "codeKeyword" : "keyword");
+  const keyword = style("keyword");
   switch (readonly) {
     case true:
       return <span class={keyword}>readonly{" "}</span>;
@@ -212,7 +207,6 @@ export function TypeArguments(
     children: Child<TsTypeDef[] | undefined>;
     url: string;
     namespace?: string;
-    code?: boolean;
     inline?: boolean;
   },
 ) {
@@ -482,12 +476,11 @@ function TypeDefIntersection(
     children: Child<TsTypeIntersectionDef>;
     url: string;
     namespace?: string;
-    code?: boolean;
     inline?: boolean;
   },
 ) {
   const { intersection } = take(children);
-  const keyword = style(props.code ? "codeKeyword" : "keyword");
+  const keyword = style("keyword");
   const lastIndex = intersection.length - 1;
   if (props.inline || intersection.length <= 3) {
     const items = [];
@@ -513,7 +506,6 @@ function TypeDefMapped(
     children: Child<TsTypeMappedDef>;
     url: string;
     namespace?: string;
-    code?: boolean;
     inline?: boolean;
   },
 ) {
@@ -530,7 +522,7 @@ function TypeDefMapped(
       </TypeParam>
       {nameType && (
         <>
-          <span class={style(props.code ? "codeKeyword" : "keyword")}>
+          <span class={style("keyword")}>
             in keyof{" "}
           </span>
           <TypeDef {...props}>{nameType}</TypeDef>
@@ -550,7 +542,6 @@ function TypeDefTuple(
     children: Child<TsTypeTupleDef>;
     url: string;
     namespace?: string;
-    code?: boolean;
     inline?: boolean;
   },
 ) {
@@ -579,12 +570,11 @@ function TypeDefUnion(
     children: Child<TsTypeUnionDef>;
     url: string;
     namespace?: string;
-    code?: boolean;
     inline?: boolean;
   },
 ) {
   const { union } = take(children);
-  const keyword = style(props.code ? "codeKeyword" : "keyword");
+  const keyword = style("keyword");
   const lastIndex = union.length - 1;
   if (props.inline || union.length <= 3) {
     const items = [];
@@ -610,16 +600,14 @@ export function TypeParam(
     children: Child<TsTypeParamDef>;
     url: string;
     namespace?: string;
-    code?: boolean;
     constraintKind?: string;
   },
 ) {
   const { name, constraint, default: def } = take(children);
-  const { code } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
+  const keyword = style("keyword");
   return (
     <>
-      <span class={style(code ? "codeTypeParam" : "typeParam")}>{name}</span>
+      <span class={style("typeParam")}>{name}</span>
       {constraint && (
         <>
           <span class={keyword}>{` ${constraintKind} `}</span>

@@ -29,7 +29,8 @@ export function DocBlockTypeAlias(
         <Anchor>{id}</Anchor>
         <DocEntry location={location}>
           <span class={style("keyword")}>type</span> {name}
-          <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams> ={" "}
+          <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams> =
+          {" "}
           <TypeDef inline {...markdownContext}>{tsType}</TypeDef>
           {tags}
         </DocEntry>
