@@ -5,8 +5,7 @@ import { DocSubTitleClass } from "./classes.tsx";
 import { type DocNode, tw } from "../deps.ts";
 import { DocSubTitleInterface } from "./interfaces.tsx";
 import { runtime } from "../services.ts";
-import { DocBlockTypeAlias } from "./type_aliases.tsx";
-import { type Child, take } from "./utils.ts";
+import { type Child, decamelize, take } from "./utils.ts";
 import { docNodeKindColors } from "./symbol_kind.tsx";
 import { DocTypeParams } from "./types.tsx";
 import { MarkdownContext } from "./markdown.tsx";
@@ -23,20 +22,32 @@ export function DocTitle(
     let subTitle;
     switch (docNode.kind) {
       case "class":
-        title = <DocTypeParams>{docNode.classDef.typeParams}</DocTypeParams>;
+        title = (
+          <DocTypeParams {...markdownContext}>
+            {docNode.classDef.typeParams}
+          </DocTypeParams>
+        );
         subTitle = (
           <DocSubTitleClass {...markdownContext}>{docNode}</DocSubTitleClass>
         );
         break;
       case "interface":
         title = (
-          <DocTypeParams>{docNode.interfaceDef.typeParams}</DocTypeParams>
+          <DocTypeParams {...markdownContext}>
+            {docNode.interfaceDef.typeParams}
+          </DocTypeParams>
         );
-        subTitle = <DocSubTitleInterface>{docNode}</DocSubTitleInterface>;
+        subTitle = (
+          <DocSubTitleInterface {...markdownContext}>
+            {docNode}
+          </DocSubTitleInterface>
+        );
         break;
       case "typeAlias":
-        elements.push(
-          <DocBlockTypeAlias {...markdownContext}>{docNode}</DocBlockTypeAlias>,
+        title = (
+          <DocTypeParams {...markdownContext}>
+            {docNode.typeAliasDef.typeParams}
+          </DocTypeParams>
         );
         break;
     }
@@ -45,7 +56,7 @@ export function DocTitle(
       <div class={tw`font-medium space-y-1`}>
         <div class={tw`text-xl`}>
           <span class={tw`text-[${docNodeKindColors[docNode.kind][0]}]`}>
-            {docNode.kind}
+            {decamelize(docNode.kind)}
           </span>{" "}
           <span class={tw`font-bold`}>{docNode.name}</span>
           {title}

@@ -97,11 +97,7 @@ export function SymbolDoc(
           !(url.endsWith(".d.ts") || library),
           <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
         )}
-        {!isFunction && (
-          <JsDoc {...markdownContext}>
-            {jsDoc}
-          </JsDoc>
-        )}
+        {!isFunction && <JsDoc {...markdownContext}>{jsDoc}</JsDoc>}
       </div>
       <DocBlock {...markdownContext}>{docNodes}</DocBlock>
     </article>

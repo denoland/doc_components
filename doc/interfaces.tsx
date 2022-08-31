@@ -54,9 +54,7 @@ function CallSignaturesDoc(
             )}
             {tags}
           </DocEntry>
-          <JsDoc {...markdownContext}>
-            {jsDoc}
-          </JsDoc>
+          <JsDoc {...markdownContext}>{jsDoc}</JsDoc>
         </div>
       );
     },
@@ -153,9 +151,7 @@ function MethodsDoc(
               </span>
             )}
           </DocEntry>
-          <JsDoc {...markdownContext}>
-            {jsDoc}
-          </JsDoc>
+          <JsDoc {...markdownContext}>{jsDoc}</JsDoc>
         </div>
       );
     },
@@ -210,9 +206,7 @@ function PropertiesDoc(
               </>
             )}
           </DocEntry>
-          <JsDoc {...markdownContext}>
-            {jsDoc}
-          </JsDoc>
+          <JsDoc {...markdownContext}>{jsDoc}</JsDoc>
         </div>
       );
     },

@@ -35,7 +35,7 @@ export function DocFunctionSummary({
 
   return (
     <>
-      <DocTypeParams>{def.typeParams}</DocTypeParams>
+      <DocTypeParams {...markdownContext}>{def.typeParams}</DocTypeParams>
       (
       <Params {...markdownContext}>
         {def.params}
@@ -88,6 +88,74 @@ function DocFunctionOverload({
   );
 }
 
+function DocFunction(
+  { children, n, ...markdownContext }:
+    & { children: Child<DocNodeFunction>; n: number }
+    & MarkdownContext,
+) {
+  const def = take(children);
+
+  const overloadId = nameToId("function_overload", `${n}_${def.name}`);
+  const tags = [];
+  if (isDeprecated(def)) {
+    tags.push(<Tag color="gray">deprecated</Tag>);
+  }
+
+  const paramDocs: JsDocTagParam[] =
+    (def.jsDoc?.tags?.filter(({ kind }) =>
+      kind === "param"
+    ) as JsDocTagParam[]) ??
+      [];
+
+  const returnDoc = def.jsDoc?.tags?.find(({ kind }) =>
+    kind === "return"
+  ) as (JsDocTagReturn | undefined);
+
+  const parameters = def.functionDef.params.map((param, i) => {
+    const doc = paramDocs[i]?.doc;
+    const id = nameToId(
+      "function_overload",
+      `${n}_${def.name}_parameters_${i}`,
+    );
+
+    return (
+      <div class={style("docItem")} id={id}>
+        <Anchor>{id}</Anchor>
+        <DocParamDef location={def.location} {...markdownContext}>
+          {param}
+        </DocParamDef>
+        {doc && <Markdown {...markdownContext}>{doc}</Markdown>}
+      </div>
+    );
+  });
+
+  return (
+    <div class={style("docBlockItems")} id={overloadId + "_div"}>
+      <JsDoc {...markdownContext}>{def.jsDoc}</JsDoc>
+
+      <Section title="Parameters">{parameters}</Section>
+
+      {def.functionDef.returnType && (
+        <Section title="Returns">
+          {[
+            <div class={style("docItem")} id={"id"}>
+              <Anchor>{"id"}</Anchor>
+              <DocEntry location={def.location} name={""}>
+                <TypeDef {...markdownContext}>
+                  {def.functionDef.returnType}
+                </TypeDef>
+              </DocEntry>
+              {returnDoc?.doc && (
+                <Markdown {...markdownContext}>{returnDoc?.doc}</Markdown>
+              )}
+            </div>,
+          ]}
+        </Section>
+      )}
+    </div>
+  );
+}
+
 export function DocBlockFunction(
   { children, ...markdownContext }:
     & { children: Child<DocNodeFunction[]> }
@@ -95,76 +163,9 @@ export function DocBlockFunction(
 ) {
   const defs = take(children, true);
 
-  const items = defs.map(
-    (
-      {
-        location,
-        name,
-        jsDoc,
-        functionDef,
-      },
-      i,
-    ) => {
-      const overloadId = nameToId("function_overload", `${i}_${name}`);
-      const tags = [];
-      if (isDeprecated({ jsDoc })) {
-        tags.push(<Tag color="gray">deprecated</Tag>);
-      }
-
-      const paramDocs: JsDocTagParam[] =
-        (jsDoc?.tags?.filter(({ kind }) =>
-          kind === "param"
-        ) as JsDocTagParam[]) ?? [];
-
-      const returnDoc = jsDoc?.tags?.find(({ kind }) =>
-        kind === "return"
-      ) as (JsDocTagReturn | undefined);
-
-      const parameters = functionDef.params.map((param, j) => {
-        const doc = paramDocs[j]?.doc;
-        const id = nameToId(
-          "function_overload",
-          `${i}_${name}_parameters_${j}`,
-        );
-
-        return (
-          <div class={style("docItem")} id={id}>
-            <Anchor>{id}</Anchor>
-            <DocParamDef location={location}>{param}</DocParamDef>
-            {doc && <Markdown {...markdownContext}>{doc}</Markdown>}
-          </div>
-        );
-      });
-
-      return (
-        <div class={style("docBlockItems")} id={overloadId + "_div"}>
-          <JsDoc {...markdownContext}>
-            {jsDoc}
-          </JsDoc>
-
-          <Section title="Parameters">{parameters}</Section>
-
-          {functionDef.returnType && (
-            <Section title="Returns">
-              {[
-                <div class={style("docItem")} id={"id"}>
-                  <Anchor>{"id"}</Anchor>
-                  <DocEntry location={location} name={""}>
-                    <TypeDef {...markdownContext}>
-                      {functionDef.returnType}
-                    </TypeDef>
-                  </DocEntry>
-                  {returnDoc?.doc && (
-                    <Markdown {...markdownContext}>{returnDoc?.doc}</Markdown>
-                  )}
-                </div>,
-              ]}
-            </Section>
-          )}
-        </div>
-      );
-    },
-  );
+  const items = defs.map((def, i) => (
+    <DocFunction n={i} {...markdownContext}>{def}</DocFunction>
+  ));
 
   return (
     <div class={style("docBlockItems")}>

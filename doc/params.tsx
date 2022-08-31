@@ -208,11 +208,6 @@ export function DocParamDef(
           </span>
         )}
       </DocEntry>
-      {
-        /*<JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
-        {jsDoc}
-      </JsDoc>*/
-      }
     </div>
   );
 }
