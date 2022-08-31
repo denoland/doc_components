@@ -8,7 +8,7 @@ import {
   type DocNodeTypeAlias,
   tw,
 } from "../deps.ts";
-import { byKind, isAbstract, isDeprecated } from "./doc.ts";
+import { byKind } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
 import { Tag } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
@@ -16,7 +16,7 @@ import * as Icons from "../icons.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
-import { type Child, maybe, take } from "./utils.ts";
+import { type Child, isAbstract, isDeprecated, maybe, take } from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
 
 function isTypeOnly(
@@ -42,18 +42,18 @@ export function SymbolDoc(
   const title = namespace ? `${namespace}.${name}` : name;
   const markdownContext = { url, namespace };
 
-  const labels = [];
+  const tags = [];
 
-  const tags: string[] = docNodes.flatMap(({ jsDoc }) =>
+  const jsDocTags: string[] = docNodes.flatMap(({ jsDoc }) =>
     jsDoc?.tags?.filter(({ kind }) => kind === "tags").flatMap(({ tags }) =>
       tags
     ) ?? []
   );
-  if (tags.length !== 0) {
-    labels.push(
+  if (jsDocTags.length !== 0) {
+    tags.push(
       <Tag color="cyan" large>
         <span class={tw`space-x-2`}>
-          {tags.map((tag, i) => (
+          {jsDocTags.map((tag, i) => (
             <>
               {i !== 0 && <div class={tw`inline border-l-2 border-gray-300`} />}
               <span>{tag}</span>
@@ -65,10 +65,10 @@ export function SymbolDoc(
   }
 
   if (isAbstract(docNodes[0])) {
-    labels.push(<Tag color="cyan" large>Abstract</Tag>);
+    tags.push(<Tag color="cyan" large>Abstract</Tag>);
   }
   if (isDeprecated(docNodes[0])) {
-    labels.push(<Tag color="gray" large>Deprecated</Tag>);
+    tags.push(<Tag color="gray" large>Deprecated</Tag>);
   }
 
   const isFunction = docNodes[0].kind === "function";
@@ -79,9 +79,9 @@ export function SymbolDoc(
         <div class={tw`space-y-2`}>
           <DocTitle {...markdownContext}>{docNodes}</DocTitle>
 
-          {labels.length !== 0 && (
+          {tags.length !== 0 && (
             <div>
-              {labels}
+              {tags}
             </div>
           )}
         </div>
@@ -98,7 +98,7 @@ export function SymbolDoc(
           <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
         )}
         {!isFunction && (
-          <JsDoc tagKinds="deprecated" tagsWithDoc {...markdownContext}>
+          <JsDoc {...markdownContext}>
             {jsDoc}
           </JsDoc>
         )}

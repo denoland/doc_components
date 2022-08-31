@@ -57,19 +57,6 @@ export function DocEntry(
   );
 }
 
-export function SectionSubTitle(
-  { children, id: parentId }: { children: Child<string>; id: string },
-) {
-  const name = take(children);
-  const id = nameToId(parentId, name);
-  return (
-    <h3 class={style("subSection")} id={id}>
-      <Anchor>{id}</Anchor>
-      {name}
-    </h3>
-  );
-}
-
 export function SectionTitle({ children }: { children: Child<string> }) {
   const name = take(children);
   const id = name.replaceAll(TARGET_RE, "_");

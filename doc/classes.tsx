@@ -170,7 +170,7 @@ function ClassAccessorDoc(
         )}
       </DocEntry>
 
-      <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
+      <JsDoc {...markdownContext}>
         {jsDoc}
       </JsDoc>
     </div>
@@ -227,11 +227,7 @@ function ClassMethodDoc(
     lastItem[0] = (
       <>
         {lastItem[0]}
-        <JsDoc
-          tagKinds={["param", "return", "template", "deprecated"]}
-          tagsWithDoc
-          {...markdownContext}
-        >
+        <JsDoc {...markdownContext}>
           {jsDocEntries[0][1]}
         </JsDoc>
       </>
@@ -240,11 +236,7 @@ function ClassMethodDoc(
     items.map((item) => (
       <>
         {item[0]}
-        <JsDoc
-          tagKinds={["param", "return", "template", "deprecated"]}
-          tagsWithDoc
-          {...markdownContext}
-        >
+        <JsDoc {...markdownContext}>
           {item[1]}
         </JsDoc>
       </>
@@ -302,7 +294,7 @@ function ClassPropertyDoc(
           </span>
         )}
       </DocEntry>
-      <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
+      <JsDoc {...markdownContext}>
         {jsDoc}
       </JsDoc>
     </div>
@@ -405,11 +397,7 @@ function ConstructorsDoc(
             {params}
           </Params>)
         </DocEntry>
-        <JsDoc
-          tagKinds={["param", "template", "deprecated"]}
-          tagsWithDoc
-          {...markdownContext}
-        >
+        <JsDoc {...markdownContext}>
           {jsDoc}
         </JsDoc>
       </div>

@@ -54,7 +54,7 @@ function CallSignaturesDoc(
             )}
             {tags}
           </DocEntry>
-          <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
+          <JsDoc {...markdownContext}>
             {jsDoc}
           </JsDoc>
         </div>
@@ -153,11 +153,7 @@ function MethodsDoc(
               </span>
             )}
           </DocEntry>
-          <JsDoc
-            tagKinds={["param", "return", "template", "deprecated"]}
-            tagsWithDoc
-            {...markdownContext}
-          >
+          <JsDoc {...markdownContext}>
             {jsDoc}
           </JsDoc>
         </div>
@@ -214,7 +210,7 @@ function PropertiesDoc(
               </>
             )}
           </DocEntry>
-          <JsDoc tagKinds={["deprecated"]} tagsWithDoc {...markdownContext}>
+          <JsDoc {...markdownContext}>
             {jsDoc}
           </JsDoc>
         </div>

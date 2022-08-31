@@ -7,23 +7,4 @@ import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, take } from "./utils.ts";
-
-export function CodeBlockVariable({ children, ...props }: {
-  children: Child<DocNodeVariable>;
-  url: string;
-  namespace?: string;
-}) {
-  const { name, variableDef: { kind, tsType } } = take(children);
-  return (
-    <div class={style("codeBlock")}>
-      <span class={style("keyword")}>{kind}</span> {name}
-      {tsType
-        ? (
-          <>
-            : <TypeDef {...props}>{tsType}</TypeDef>
-          </>
-        )
-        : ";"}
-    </div>
-  );
-}
+import { MarkdownContext } from "./markdown.tsx";

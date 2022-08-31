@@ -38,11 +38,7 @@ export function DocBlockTypeAlias(
       <DocTypeParams {...markdownContext}>
         {typeParams}
       </DocTypeParams>
-      <JsDoc
-        tagKinds={["template", "deprecated"]}
-        tagsWithDoc
-        {...markdownContext}
-      >
+      <JsDoc {...markdownContext}>
         {jsDoc}
       </JsDoc>
     </div>
