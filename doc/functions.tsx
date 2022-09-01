@@ -63,7 +63,7 @@ function DocFunctionOverload({
     return <></>;
   }
 
-  const overloadId = nameToId("function", `${i}_${def.name}`);
+  const overloadId = nameToId("function", `${def.name}_${i}`);
   const summary = getSummary(def.jsDoc?.doc);
 
   return (
@@ -94,7 +94,7 @@ function DocFunction(
 ) {
   const def = take(children);
 
-  const overloadId = nameToId("function", `${n}_${def.name}`);
+  const overloadId = nameToId("function", `${def.name}_${n}`);
   const tags = [];
 
   if (isDeprecated(def)) {
@@ -108,7 +108,7 @@ function DocFunction(
       [];
 
   const parameters = def.functionDef.params.map((param, i) => {
-    const id = nameToId("function", `${n}_${def.name}_parameters_${i}`);
+    const id = nameToId("function", `${def.name}_${n}_parameters_${i}`);
     const name = paramName(param);
 
     return (
@@ -131,7 +131,7 @@ function DocFunction(
   const returnDoc = def.jsDoc?.tags?.find(({ kind }) =>
     kind === "return"
   ) as (JsDocTagReturn | undefined);
-  const returnId = nameToId("function", `${n}_${def.name}_return`);
+  const returnId = nameToId("function", `${def.name}_${n}_return`);
 
   return (
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
@@ -177,7 +177,7 @@ export function DocBlockFunction(
         <>
           {defs.map((def, i) => {
             const id = nameToId("function", def.name);
-            const overloadId = nameToId("function", `${i}_${def.name}`);
+            const overloadId = nameToId("function", `${def.name}_${i}`);
 
             return (
               <input
@@ -189,15 +189,14 @@ export function DocBlockFunction(
                     [`&:checked ~ *:last-child > :not(#${overloadId}_div)`]:
                       apply`hidden`,
                     [`&:checked ~ div:first-of-type > label[for='${overloadId}']`]:
-                      apply`bg-gray-200`,
+                      apply`bg-[#056CF00C] border-[#056CF0] border-2`,
                   })
                 }`}
                 checked={i === 0}
               />
             );
           })}
-
-          <div class={tw`space-y-4`}>
+          <div class={tw`space-y-2`}>
             {defs.map((def, i) => (
               <DocFunctionOverload i={i} {...markdownContext}>
                 {def}
