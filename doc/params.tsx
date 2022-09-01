@@ -1,16 +1,11 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import {
-  type Location,
-  type ObjectPatPropDef,
-  type ParamDef,
-} from "../deps.ts";
+import { type ObjectPatPropDef, type ParamDef } from "../deps.ts";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, maybe, take } from "./utils.ts";
-import { Anchor, DocEntry, nameToId } from "./doc_common.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 
 function ObjectPat(
@@ -165,7 +160,7 @@ export function Params(
   );
 }
 
-function paramName(param: ParamDef): string {
+export function paramName(param: ParamDef): string {
   switch (param.kind) {
     case "array":
       return param.elements.map((param) => {
@@ -185,29 +180,4 @@ function paramName(param: ParamDef): string {
     case "rest":
       return `...${paramName(param.arg)}`;
   }
-}
-
-export function DocParamDef(
-  { children, location, ...markdownContext }: {
-    children: Child<ParamDef>;
-    location: Location;
-  } & MarkdownContext,
-) {
-  const param = take(children, true);
-
-  const name = paramName(param);
-  const id = nameToId("arg", name);
-
-  return (
-    <div class={style("docItem")} id={id}>
-      <Anchor>{id}</Anchor>
-      <DocEntry name={name} location={location}>
-        {param.tsType && (
-          <span>
-            : <TypeDef {...markdownContext}>{param.tsType}</TypeDef>
-          </span>
-        )}
-      </DocEntry>
-    </div>
-  );
 }

@@ -16,6 +16,7 @@ import {
   getAccessibilityTag,
   nameToId,
   Section,
+  SectionEntry,
   Tag,
   tagVariants,
 } from "./doc_common.tsx";
@@ -159,23 +160,23 @@ function ClassAccessorDoc(
   }
 
   return (
-    <div class={style("docItem")} id={id}>
-      <Anchor>{id}</Anchor>
-      <DocEntry location={location} tags={tags} name={name}>
-        {tsType && (
-          <span>
-            :{" "}
-            <span class={tw`font-medium`}>
-              <TypeDef {...markdownContext}>{tsType}</TypeDef>
-            </span>
+    <SectionEntry
+      id={id}
+      location={location}
+      tags={tags}
+      name={name}
+      jsDoc={jsDoc}
+      {...markdownContext}
+    >
+      {tsType && (
+        <span>
+          :{" "}
+          <span class={tw`font-medium`}>
+            <TypeDef {...markdownContext}>{tsType}</TypeDef>
           </span>
-        )}
-      </DocEntry>
-
-      <JsDoc {...markdownContext}>
-        {jsDoc}
-      </JsDoc>
-    </div>
+        </span>
+      )}
+    </SectionEntry>
   );
 }
 
@@ -289,19 +290,20 @@ function ClassPropertyDoc(
   }
 
   return (
-    <div class={style("docItem")} id={id}>
-      <Anchor>{id}</Anchor>
-      <DocEntry location={location} tags={tags} name={name}>
-        {tsType && (
-          <span>
-            : <TypeDef {...markdownContext}>{tsType}</TypeDef>
-          </span>
-        )}
-      </DocEntry>
-      <JsDoc {...markdownContext}>
-        {jsDoc}
-      </JsDoc>
-    </div>
+    <SectionEntry
+      id={id}
+      location={location}
+      tags={tags}
+      name={name}
+      jsDoc={jsDoc}
+      {...markdownContext}
+    >
+      {tsType && (
+        <span>
+          : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+        </span>
+      )}
+    </SectionEntry>
   );
 }
 
@@ -387,24 +389,21 @@ function ConstructorsDoc(
   const items = defs.map(({ location, params, jsDoc, accessibility }, i) => {
     const id = nameToId("ctor", String(i));
     return (
-      <div class={style("docItem")} id={id}>
-        <Anchor>{id}</Anchor>
-        <DocEntry
-          location={location}
-          tags={[
-            <Tag color="purple">new</Tag>,
-            getAccessibilityTag(accessibility),
-          ]}
-          name={name}
-        >
-          (<Params {...markdownContext}>
-            {params}
-          </Params>)
-        </DocEntry>
-        <JsDoc {...markdownContext}>
-          {jsDoc}
-        </JsDoc>
-      </div>
+      <SectionEntry
+        id={id}
+        location={location}
+        tags={[
+          <Tag color="purple">new</Tag>,
+          getAccessibilityTag(accessibility),
+        ]}
+        name={name}
+        jsDoc={jsDoc}
+        {...markdownContext}
+      >
+        (<Params {...markdownContext}>
+          {params}
+        </Params>)
+      </SectionEntry>
     );
   });
 

@@ -5,18 +5,13 @@ import { type Accessibility, type Location, tw } from "../deps.ts";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
+import { JsDoc } from "./jsdoc.tsx";
+import { MarkdownContext } from "./markdown.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
 
 export function nameToId(kind: string, name: string) {
   return `${kind}_${name.replaceAll(TARGET_RE, "_")}`;
-}
-
-export function getAccessibilityTag(accessibility?: Accessibility) {
-  if (!accessibility || accessibility === "public") {
-    return null;
-  }
-  return <Tag color="purple">{accessibility}</Tag>;
 }
 
 export function Anchor({ children: name }: { children: string }) {
@@ -29,6 +24,29 @@ export function Anchor({ children: name }: { children: string }) {
     >
       §
     </a>
+  );
+}
+
+export function SectionEntry(
+  { children, tags, name, location, id, jsDoc, ...markdownContext }: {
+    children: unknown;
+    tags?: unknown[];
+    name: string;
+    location: Location;
+    id: string;
+    jsDoc: { doc?: string } | undefined;
+  } & MarkdownContext,
+) {
+  return (
+    <div class={style("docItem")} id={id}>
+      <Anchor>{id}</Anchor>
+      <DocEntry location={location} tags={tags} name={name}>
+        {children}
+      </DocEntry>
+      <JsDoc {...markdownContext}>
+        {jsDoc}
+      </JsDoc>
+    </div>
   );
 }
 
@@ -117,3 +135,10 @@ export const tagVariants = {
   writeonly: () => <Tag color="purple">readonly</Tag>,
   optional: () => <Tag color="cyan">optional</Tag>,
 } as const;
+
+export function getAccessibilityTag(accessibility?: Accessibility) {
+  if (!accessibility || accessibility === "public") {
+    return null;
+  }
+  return <Tag color="purple">{accessibility}</Tag>;
+}

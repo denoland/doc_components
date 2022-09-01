@@ -11,21 +11,14 @@ import {
   type JsDocTagReturn,
   tw,
 } from "../deps.ts";
-import {
-  Anchor,
-  DocEntry,
-  nameToId,
-  Section,
-  tagVariants,
-} from "./doc_common.tsx";
+import { nameToId, Section, SectionEntry, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import {
   getSummary,
-  Markdown,
   type MarkdownContext,
   MarkdownSummary,
 } from "./markdown.tsx";
-import { DocParamDef, Params } from "./params.tsx";
+import { paramName, Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { DocTypeParams, TypeDef } from "./types.tsx";
@@ -70,7 +63,7 @@ function DocFunctionOverload({
     return <></>;
   }
 
-  const overloadId = nameToId("function_overload", `${i}_${def.name}`);
+  const overloadId = nameToId("function", `${i}_${def.name}`);
   const summary = getSummary(def.jsDoc?.doc);
 
   return (
@@ -101,8 +94,9 @@ function DocFunction(
 ) {
   const def = take(children);
 
-  const overloadId = nameToId("function_overload", `${n}_${def.name}`);
+  const overloadId = nameToId("function", `${n}_${def.name}`);
   const tags = [];
+
   if (isDeprecated(def)) {
     tags.push(tagVariants.deprecated());
   }
@@ -113,27 +107,31 @@ function DocFunction(
     ) as JsDocTagParam[]) ??
       [];
 
+  const parameters = def.functionDef.params.map((param, i) => {
+    const id = nameToId("function", `${n}_${def.name}_parameters_${i}`);
+    const name = paramName(param);
+
+    return (
+      <SectionEntry
+        id={id}
+        location={def.location}
+        name={name}
+        jsDoc={paramDocs[i]}
+        {...markdownContext}
+      >
+        {param.tsType && (
+          <span>
+            : <TypeDef {...markdownContext}>{param.tsType}</TypeDef>
+          </span>
+        )}
+      </SectionEntry>
+    );
+  });
+
   const returnDoc = def.jsDoc?.tags?.find(({ kind }) =>
     kind === "return"
   ) as (JsDocTagReturn | undefined);
-
-  const parameters = def.functionDef.params.map((param, i) => {
-    const doc = paramDocs[i]?.doc;
-    const id = nameToId(
-      "function_overload",
-      `${n}_${def.name}_parameters_${i}`,
-    );
-
-    return (
-      <div class={style("docItem")} id={id}>
-        <Anchor>{id}</Anchor>
-        <DocParamDef location={def.location} {...markdownContext}>
-          {param}
-        </DocParamDef>
-        {doc && <Markdown {...markdownContext}>{doc}</Markdown>}
-      </div>
-    );
-  });
+  const returnId = nameToId("function", `${n}_${def.name}_return`);
 
   return (
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
@@ -144,17 +142,17 @@ function DocFunction(
       {def.functionDef.returnType && (
         <Section title="Returns">
           {[
-            <div class={style("docItem")} id={"id"}>
-              <Anchor>{"id"}</Anchor>
-              <DocEntry location={def.location} tags={tags} name={""}>
-                <TypeDef {...markdownContext}>
-                  {def.functionDef.returnType}
-                </TypeDef>
-              </DocEntry>
-              {returnDoc?.doc && (
-                <Markdown {...markdownContext}>{returnDoc?.doc}</Markdown>
-              )}
-            </div>,
+            <SectionEntry
+              id={returnId}
+              location={def.location}
+              name={""}
+              jsDoc={returnDoc}
+              {...markdownContext}
+            >
+              <TypeDef {...markdownContext}>
+                {def.functionDef.returnType}
+              </TypeDef>
+            </SectionEntry>,
           ]}
         </Section>
       )}
@@ -178,11 +176,8 @@ export function DocBlockFunction(
       {defs.length !== 1 && (
         <>
           {defs.map((def, i) => {
-            const id = nameToId("function_overload", def.name);
-            const overloadId = nameToId(
-              "function_overload",
-              `${i}_${def.name}`,
-            );
+            const id = nameToId("function", def.name);
+            const overloadId = nameToId("function", `${i}_${def.name}`);
 
             return (
               <input

@@ -13,13 +13,12 @@ import {
 } from "../deps.ts";
 import {
   Anchor,
-  DocEntry,
   nameToId,
   Section,
+  SectionEntry,
   Tag,
   tagVariants,
 } from "./doc_common.tsx";
-import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "../services.ts";
@@ -48,21 +47,23 @@ function CallSignaturesDoc(
         tags.push(tagVariants.deprecated());
       }
       return (
-        <div class={style("docItem")} id={id}>
-          <Anchor>{id}</Anchor>
-          <DocEntry location={location} name={""}>
-            <DocTypeParams {...markdownContext}>{typeParams}
-            </DocTypeParams>(<Params {...markdownContext}>
-              {params}
-            </Params>){tsType && (
-              <>
-                : <TypeDef {...markdownContext}>{tsType}</TypeDef>
-              </>
-            )}
-            {tags}
-          </DocEntry>
-          <JsDoc {...markdownContext}>{jsDoc}</JsDoc>
-        </div>
+        <SectionEntry
+          id={id}
+          location={location}
+          tags={tags}
+          name={""}
+          jsDoc={jsDoc}
+          {...markdownContext}
+        >
+          <DocTypeParams {...markdownContext}>{typeParams}
+          </DocTypeParams>(<Params {...markdownContext}>
+            {params}
+          </Params>){tsType && (
+            <>
+              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+            </>
+          )}
+        </SectionEntry>
       );
     },
   );
@@ -136,31 +137,26 @@ function MethodsDoc(
       }
 
       return (
-        <div class={style("docItem")} id={id}>
-          <Anchor>{id}</Anchor>
-          <DocEntry
-            location={location}
-            tags={tags}
-            name={name === "new"
-              ? <span class={style("keyword")}>new</span>
-              : computed
-              ? `[${name}]`
-              : name}
-          >
-            <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>
-            (
-            <Params {...markdownContext}>
-              {params}
-            </Params>
-            )
-            {returnType && (
-              <span>
-                : <TypeDef {...markdownContext}>{returnType}</TypeDef>
-              </span>
-            )}
-          </DocEntry>
-          <JsDoc {...markdownContext}>{jsDoc}</JsDoc>
-        </div>
+        <SectionEntry
+          id={id}
+          location={location}
+          tags={tags}
+          name={name === "new"
+            ? <span class={style("keyword")}>new</span>
+            : computed
+            ? `[${name}]`
+            : name}
+          jsDoc={jsDoc}
+          {...markdownContext}
+        >
+          <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>
+          (<Params {...markdownContext}>{params}</Params>)
+          {returnType && (
+            <span>
+              : <TypeDef {...markdownContext}>{returnType}</TypeDef>
+            </span>
+          )}
+        </SectionEntry>
       );
     },
   );
@@ -202,21 +198,20 @@ function PropertiesDoc(
       }
 
       return (
-        <div class={style("docItem")} id={id}>
-          <Anchor>{id}</Anchor>
-          <DocEntry
-            location={location}
-            tags={tags}
-            name={maybe(computed, `[${name}]`, name)}
-          >
-            {tsType && (
-              <>
-                : <TypeDef {...markdownContext}>{tsType}</TypeDef>
-              </>
-            )}
-          </DocEntry>
-          <JsDoc {...markdownContext}>{jsDoc}</JsDoc>
-        </div>
+        <SectionEntry
+          id={id}
+          location={location}
+          tags={tags}
+          name={maybe(computed, `[${name}]`, name)}
+          jsDoc={jsDoc}
+          {...markdownContext}
+        >
+          {tsType && (
+            <>
+              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+            </>
+          )}
+        </SectionEntry>
       );
     },
   );

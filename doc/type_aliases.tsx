@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 import { type DocNodeTypeAlias } from "../deps.ts";
-import { Anchor, DocEntry, nameToId, tagVariants } from "./doc_common.tsx";
+import { nameToId, SectionEntry, tagVariants } from "./doc_common.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
@@ -22,12 +22,16 @@ export function DocBlockTypeAlias(
   }
   return (
     <div class={style("docBlockItems")}>
-      <div class={style("docItem")} id={id}>
-        <Anchor>{id}</Anchor>
-        <DocEntry location={location} tags={tags} name={name}>
-          : <TypeDef {...markdownContext}>{typeAliasDef.tsType}</TypeDef>
-        </DocEntry>
-      </div>
+      <SectionEntry
+        id={id}
+        location={location}
+        tags={tags}
+        name={name}
+        jsDoc={jsDoc}
+        {...markdownContext}
+      >
+        : <TypeDef {...markdownContext}>{typeAliasDef.tsType}</TypeDef>
+      </SectionEntry>
     </div>
   );
 }
