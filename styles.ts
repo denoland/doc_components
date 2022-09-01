@@ -2,11 +2,6 @@
 
 import { apply, css, type Directive, tw } from "./deps.ts";
 
-const anchorStyles = css({
-  "margin-left": "-1em",
-  "padding-right": "0.5em",
-});
-
 const codeStyles = css({
   ":not(pre) > code":
     apply`font-mono text-sm py-1 px-1.5 rounded text-black bg-gray-100 dark:(text-white bg-gray-800)`,
@@ -47,7 +42,7 @@ const syntaxHighlightingStyles = css({
 
 const styles = {
   anchor:
-    apply`opacity-0 group-hover:opacity-100 absolute bg-transparent text-gray-600 dark:text-gray-400 ${anchorStyles}`,
+    apply`float-left leading-none hidden group-hover:block text-gray-600 -ml-[18px] pr-[4px]`,
   boolean: none,
   copyButton: apply`rounded border border-[#D2D2DC] p-1.5`,
   docBlockItems: apply`space-y-7`,
@@ -57,9 +52,6 @@ const styles = {
   keyword: none,
   indent: apply`ml-4`,
   link: apply`text([#056CF0] dark:blue-300) hover:(underline text-blue-500)`,
-  linkPadRight:
-    apply`pr-4 text([#056CF0] dark:300) hover:(underline text-blue-500)`,
-  linkType: apply`underline`,
   main: apply`space-y-7 md:(col-span-3)`,
   markdown:
     apply`flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
@@ -98,10 +90,6 @@ const styles = {
     apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50) children:(flex-none last-child:(truncate flex-shrink-1))`,
   none,
   numberLiteral: none,
-  panel: css({
-    "& > input:checked ~ .content": apply`hidden`,
-    "& > input:checked ~ label > svg": apply`rotate-0`,
-  }),
   section: apply`text-sm leading-6 font-semibold text-gray-400 py-1`,
   symbolDocHeader: apply`flex justify-between items-start`,
   symbolKind:
@@ -116,8 +104,6 @@ const styles = {
   symbolListTable: apply`block lg:table`,
   tag:
     apply`inline-block rounded-full font-medium text-sm leading-none font-sans`,
-  title:
-    apply`text-2xl md:text-3xl lg:text-4xl text-gray(900 dark:50) font-bold mb-3`,
   typeLink: apply`underline`,
   typeParam: none,
 } as const;

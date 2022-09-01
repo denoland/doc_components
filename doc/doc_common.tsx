@@ -7,6 +7,7 @@ import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
+import * as Icons from "../icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
 
@@ -22,7 +23,7 @@ export function Anchor({ children: name }: { children: string }) {
       aria-label="Anchor"
       tabIndex={-1}
     >
-      §
+      <Icons.Link />
     </a>
   );
 }
