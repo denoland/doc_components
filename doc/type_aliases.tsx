@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 import { type DocNodeTypeAlias } from "../deps.ts";
-import { nameToId, SectionEntry, tagVariants } from "./doc_common.tsx";
+import { nameToId, DocEntry, tagVariants } from "./doc_common.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
@@ -22,7 +22,7 @@ export function DocBlockTypeAlias(
   }
   return (
     <div class={style("docBlockItems")}>
-      <SectionEntry
+      <DocEntry
         id={id}
         location={location}
         tags={tags}
@@ -31,7 +31,7 @@ export function DocBlockTypeAlias(
         {...markdownContext}
       >
         : <TypeDef {...markdownContext}>{typeAliasDef.tsType}</TypeDef>
-      </SectionEntry>
+      </DocEntry>
     </div>
   );
 }

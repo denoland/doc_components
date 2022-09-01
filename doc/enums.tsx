@@ -3,7 +3,7 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { type DocNodeEnum } from "../deps.ts";
-import { nameToId, Section, SectionEntry } from "./doc_common.tsx";
+import { nameToId, Section, DocEntry } from "./doc_common.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
@@ -23,7 +23,7 @@ export function DocBlockEnum(
   const items = [...members].sort(byName).map(({ name, init, jsDoc }) => {
     const id = nameToId("enum", `${enumName}_${name}`);
     return (
-      <SectionEntry
+      <DocEntry
         id={id}
         location={location}
         name={name}
@@ -36,7 +36,7 @@ export function DocBlockEnum(
             <TypeDef {...markdownContext}>{init}</TypeDef>
           </>
         )}
-      </SectionEntry>
+      </DocEntry>
     );
   });
   return (

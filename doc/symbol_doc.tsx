@@ -45,7 +45,7 @@ export function SymbolDoc(
   const tags = [];
 
   const jsDocTags: string[] = docNodes.flatMap(({ jsDoc }) =>
-    jsDoc?.tags?.filter(({ kind }) => kind === "tags").flatMap(({ tags }) =>
+    jsDoc?.tags?.filter(({ kind }) => kind === "tags")?.flatMap(({ tags }) =>
       tags
     ) ?? []
   );

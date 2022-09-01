@@ -27,7 +27,7 @@ export function Anchor({ children: name }: { children: string }) {
   );
 }
 
-export function SectionEntry(
+export function DocEntry(
   { children, tags, name, location, id, jsDoc, ...markdownContext }: {
     children: unknown;
     tags?: unknown[];
@@ -37,40 +37,28 @@ export function SectionEntry(
     jsDoc: { doc?: string } | undefined;
   } & MarkdownContext,
 ) {
+  const href = services.resolveSourceHref(location.filename, location.line);
+
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>
-      <DocEntry location={location} tags={tags} name={name}>
-        {children}
-      </DocEntry>
+
+      <div class={style("docEntry")}>
+        <span class={style("docEntryChildren")}>
+          {!!tags?.length && <span>{tags}</span>}
+          <span class={tw`font-mono`}>
+            <span class={tw`font-bold`}>{name}</span>
+            <span class={tw`font-medium`}>{children}</span>
+          </span>
+        </span>
+        {href && (
+          <a href={href} target="_blank" class={style("sourceLink")}>[src]</a>
+        )}
+      </div>
+
       <JsDoc {...markdownContext}>
         {jsDoc}
       </JsDoc>
-    </div>
-  );
-}
-
-export function DocEntry(
-  { children, tags, name, location: { filename, line } }: {
-    children: unknown;
-    tags?: unknown[];
-    name: string;
-    location: Location;
-  },
-) {
-  const href = services.resolveSourceHref(filename, line);
-  return (
-    <div class={style("docEntry")}>
-      <span class={style("docEntryChildren")}>
-        {!!tags?.length && <span>{tags}</span>}
-        <span class={tw`font-mono`}>
-          <span class={tw`font-bold`}>{name}</span>
-          <span class={tw`font-medium`}>{children}</span>
-        </span>
-      </span>
-      {href && (
-        <a href={href} target="_blank" class={style("sourceLink")}>[src]</a>
-      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ import {
   type JsDocTagReturn,
   tw,
 } from "../deps.ts";
-import { nameToId, Section, SectionEntry, tagVariants } from "./doc_common.tsx";
+import { nameToId, Section, DocEntry, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import {
   getSummary,
@@ -112,7 +112,7 @@ function DocFunction(
     const name = paramName(param);
 
     return (
-      <SectionEntry
+      <DocEntry
         id={id}
         location={def.location}
         name={name}
@@ -124,7 +124,7 @@ function DocFunction(
             : <TypeDef {...markdownContext}>{param.tsType}</TypeDef>
           </span>
         )}
-      </SectionEntry>
+      </DocEntry>
     );
   });
 
@@ -142,7 +142,7 @@ function DocFunction(
       {def.functionDef.returnType && (
         <Section title="Returns">
           {[
-            <SectionEntry
+            <DocEntry
               id={returnId}
               location={def.location}
               name={""}
@@ -152,7 +152,7 @@ function DocFunction(
               <TypeDef {...markdownContext}>
                 {def.functionDef.returnType}
               </TypeDef>
-            </SectionEntry>,
+            </DocEntry>,
           ]}
         </Section>
       )}

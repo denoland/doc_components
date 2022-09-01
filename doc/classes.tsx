@@ -7,21 +7,17 @@ import {
   type ClassMethodDef,
   type ClassPropertyDef,
   type DocNodeClass,
-  type JsDoc as JsDocType,
   tw,
 } from "../deps.ts";
 import {
-  Anchor,
-  DocEntry,
   getAccessibilityTag,
   nameToId,
   Section,
-  SectionEntry,
+  DocEntry,
   Tag,
   tagVariants,
 } from "./doc_common.tsx";
 import { IndexSignaturesDoc } from "./interfaces.tsx";
-import { JsDoc } from "./jsdoc.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "../services.ts";
@@ -160,7 +156,7 @@ function ClassAccessorDoc(
   }
 
   return (
-    <SectionEntry
+    <DocEntry
       id={id}
       location={location}
       tags={tags}
@@ -176,7 +172,7 @@ function ClassAccessorDoc(
           </span>
         </span>
       )}
-    </SectionEntry>
+    </DocEntry>
   );
 }
 
@@ -186,8 +182,7 @@ function ClassMethodDoc(
     & MarkdownContext,
 ) {
   const defs = take(children, true);
-  const id = nameToId("method", defs[0].name);
-  const items: [unknown, JsDocType | undefined][] = defs.map((
+  const items = defs.map((
     {
       location,
       name,
@@ -197,7 +192,10 @@ function ClassMethodDoc(
       isAbstract,
       functionDef,
     },
+    i,
   ) => {
+    const id = nameToId("method", `${defs[0].name}_${i}`);
+
     const tags = [];
     const accessibilityTag = getAccessibilityTag(accessibility);
     if (accessibilityTag) {
@@ -214,44 +212,23 @@ function ClassMethodDoc(
       tags.push(tagVariants.deprecated());
     }
 
-    return [
-      <DocEntry location={location} tags={tags} name={name}>
+    return (
+      <DocEntry
+        id={id}
+        tags={tags}
+        location={location}
+        name={name}
+        jsDoc={jsDoc}
+        {...markdownContext}
+      >
         <DocFunctionSummary {...markdownContext}>
           {functionDef}
         </DocFunctionSummary>
-      </DocEntry>,
-      jsDoc,
-    ];
+      </DocEntry>
+    );
   });
 
-  const jsDocEntries = items.filter((x) => x[1]);
-  if (jsDocEntries.length === 1) {
-    const lastItem = items.at(-1)!;
-    lastItem[0] = (
-      <>
-        {lastItem[0]}
-        <JsDoc {...markdownContext}>
-          {jsDocEntries[0][1]}
-        </JsDoc>
-      </>
-    );
-  } else {
-    items.map((item) => (
-      <>
-        {item[0]}
-        <JsDoc {...markdownContext}>
-          {item[1]}
-        </JsDoc>
-      </>
-    ));
-  }
-
-  return (
-    <div class={style("docItem")} id={id}>
-      <Anchor>{id}</Anchor>
-      {items.map((item) => item[0])}
-    </div>
-  );
+  return <>{items}</>;
 }
 
 function ClassPropertyDoc(
@@ -290,7 +267,7 @@ function ClassPropertyDoc(
   }
 
   return (
-    <SectionEntry
+    <DocEntry
       id={id}
       location={location}
       tags={tags}
@@ -303,7 +280,7 @@ function ClassPropertyDoc(
           : <TypeDef {...markdownContext}>{tsType}</TypeDef>
         </span>
       )}
-    </SectionEntry>
+    </DocEntry>
   );
 }
 
@@ -389,7 +366,7 @@ function ConstructorsDoc(
   const items = defs.map(({ location, params, jsDoc, accessibility }, i) => {
     const id = nameToId("ctor", String(i));
     return (
-      <SectionEntry
+      <DocEntry
         id={id}
         location={location}
         tags={[
@@ -403,7 +380,7 @@ function ConstructorsDoc(
         (<Params {...markdownContext}>
           {params}
         </Params>)
-      </SectionEntry>
+      </DocEntry>
     );
   });
 

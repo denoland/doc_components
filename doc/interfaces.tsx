@@ -15,7 +15,7 @@ import {
   Anchor,
   nameToId,
   Section,
-  SectionEntry,
+  DocEntry,
   Tag,
   tagVariants,
 } from "./doc_common.tsx";
@@ -47,7 +47,7 @@ function CallSignaturesDoc(
         tags.push(tagVariants.deprecated());
       }
       return (
-        <SectionEntry
+        <DocEntry
           id={id}
           location={location}
           tags={tags}
@@ -63,7 +63,7 @@ function CallSignaturesDoc(
               : <TypeDef {...markdownContext}>{tsType}</TypeDef>
             </>
           )}
-        </SectionEntry>
+        </DocEntry>
       );
     },
   );
@@ -137,7 +137,7 @@ function MethodsDoc(
       }
 
       return (
-        <SectionEntry
+        <DocEntry
           id={id}
           location={location}
           tags={tags}
@@ -156,7 +156,7 @@ function MethodsDoc(
               : <TypeDef {...markdownContext}>{returnType}</TypeDef>
             </span>
           )}
-        </SectionEntry>
+        </DocEntry>
       );
     },
   );
@@ -198,7 +198,7 @@ function PropertiesDoc(
       }
 
       return (
-        <SectionEntry
+        <DocEntry
           id={id}
           location={location}
           tags={tags}
@@ -211,7 +211,7 @@ function PropertiesDoc(
               : <TypeDef {...markdownContext}>{tsType}</TypeDef>
             </>
           )}
-        </SectionEntry>
+        </DocEntry>
       );
     },
   );
