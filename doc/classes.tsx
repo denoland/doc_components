@@ -10,10 +10,10 @@ import {
   tw,
 } from "../deps.ts";
 import {
+  DocEntry,
   getAccessibilityTag,
   nameToId,
   Section,
-  DocEntry,
   Tag,
   tagVariants,
 } from "./doc_common.tsx";

@@ -11,7 +11,7 @@ import {
   type JsDocTagReturn,
   tw,
 } from "../deps.ts";
-import { nameToId, Section, DocEntry, tagVariants } from "./doc_common.tsx";
+import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import {
   getSummary,

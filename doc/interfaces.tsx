@@ -13,9 +13,9 @@ import {
 } from "../deps.ts";
 import {
   Anchor,
+  DocEntry,
   nameToId,
   Section,
-  DocEntry,
   Tag,
   tagVariants,
 } from "./doc_common.tsx";

@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 import { type DocNodeTypeAlias } from "../deps.ts";
-import { nameToId, DocEntry, tagVariants } from "./doc_common.tsx";
+import { DocEntry, nameToId, tagVariants } from "./doc_common.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";

@@ -3,7 +3,7 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { type DocNodeEnum } from "../deps.ts";
-import { nameToId, Section, DocEntry } from "./doc_common.tsx";
+import { DocEntry, nameToId, Section } from "./doc_common.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
