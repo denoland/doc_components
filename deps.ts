@@ -44,7 +44,7 @@ export type {
   TsTypeParamDef,
   TsTypeTupleDef,
   TsTypeUnionDef,
-} from "https://deno.land/x/deno_doc@0.39.0/lib/types.d.ts";
+} from "https://deno.land/x/deno_doc@0.44.0/lib/types.d.ts";
 
 export { toHtml } from "https://esm.sh/hast-util-to-html@8.0.3?pin=v87";
 export * as htmlEntities from "https://esm.sh/html-entities@2.3.3?pin=v87";
