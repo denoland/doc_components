@@ -162,12 +162,11 @@ export function DocTypeSections(
 }
 
 export function ModuleDoc(
-  { children, library = false, sourceUrl, markdownContext }: {
+  { children, library = false, sourceUrl, ...markdownContext }: {
     children: Child<DocNode[]>;
     library?: boolean;
     sourceUrl: string;
-    markdownContext: MarkdownContext;
-  },
+  } & MarkdownContext,
 ) {
   const collection = asCollection(take(children, true));
   return (
