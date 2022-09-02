@@ -141,19 +141,19 @@ export function ShowcaseDocBlocks(
       <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
       <hr />
       <ComponentTitle module="/classes.tsx">DocBlockClass</ComponentTitle>
-      <DocBlockClass url={url}>{classNode}</DocBlockClass>
+      <DocBlockClass markdownContext={{url}}>{classNode}</DocBlockClass>
       <ComponentTitle module="/enum.tsx">DocBlockEnum</ComponentTitle>
-      <DocBlockEnum url={url}>{enumNode}</DocBlockEnum>
+      <DocBlockEnum markdownContext={{url}}>{enumNode}</DocBlockEnum>
       <ComponentTitle module="/interfaces.tsx">
         DocBlockInterface
       </ComponentTitle>
-      <DocBlockInterface url={url}>{interfaceNode}</DocBlockInterface>
+      <DocBlockInterface markdownContext={{url}}>{interfaceNode}</DocBlockInterface>
       <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
-      <DocBlockFunction url={url}>{fnNodes}</DocBlockFunction>
+      <DocBlockFunction markdownContext={{url}}>{fnNodes}</DocBlockFunction>
       <ComponentTitle module="/type_alias.tsx">DocNodeTypeAlias</ComponentTitle>
-      <DocBlockTypeAlias url={url}>{typeAliasNode}</DocBlockTypeAlias>
+      <DocBlockTypeAlias markdownContext={{url}}>{typeAliasNode}</DocBlockTypeAlias>
       <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>
-      <DocBlockNamespace url={url}>{namespaceNode}</DocBlockNamespace>
+      <DocBlockNamespace markdownContext={{url}}>{namespaceNode}</DocBlockNamespace>
     </div>
   );
 }

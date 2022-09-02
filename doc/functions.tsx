@@ -155,7 +155,6 @@ function DocFunction(
             <DocEntry
               id={returnId}
               location={def.location}
-              name={""}
               jsDoc={returnDoc}
               markdownContext={markdownContext}
             >

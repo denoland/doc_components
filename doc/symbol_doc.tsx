@@ -6,6 +6,7 @@ import {
   type DocNode,
   type DocNodeInterface,
   type DocNodeTypeAlias,
+  type JsDocTagTags,
   tw,
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
@@ -45,7 +46,7 @@ export function SymbolDoc(
   const tags = [];
 
   const jsDocTags: string[] = docNodes.flatMap(({ jsDoc }) =>
-    jsDoc?.tags?.filter(({ kind }) => kind === "tags")?.flatMap(({ tags }) =>
+    (jsDoc?.tags?.filter(({ kind }) => kind === "tags") as JsDocTagTags[] | undefined)?.flatMap(({ tags }) =>
       tags
     ) ?? []
   );

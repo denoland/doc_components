@@ -165,6 +165,7 @@ export function Params(
   );
 }
 
+// @ts-ignore onKeyDown does support strings
 export function paramName(param: ParamDef): string {
   switch (param.kind) {
     case "array":

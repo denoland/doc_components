@@ -24,7 +24,6 @@ import {
 } from "./deps.ts";
 import {
   Showcase,
-  ShowcaseCodeBlocks,
   ShowcaseDocBlocks,
 } from "./showcase.tsx";
 import { getDocNodes, getModuleIndex } from "./util.ts";

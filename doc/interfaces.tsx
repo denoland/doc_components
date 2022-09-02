@@ -52,7 +52,6 @@ function CallSignaturesDoc(
           id={id}
           location={location}
           tags={tags}
-          name={""}
           jsDoc={jsDoc}
           markdownContext={markdownContext}
         >
