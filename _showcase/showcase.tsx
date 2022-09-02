@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
-import { Tag } from "../doc/doc_common.tsx";
+import { tagVariants } from "../doc/doc_common.tsx";
 import { DocBlockClass } from "../doc/classes.tsx";
 import {
   type DocNode,
@@ -55,14 +55,14 @@ function ComponentTitle(
 }
 
 export function Showcase(
-  { docNodes, moduleIndex, symbol, url }: {
-    docNodes: DocNode[];
+  { moduleIndex, moduleDoc, symbolDoc, symbol, url }: {
     url: string;
     symbol: string;
-    moduleIndex: ModuleIndexWithDoc;
+    moduleIndex: any;
+    moduleDoc: any;
+    symbolDoc: any;
   },
 ) {
-  const itemNodes = docNodes.filter(({ name }) => name === symbol);
   return (
     <div
       class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
@@ -74,28 +74,36 @@ export function Showcase(
       <MarkdownSummary markdownContext={{ url }}>
         {`Some _markdown_ with [links](https://deno.land/) and symbol links, like: {@linkcode Router}`}
       </MarkdownSummary>
-      <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
-      <ModuleDoc url={url} sourceUrl={url}>
-        {docNodes}
-      </ModuleDoc>
+
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
       <ModuleIndex
-        base="https://deno.land/std@0.142.0"
-        sourceUrl="https://deno.land/std@0.142.0"
+        base="https://deno.land/std@0.154.0"
+        sourceUrl="https://deno.land/std@0.154.0"
       >
-        {moduleIndex}
+        {moduleIndex.items}
       </ModuleIndex>
+
+      <ComponentTitle module="/module_index_panel.tsx">ModuleIndexPanel</ComponentTitle>
       <ModuleIndexPanel
-        base="https://deno.land/std@0.142.0"
-        path="/"
-        current="/version.ts"
+        base="https://deno.land/oak@v11.0.0"
+        path="/mod.ts"
+        current="/mod.ts"
       >
-        {moduleIndex}
+        {moduleDoc.nav}
       </ModuleIndexPanel>
-      <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
-      <SymbolDoc url={url}>{itemNodes}</SymbolDoc>
-      <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
-      <ComponentTitle module="/usage.tsx">Usage</ComponentTitle>
+
+      <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
+      <ModuleDoc url={url} sourceUrl={url}>
+        {moduleDoc.docNodes}
+      </ModuleDoc>
+
+      <ComponentTitle module="/doc/symbol_doc.ts">SymbolDoc</ComponentTitle>
+      <SymbolDoc url={url}>{symbolDoc.docNodes}</SymbolDoc>
+
+      <ComponentTitle module="/doc/doc_common.tsx">Tag</ComponentTitle>
+      {Object.values(tagVariants).map((tag) => tag())}
+
+      <ComponentTitle module="/doc/usage.tsx">Usage</ComponentTitle>
       <Usage url="https://deno.land/x/example@v1.0.0/mod.ts" />
       <Usage
         url="https://deno.land/x/example@v1.0.0/mod.ts"

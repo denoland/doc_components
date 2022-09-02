@@ -105,6 +105,8 @@ export const theme: ThemeConfiguration = {
     colors: {
       secondary: "#E5E7EB",
       "default-highlight": "#333333C0",
+      ultralight: "#F8F7F6",
+      border: "#DDDDDD",
     },
     spacing: {
       4.5: "1.125rem",
@@ -133,7 +135,7 @@ export const plugins: Record<string, Plugin> = {
       },
     }),
   "icon-button":
-    apply`border border-dark-border rounded p-2 hover:bg-ultralight`,
+    apply`border border-border rounded p-2 hover:bg-ultralight`,
 };
 
 const runtimeConfig: Required<
