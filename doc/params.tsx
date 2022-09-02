@@ -87,13 +87,15 @@ export function paramName(param: ParamDef): string {
             return "undefined";
           }
         }).join(", ")
-      }]`;
+      }]${param.optional ? "?" : ""}`;
     case "assign":
       return paramName(param.left);
     case "identifier":
-      return param.name;
+      return param.name + (param.optional ? "?" : "");
     case "object":
-      return `{ ${param.props.map(ObjectPatName).join(", ")} }`;
+      return `{ ${param.props.map(ObjectPatName).join(", ")} }${
+        param.optional ? "?" : ""
+      }`;
       break;
     case "rest":
       return `...${paramName(param.arg)}`;
