@@ -9,9 +9,10 @@ import { type Child, maybe, take } from "./utils.ts";
 import { MarkdownContext } from "./markdown.tsx";
 
 function ObjectPat(
-  { children, ...markdownContext }: {
+  { children, markdownContext }: {
     children: Child<ObjectPatPropDef>;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const pattern = take(children);
   switch (pattern.kind) {
@@ -28,7 +29,7 @@ function ObjectPat(
       const { key, value } = pattern;
       return (
         <span>
-          {key}: <Param {...markdownContext}>{value}</Param>
+          {key}: <Param markdownContext={markdownContext}>{value}</Param>
         </span>
       );
     }
@@ -36,7 +37,7 @@ function ObjectPat(
       const { arg } = pattern;
       return (
         <span>
-          ...<Param {...markdownContext}>{arg}</Param>
+          ...<Param markdownContext={markdownContext}>{arg}</Param>
         </span>
       );
     }
@@ -44,24 +45,25 @@ function ObjectPat(
 }
 
 function Param(
-  { children, optional, ...markdownContext }: {
+  { children, optional, markdownContext }: {
     children: Child<ParamDef>;
     optional?: boolean;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const param = take(children);
   switch (param.kind) {
     case "array": {
       const { elements, optional: paramOptional, tsType } = param;
       const items = elements.map((e) =>
-        e && <Param {...markdownContext}>{e}</Param>
+        e && <Param markdownContext={markdownContext}>{e}</Param>
       );
       return (
         <span>
           [{items}]{paramOptional || optional ? "?" : ""}
           {tsType && (
             <span>
-              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -71,10 +73,10 @@ function Param(
       const { left, tsType } = param;
       return (
         <span>
-          <Param {...markdownContext} optional>{left}</Param>
+          <Param markdownContext={markdownContext} optional>{left}</Param>
           {tsType && (
             <span>
-              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -88,7 +90,7 @@ function Param(
           {paramOptional || optional ? "?" : ""}
           {tsType && (
             <span>
-              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -98,7 +100,9 @@ function Param(
       const { props, optional: paramOptional, tsType } = param;
       const items = [];
       for (let i = 0; i < props.length; i++) {
-        items.push(<ObjectPat {...markdownContext}>{props[i]}</ObjectPat>);
+        items.push(
+          <ObjectPat markdownContext={markdownContext}>{props[i]}</ObjectPat>,
+        );
         if (i < props.length - 1) {
           items.push(<span>{", "}</span>);
         }
@@ -108,7 +112,7 @@ function Param(
           &#123; {items} &#125;{paramOptional || optional ? "?" : ""}
           {tsType && (
             <span>
-              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -118,10 +122,10 @@ function Param(
       const { arg, tsType } = param;
       return (
         <span>
-          ...<Param {...markdownContext}>{arg}</Param>
+          ...<Param markdownContext={markdownContext}>{arg}</Param>
           {tsType && (
             <span>
-              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
             </span>
           )}
         </span>
@@ -131,9 +135,10 @@ function Param(
 }
 
 export function Params(
-  { children, ...markdownContext }: {
+  { children, markdownContext }: {
     children: Child<ParamDef[]>;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const params = take(children, true);
   if (!params.length) {
@@ -142,7 +147,7 @@ export function Params(
   if (params.length < 3) {
     const items = [];
     for (let i = 0; i < params.length; i++) {
-      items.push(<Param {...markdownContext}>{params[i]}</Param>);
+      items.push(<Param markdownContext={markdownContext}>{params[i]}</Param>);
       if (i < params.length - 1) {
         items.push(<span>{", "}</span>);
       }
@@ -153,7 +158,7 @@ export function Params(
     <div class={style("indent")}>
       {params.map((param) => (
         <div>
-          <Param {...markdownContext}>{param}</Param>,
+          <Param markdownContext={markdownContext}>{param}</Param>,
         </div>
       ))}
     </div>

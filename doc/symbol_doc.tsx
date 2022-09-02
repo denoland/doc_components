@@ -77,7 +77,7 @@ export function SymbolDoc(
     <article class={style("main")}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
-          <DocTitle {...markdownContext}>{docNodes}</DocTitle>
+          <DocTitle markdownContext={markdownContext}>{docNodes}</DocTitle>
 
           {tags.length !== 0 && (
             <div>
@@ -97,9 +97,10 @@ export function SymbolDoc(
           !(url.endsWith(".d.ts") || library),
           <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
         )}
-        {!isFunction && <JsDoc {...markdownContext}>{jsDoc}</JsDoc>}
+        {!isFunction && <JsDoc markdownContext={markdownContext}>{jsDoc}
+        </JsDoc>}
       </div>
-      <DocBlock {...markdownContext}>{docNodes}</DocBlock>
+      <DocBlock markdownContext={markdownContext}>{docNodes}</DocBlock>
     </article>
   );
 }

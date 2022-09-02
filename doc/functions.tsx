@@ -26,23 +26,27 @@ import { type Child, isDeprecated, take } from "./utils.ts";
 
 export function DocFunctionSummary({
   children,
-  ...markdownContext
+  markdownContext,
 }: {
   children: Child<FunctionDef>;
-} & MarkdownContext) {
+  markdownContext: MarkdownContext;
+}) {
   const def = take(children, true);
 
   return (
     <>
-      <DocTypeParams {...markdownContext}>{def.typeParams}</DocTypeParams>
+      <DocTypeParams markdownContext={markdownContext}>
+        {def.typeParams}
+      </DocTypeParams>
       (
-      <Params {...markdownContext}>
+      <Params markdownContext={markdownContext}>
         {def.params}
       </Params>
       )
       {def.returnType && (
         <span>
-          : <TypeDef {...markdownContext}>{def.returnType}</TypeDef>
+          :{" "}
+          <TypeDef markdownContext={markdownContext}>{def.returnType}</TypeDef>
         </span>
       )}
     </>
@@ -52,11 +56,12 @@ export function DocFunctionSummary({
 function DocFunctionOverload({
   children,
   i,
-  ...markdownContext
+  markdownContext,
 }: {
   children: Child<DocNodeFunction>;
   i: number;
-} & MarkdownContext) {
+  markdownContext: MarkdownContext;
+}) {
   const def = take(children, true);
 
   if (def.functionDef.hasBody) {
@@ -74,23 +79,27 @@ function DocFunctionOverload({
       <div class={tw`font-mono`}>
         <span class={tw`font-bold`}>{def.name}</span>
         <span class={tw`font-medium`}>
-          <DocFunctionSummary {...markdownContext}>
+          <DocFunctionSummary markdownContext={markdownContext}>
             {def.functionDef}
           </DocFunctionSummary>
         </span>
       </div>
 
       <div class={tw`w-full`}>
-        <MarkdownSummary {...markdownContext}>{summary}</MarkdownSummary>
+        <MarkdownSummary markdownContext={markdownContext}>
+          {summary}
+        </MarkdownSummary>
       </div>
     </label>
   );
 }
 
 function DocFunction(
-  { children, n, ...markdownContext }:
-    & { children: Child<DocNodeFunction>; n: number }
-    & MarkdownContext,
+  { children, n, markdownContext }: {
+    children: Child<DocNodeFunction>;
+    n: number;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const def = take(children);
 
@@ -117,11 +126,12 @@ function DocFunction(
         location={def.location}
         name={name}
         jsDoc={paramDocs[i]}
-        {...markdownContext}
+        markdownContext={markdownContext}
       >
         {param.tsType && (
           <span>
-            : <TypeDef {...markdownContext}>{param.tsType}</TypeDef>
+            :{" "}
+            <TypeDef markdownContext={markdownContext}>{param.tsType}</TypeDef>
           </span>
         )}
       </DocEntry>
@@ -135,7 +145,7 @@ function DocFunction(
 
   return (
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
-      <JsDoc {...markdownContext}>{def.jsDoc}</JsDoc>
+      <JsDoc markdownContext={markdownContext}>{def.jsDoc}</JsDoc>
 
       <Section title="Parameters">{parameters}</Section>
 
@@ -147,9 +157,9 @@ function DocFunction(
               location={def.location}
               name={""}
               jsDoc={returnDoc}
-              {...markdownContext}
+              markdownContext={markdownContext}
             >
-              <TypeDef {...markdownContext}>
+              <TypeDef markdownContext={markdownContext}>
                 {def.functionDef.returnType}
               </TypeDef>
             </DocEntry>,
@@ -161,14 +171,15 @@ function DocFunction(
 }
 
 export function DocBlockFunction(
-  { children, ...markdownContext }:
-    & { children: Child<DocNodeFunction[]> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<DocNodeFunction[]>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const defs = take(children, true);
 
   const items = defs.map((def, i) => (
-    <DocFunction n={i} {...markdownContext}>{def}</DocFunction>
+    <DocFunction n={i} markdownContext={markdownContext}>{def}</DocFunction>
   ));
 
   return (
@@ -198,7 +209,7 @@ export function DocBlockFunction(
           })}
           <div class={tw`space-y-2`}>
             {defs.map((def, i) => (
-              <DocFunctionOverload i={i} {...markdownContext}>
+              <DocFunctionOverload i={i} markdownContext={markdownContext}>
                 {def}
               </DocFunctionOverload>
             ))}

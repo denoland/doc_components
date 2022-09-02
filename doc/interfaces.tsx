@@ -31,9 +31,10 @@ type IndexSignatureDef =
   | InterfaceIndexSignatureDef;
 
 function CallSignaturesDoc(
-  { children, ...markdownContext }: {
+  { children, markdownContext }: {
     children: Child<InterfaceCallSignatureDef[]>;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const defs = take(children, true);
   if (!defs.length) {
@@ -53,14 +54,15 @@ function CallSignaturesDoc(
           tags={tags}
           name={""}
           jsDoc={jsDoc}
-          {...markdownContext}
+          markdownContext={markdownContext}
         >
-          <DocTypeParams {...markdownContext}>{typeParams}
-          </DocTypeParams>(<Params {...markdownContext}>
+          <DocTypeParams markdownContext={markdownContext}>
+            {typeParams}
+          </DocTypeParams>(<Params markdownContext={markdownContext}>
             {params}
           </Params>){tsType && (
             <>
-              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
             </>
           )}
         </DocEntry>
@@ -71,9 +73,10 @@ function CallSignaturesDoc(
 }
 
 export function IndexSignaturesDoc(
-  { children, ...markdownContext }:
-    & { children: Child<IndexSignatureDef[]> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<IndexSignatureDef[]>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const defs = take(children, true);
   if (!defs.length) {
@@ -87,9 +90,11 @@ export function IndexSignaturesDoc(
         {maybe(
           readonly,
           <span class={style("keyword")}>readonly{" "}</span>,
-        )}[<Params {...markdownContext}>{params}</Params>]{tsType && (
+        )}[<Params markdownContext={markdownContext}>
+          {params}
+        </Params>]{tsType && (
           <span>
-            : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+            : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
           </span>
         )}
       </div>
@@ -100,9 +105,10 @@ export function IndexSignaturesDoc(
 }
 
 function MethodsDoc(
-  { children, ...markdownContext }:
-    & { children: Child<InterfaceMethodDef[]> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<InterfaceMethodDef[]>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const defs = take(children, true);
   if (!defs.length) {
@@ -147,13 +153,16 @@ function MethodsDoc(
             ? `[${name}]`
             : name}
           jsDoc={jsDoc}
-          {...markdownContext}
+          markdownContext={markdownContext}
         >
-          <DocTypeParams {...markdownContext}>{typeParams}</DocTypeParams>
-          (<Params {...markdownContext}>{params}</Params>)
+          <DocTypeParams markdownContext={markdownContext}>
+            {typeParams}
+          </DocTypeParams>
+          (<Params markdownContext={markdownContext}>{params}</Params>)
           {returnType && (
             <span>
-              : <TypeDef {...markdownContext}>{returnType}</TypeDef>
+              :{" "}
+              <TypeDef markdownContext={markdownContext}>{returnType}</TypeDef>
             </span>
           )}
         </DocEntry>
@@ -164,9 +173,10 @@ function MethodsDoc(
 }
 
 function PropertiesDoc(
-  { children, ...markdownContext }:
-    & { children: Child<InterfacePropertyDef[]> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<InterfacePropertyDef[]>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const defs = take(children, true);
   if (!defs.length) {
@@ -204,11 +214,11 @@ function PropertiesDoc(
           tags={tags}
           name={maybe(computed, `[${name}]`, name)}
           jsDoc={jsDoc}
-          {...markdownContext}
+          markdownContext={markdownContext}
         >
           {tsType && (
             <>
-              : <TypeDef {...markdownContext}>{tsType}</TypeDef>
+              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
             </>
           )}
         </DocEntry>
@@ -220,9 +230,10 @@ function PropertiesDoc(
 }
 
 export function DocSubTitleInterface(
-  { children, ...markdownContext }:
-    & { children: Child<DocNodeInterface> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<DocNodeInterface>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const { interfaceDef } = take(children);
 
@@ -235,7 +246,7 @@ export function DocSubTitleInterface(
       <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
       {interfaceDef.extends.map((typeDef, i) => (
         <>
-          <TypeDef {...markdownContext}>{typeDef}</TypeDef>
+          <TypeDef markdownContext={markdownContext}>{typeDef}</TypeDef>
           {i !== (interfaceDef.extends.length - 1) && <span>,{" "}</span>}
         </>
       ))}
@@ -244,9 +255,10 @@ export function DocSubTitleInterface(
 }
 
 export function DocBlockInterface(
-  { children, ...markdownContext }:
-    & { children: Child<DocNodeInterface> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<DocNodeInterface>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const {
     interfaceDef: {
@@ -258,17 +270,19 @@ export function DocBlockInterface(
   } = take(children);
   return (
     <div class={style("docBlockItems")}>
-      <IndexSignaturesDoc {...markdownContext}>
+      <IndexSignaturesDoc markdownContext={markdownContext}>
         {indexSignatures}
       </IndexSignaturesDoc>
 
-      <CallSignaturesDoc {...markdownContext}>
+      <CallSignaturesDoc markdownContext={markdownContext}>
         {callSignatures}
       </CallSignaturesDoc>
 
-      <PropertiesDoc {...markdownContext}>{properties}</PropertiesDoc>
+      <PropertiesDoc markdownContext={markdownContext}>
+        {properties}
+      </PropertiesDoc>
 
-      <MethodsDoc {...markdownContext}>{methods}</MethodsDoc>
+      <MethodsDoc markdownContext={markdownContext}>{methods}</MethodsDoc>
     </div>
   );
 }

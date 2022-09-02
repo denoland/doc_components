@@ -15,9 +15,10 @@ function byName(a: { name: string }, b: { name: string }): number {
 }
 
 export function DocBlockEnum(
-  { children, ...markdownContext }:
-    & { children: Child<DocNodeEnum> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<DocNodeEnum>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const { name: enumName, enumDef: { members }, location } = take(children);
   const items = [...members].sort(byName).map(({ name, init, jsDoc }) => {
@@ -28,12 +29,12 @@ export function DocBlockEnum(
         location={location}
         name={name}
         jsDoc={jsDoc}
-        {...markdownContext}
+        markdownContext={markdownContext}
       >
         {init && (
           <>
             {" = "}
-            <TypeDef {...markdownContext}>{init}</TypeDef>
+            <TypeDef markdownContext={markdownContext}>{init}</TypeDef>
           </>
         )}
       </DocEntry>

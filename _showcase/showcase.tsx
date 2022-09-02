@@ -71,7 +71,7 @@ export function Showcase(
       <h2 class={tw`text-2xl py-2`}>Component Showcase</h2>
       <hr />
       <ComponentTitle module="/markdown.tsx">MarkdownSummary</ComponentTitle>
-      <MarkdownSummary url={url}>
+      <MarkdownSummary markdownContext={{ url }}>
         {`Some _markdown_ with [links](https://deno.land/) and symbol links, like: {@linkcode Router}`}
       </MarkdownSummary>
       <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>

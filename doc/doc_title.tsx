@@ -11,9 +11,10 @@ import { DocTypeParams } from "./types.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 
 export function DocTitle(
-  { children, ...markdownContext }:
-    & { children: Child<DocNode[]> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<DocNode[]>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const docNodes = take(children, true);
   const elements = [];
@@ -23,29 +24,31 @@ export function DocTitle(
     switch (docNode.kind) {
       case "class":
         title = (
-          <DocTypeParams {...markdownContext}>
+          <DocTypeParams markdownContext={markdownContext}>
             {docNode.classDef.typeParams}
           </DocTypeParams>
         );
         subTitle = (
-          <DocSubTitleClass {...markdownContext}>{docNode}</DocSubTitleClass>
+          <DocSubTitleClass markdownContext={markdownContext}>
+            {docNode}
+          </DocSubTitleClass>
         );
         break;
       case "interface":
         title = (
-          <DocTypeParams {...markdownContext}>
+          <DocTypeParams markdownContext={markdownContext}>
             {docNode.interfaceDef.typeParams}
           </DocTypeParams>
         );
         subTitle = (
-          <DocSubTitleInterface {...markdownContext}>
+          <DocSubTitleInterface markdownContext={markdownContext}>
             {docNode}
           </DocSubTitleInterface>
         );
         break;
       case "typeAlias":
         title = (
-          <DocTypeParams {...markdownContext}>
+          <DocTypeParams markdownContext={markdownContext}>
             {docNode.typeAliasDef.typeParams}
           </DocTypeParams>
         );

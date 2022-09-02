@@ -10,17 +10,20 @@ import { style } from "../styles.ts";
 import { asCollection, Child, take } from "./utils.ts";
 
 export function DocBlockNamespace(
-  { children, namespace: parentNamespace, ...markdownContext }:
-    & { children: Child<DocNodeNamespace> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<DocNodeNamespace>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const { name, namespaceDef: { elements } } = take(children);
-  const namespace = parentNamespace ? `${parentNamespace}.${name}` : name;
+  const namespace = markdownContext.namespace
+    ? `${markdownContext.namespace}.${name}`
+    : name;
   const collection = asCollection(elements);
   const context = { namespace, ...markdownContext };
   return (
     <div class={style("docBlockItems")}>
-      <DocTypeSections {...context}>
+      <DocTypeSections markdownContext={context}>
         {collection}
       </DocTypeSections>
     </div>

@@ -34,7 +34,7 @@ function Folder({ children, base, parent }: {
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary url={url}>{summary}</MarkdownSummary>
+        <MarkdownSummary markdownContext={{ url }}>{summary}</MarkdownSummary>
       </td>
     </tr>
   );
@@ -57,7 +57,7 @@ function Module({ children, base, parent }: {
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary url={url}>{summary}</MarkdownSummary>
+        <MarkdownSummary markdownContext={{ url }}>{summary}</MarkdownSummary>
       </td>
     </tr>
   );

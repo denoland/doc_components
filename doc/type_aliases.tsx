@@ -10,9 +10,10 @@ import { TypeDef } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";
 
 export function DocBlockTypeAlias(
-  { children, ...markdownContext }:
-    & { children: Child<DocNodeTypeAlias> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<DocNodeTypeAlias>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const { name, location, jsDoc, typeAliasDef } = take(children);
   const id = nameToId("typeAlias", name);
@@ -28,9 +29,12 @@ export function DocBlockTypeAlias(
         tags={tags}
         name={name}
         jsDoc={jsDoc}
-        {...markdownContext}
+        markdownContext={markdownContext}
       >
-        : <TypeDef {...markdownContext}>{typeAliasDef.tsType}</TypeDef>
+        :{" "}
+        <TypeDef markdownContext={markdownContext}>
+          {typeAliasDef.tsType}
+        </TypeDef>
       </DocEntry>
     </div>
   );

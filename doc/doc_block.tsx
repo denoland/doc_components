@@ -13,9 +13,10 @@ import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
 
 export function DocBlock(
-  { children, ...markdownContext }:
-    & { children: Child<DocNode[]> }
-    & MarkdownContext,
+  { children, markdownContext }: {
+    children: Child<DocNode[]>;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const docNodes = take(children, true);
   const elements = [];
@@ -23,27 +24,37 @@ export function DocBlock(
     switch (docNode.kind) {
       case "class":
         elements.push(
-          <DocBlockClass {...markdownContext}>{docNode}</DocBlockClass>,
+          <DocBlockClass markdownContext={markdownContext}>
+            {docNode}
+          </DocBlockClass>,
         );
         break;
       case "enum":
         elements.push(
-          <DocBlockEnum {...markdownContext}>{docNode}</DocBlockEnum>,
+          <DocBlockEnum markdownContext={markdownContext}>
+            {docNode}
+          </DocBlockEnum>,
         );
         break;
       case "interface":
         elements.push(
-          <DocBlockInterface {...markdownContext}>{docNode}</DocBlockInterface>,
+          <DocBlockInterface markdownContext={markdownContext}>
+            {docNode}
+          </DocBlockInterface>,
         );
         break;
       case "namespace":
         elements.push(
-          <DocBlockNamespace {...markdownContext}>{docNode}</DocBlockNamespace>,
+          <DocBlockNamespace markdownContext={markdownContext}>
+            {docNode}
+          </DocBlockNamespace>,
         );
         break;
       case "typeAlias":
         elements.push(
-          <DocBlockTypeAlias {...markdownContext}>{docNode}</DocBlockTypeAlias>,
+          <DocBlockTypeAlias markdownContext={markdownContext}>
+            {docNode}
+          </DocBlockTypeAlias>,
         );
         break;
     }
@@ -53,7 +64,9 @@ export function DocBlock(
   ) as DocNodeFunction[];
   if (fnNodes.length) {
     elements.push(
-      <DocBlockFunction {...markdownContext}>{fnNodes}</DocBlockFunction>,
+      <DocBlockFunction markdownContext={markdownContext}>
+        {fnNodes}
+      </DocBlockFunction>,
     );
   }
   return <div>{elements}</div>;

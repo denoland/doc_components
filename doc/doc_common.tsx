@@ -29,14 +29,15 @@ export function Anchor({ children: name }: { children: string }) {
 }
 
 export function DocEntry(
-  { children, tags, name, location, id, jsDoc, ...markdownContext }: {
+  { children, tags, name, location, id, jsDoc, markdownContext }: {
     children: unknown;
     tags?: unknown[];
     name: string;
     location: Location;
     id: string;
     jsDoc: { doc?: string } | undefined;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const href = services.resolveSourceHref(location.filename, location.line);
 
@@ -57,7 +58,7 @@ export function DocEntry(
         )}
       </div>
 
-      <JsDoc {...markdownContext}>
+      <JsDoc markdownContext={markdownContext}>
         {jsDoc}
       </JsDoc>
     </div>
