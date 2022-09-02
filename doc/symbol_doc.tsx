@@ -46,9 +46,9 @@ export function SymbolDoc(
   const tags = [];
 
   const jsDocTags: string[] = docNodes.flatMap(({ jsDoc }) =>
-    (jsDoc?.tags?.filter(({ kind }) => kind === "tags") as JsDocTagTags[] | undefined)?.flatMap(({ tags }) =>
-      tags
-    ) ?? []
+    (jsDoc?.tags?.filter(({ kind }) => kind === "tags") as
+      | JsDocTagTags[]
+      | undefined)?.flatMap(({ tags }) => tags) ?? []
   );
   if (jsDocTags.length !== 0) {
     tags.push(

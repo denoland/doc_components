@@ -134,8 +134,7 @@ export const plugins: Record<string, Plugin> = {
         "border-bottom-width": (parts[0] ?? 1) + "px",
       },
     }),
-  "icon-button":
-    apply`border border-border rounded p-2 hover:bg-ultralight`,
+  "icon-button": apply`border border-border rounded p-2 hover:bg-ultralight`,
 };
 
 const runtimeConfig: Required<

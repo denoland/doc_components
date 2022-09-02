@@ -83,7 +83,9 @@ export function Showcase(
         {moduleIndex.items}
       </ModuleIndex>
 
-      <ComponentTitle module="/module_index_panel.tsx">ModuleIndexPanel</ComponentTitle>
+      <ComponentTitle module="/module_index_panel.tsx">
+        ModuleIndexPanel
+      </ComponentTitle>
       <ModuleIndexPanel
         base="https://deno.land/oak@v11.0.0"
         path="/mod.ts"
@@ -149,19 +151,25 @@ export function ShowcaseDocBlocks(
       <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
       <hr />
       <ComponentTitle module="/classes.tsx">DocBlockClass</ComponentTitle>
-      <DocBlockClass markdownContext={{url}}>{classNode}</DocBlockClass>
+      <DocBlockClass markdownContext={{ url }}>{classNode}</DocBlockClass>
       <ComponentTitle module="/enum.tsx">DocBlockEnum</ComponentTitle>
-      <DocBlockEnum markdownContext={{url}}>{enumNode}</DocBlockEnum>
+      <DocBlockEnum markdownContext={{ url }}>{enumNode}</DocBlockEnum>
       <ComponentTitle module="/interfaces.tsx">
         DocBlockInterface
       </ComponentTitle>
-      <DocBlockInterface markdownContext={{url}}>{interfaceNode}</DocBlockInterface>
+      <DocBlockInterface markdownContext={{ url }}>
+        {interfaceNode}
+      </DocBlockInterface>
       <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
-      <DocBlockFunction markdownContext={{url}}>{fnNodes}</DocBlockFunction>
+      <DocBlockFunction markdownContext={{ url }}>{fnNodes}</DocBlockFunction>
       <ComponentTitle module="/type_alias.tsx">DocNodeTypeAlias</ComponentTitle>
-      <DocBlockTypeAlias markdownContext={{url}}>{typeAliasNode}</DocBlockTypeAlias>
+      <DocBlockTypeAlias markdownContext={{ url }}>
+        {typeAliasNode}
+      </DocBlockTypeAlias>
       <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>
-      <DocBlockNamespace markdownContext={{url}}>{namespaceNode}</DocBlockNamespace>
+      <DocBlockNamespace markdownContext={{ url }}>
+        {namespaceNode}
+      </DocBlockNamespace>
     </div>
   );
 }

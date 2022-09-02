@@ -22,15 +22,8 @@ import {
   Router,
   virtualSheet,
 } from "./deps.ts";
-import {
-  Showcase,
-  ShowcaseDocBlocks,
-} from "./showcase.tsx";
-import {
-  getModuleDoc,
-  getModuleIndex,
-  getSymbolDoc,
-} from "./util.ts";
+import { Showcase, ShowcaseDocBlocks } from "./showcase.tsx";
+import { getModuleDoc, getModuleIndex, getSymbolDoc } from "./util.ts";
 
 const sheet = virtualSheet();
 const page = "/";

@@ -30,6 +30,7 @@ export type {
   JsDocTagKind,
   JsDocTagParam,
   JsDocTagReturn,
+  JsDocTagTags,
   LiteralCallSignatureDef,
   LiteralIndexSignatureDef,
   LiteralMethodDef,
@@ -44,7 +45,6 @@ export type {
   TsTypeParamDef,
   TsTypeTupleDef,
   TsTypeUnionDef,
-  JsDocTagTags,
 } from "https://deno.land/x/deno_doc@0.44.0/lib/types.d.ts";
 
 export { toHtml } from "https://esm.sh/hast-util-to-html@8.0.3?pin=v87";

@@ -120,6 +120,8 @@ function DocFunction(
     const id = nameToId("function", `${def.name}_${n}_parameters_${i}`);
     const name = paramName(param);
 
+    const defaultValue = param.kind === "assign" ? param.right : undefined;
+
     return (
       <DocEntry
         id={id}
@@ -132,6 +134,7 @@ function DocFunction(
           <span>
             :{" "}
             <TypeDef markdownContext={markdownContext}>{param.tsType}</TypeDef>
+            {defaultValue && ` = ${defaultValue}`}
           </span>
         )}
       </DocEntry>
