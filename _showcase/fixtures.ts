@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { DocNodeNamespace } from "https://deno.land/x/deno_doc@0.39.0/lib/types.d.ts";
+import { DocNodeNamespace } from "https://deno.land/x/deno_doc@0.44.0/lib/types.d.ts";
 import {
   type DocNodeClass,
   type DocNodeEnum,
