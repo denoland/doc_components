@@ -7,7 +7,6 @@ import { DocSubTitleInterface } from "./interfaces.tsx";
 import { runtime } from "../services.ts";
 import { type Child, decamelize, take } from "./utils.ts";
 import { docNodeKindColors } from "./symbol_kind.tsx";
-import { DocTypeParamsSummary } from "./types.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 
 export function DocTitle(
@@ -23,11 +22,6 @@ export function DocTitle(
     let subTitle;
     switch (docNode.kind) {
       case "class":
-        title = (
-          <DocTypeParamsSummary markdownContext={markdownContext}>
-            {docNode.classDef.typeParams}
-          </DocTypeParamsSummary>
-        );
         subTitle = (
           <DocSubTitleClass markdownContext={markdownContext}>
             {docNode}
@@ -35,22 +29,10 @@ export function DocTitle(
         );
         break;
       case "interface":
-        title = (
-          <DocTypeParamsSummary markdownContext={markdownContext}>
-            {docNode.interfaceDef.typeParams}
-          </DocTypeParamsSummary>
-        );
         subTitle = (
           <DocSubTitleInterface markdownContext={markdownContext}>
             {docNode}
           </DocSubTitleInterface>
-        );
-        break;
-      case "typeAlias":
-        title = (
-          <DocTypeParamsSummary markdownContext={markdownContext}>
-            {docNode.typeAliasDef.typeParams}
-          </DocTypeParamsSummary>
         );
         break;
     }
