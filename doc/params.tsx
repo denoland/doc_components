@@ -66,10 +66,10 @@ export function Params(
 function ObjectPatName(pattern: ObjectPatPropDef): string {
   switch (pattern.kind) {
     case "assign": {
-      return pattern.key + (pattern.value ? ` = ${pattern.value}` : "");
+      return pattern.key/* + (pattern.value ? ` = ${pattern.value}` : "")*/;
     }
     case "keyValue": {
-      return pattern.key + ": " + paramName(pattern.value);
+      return pattern.key/* + ": " + paramName(pattern.value)*/;
     }
     case "rest": {
       return `...${paramName(pattern.arg)}`;
