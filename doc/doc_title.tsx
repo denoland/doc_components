@@ -18,7 +18,6 @@ export function DocTitle(
   const docNodes = take(children, true);
   const elements = [];
   for (const docNode of [docNodes[0]]) {
-    let title;
     let subTitle;
     switch (docNode.kind) {
       case "class":
