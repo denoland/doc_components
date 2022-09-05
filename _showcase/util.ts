@@ -1,4 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+
 // deno-lint-ignore-file no-explicit-any
 
 export async function getModuleDoc(): Promise<any> {
