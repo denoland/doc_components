@@ -1,4 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+// deno-lint-ignore-file no-explicit-any
 
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
@@ -27,7 +28,6 @@ import { Usage } from "../doc/usage.tsx";
 import { type Child, take } from "../doc/utils.ts";
 import { DocBlockNamespace } from "../doc/namespaces.tsx";
 
-// deno-lint-ignore no-explicit-any
 type ModuleIndexWithDoc = any;
 
 const app = css({
