@@ -88,7 +88,7 @@ export function Section(
   return (
     <div>
       {title && <SectionTitle>{title}</SectionTitle>}
-      <div class={tw`mt-2 space-y-3`}>
+      <div class={tw`mt-2 space-y-7`}>
         {entries}
       </div>
     </div>

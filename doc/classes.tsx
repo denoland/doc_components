@@ -465,13 +465,13 @@ export function DocBlockClass(
         {def.classDef.constructors}
       </ConstructorsDoc>
 
-      <IndexSignaturesDoc markdownContext={markdownContext}>
-        {def.classDef.indexSignatures}
-      </IndexSignaturesDoc>
-
       <TypeParamsDoc base={def} markdownContext={markdownContext}>
         {def.classDef.typeParams}
       </TypeParamsDoc>
+
+      <IndexSignaturesDoc markdownContext={markdownContext}>
+        {def.classDef.indexSignatures}
+      </IndexSignaturesDoc>
 
       <ClassItemsDoc markdownContext={markdownContext}>
         {classItems}

@@ -262,6 +262,10 @@ export function DocBlockInterface(
   const def = take(children);
   return (
     <div class={style("docBlockItems")}>
+      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+        {def.interfaceDef.typeParams}
+      </TypeParamsDoc>
+
       <IndexSignaturesDoc markdownContext={markdownContext}>
         {def.interfaceDef.indexSignatures}
       </IndexSignaturesDoc>
@@ -269,10 +273,6 @@ export function DocBlockInterface(
       <CallSignaturesDoc markdownContext={markdownContext}>
         {def.interfaceDef.callSignatures}
       </CallSignaturesDoc>
-
-      <TypeParamsDoc base={def} markdownContext={markdownContext}>
-        {def.interfaceDef.typeParams}
-      </TypeParamsDoc>
 
       <PropertiesDoc markdownContext={markdownContext}>
         {def.interfaceDef.properties}
