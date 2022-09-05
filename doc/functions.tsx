@@ -140,7 +140,21 @@ function DocFunction(
         {type && (
           <span>
             : <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
-            {defaultValue && ` = ${defaultValue}`}
+            {
+              /*defaultValue && (
+              <>
+                <span> = {defaultValue}</span>
+                {param.tsType && (
+                  <span>
+                    :{" "}
+                    <TypeDef markdownContext={markdownContext}>
+                      {param.tsType}
+                    </TypeDef>
+                  </span>
+                )}
+              </>
+            )*/
+            }
           </span>
         )}
       </DocEntry>
