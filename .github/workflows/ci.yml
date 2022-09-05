@@ -27,7 +27,7 @@ jobs:
           deno-version: 1.x
 
       - name: 💄  format
-        run: deno fmt --ignore=./_showcase/data --check
+        run: deno fmt --ignore=./_showcase/data
 
       - name: 💄  lint
         run: deno lint

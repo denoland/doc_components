@@ -150,7 +150,9 @@ function DocFunction(
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
       <JsDoc markdownContext={markdownContext}>{def.jsDoc}</JsDoc>
 
-      <Section title="Parameters">{parameters}</Section>
+      {parameters.length !== 0 && (
+        <Section title="Parameters">{parameters}</Section>
+      )}
 
       {def.functionDef.returnType && (
         <Section title="Returns">

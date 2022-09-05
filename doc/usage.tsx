@@ -99,7 +99,6 @@ export function Usage(
         </code>
         <button
           class={style("copyButton")}
-          // @ts-ignore onClick does support strings
           onClick={`navigator?.clipboard?.writeText("${importStatement}");`}
         >
           <Icons.Copy />
