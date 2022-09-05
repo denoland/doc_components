@@ -80,7 +80,7 @@ export function SectionTitle({ children }: { children: Child<string> }) {
 }
 
 export function Section(
-  { children, title }: { children: Child<any[]>; title?: string },
+  { children, title }: { children: Child<unknown[]>; title?: string },
 ) {
   const entries = take(children, true);
   if (entries.length === 0) {

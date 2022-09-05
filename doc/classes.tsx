@@ -298,10 +298,10 @@ function ClassItemsDoc(
     return <></>;
   }
 
-  const properties: any[] = [];
-  const methods: any[] = [];
-  const staticProperties: any[] = [];
-  const staticMethods: any[] = [];
+  const properties: unknown[] = [];
+  const methods: unknown[] = [];
+  const staticProperties: unknown[] = [];
+  const staticMethods: unknown[] = [];
 
   for (let i = 0; i < defs.length; i++) {
     const def = defs[i];
