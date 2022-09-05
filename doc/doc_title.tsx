@@ -44,7 +44,6 @@ export function DocTitle(
             {decamelize(docNode.kind)}
           </span>{" "}
           <span class={tw`font-bold`}>{docNode.name}</span>
-          {title}
         </div>
         {subTitle && (
           <div class={tw`text-sm leading-4 space-y-0.5`}>
