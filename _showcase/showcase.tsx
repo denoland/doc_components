@@ -1,9 +1,11 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
+// deno-lint-ignore-file no-explicit-any
+
 /** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
-import { Tag } from "../doc/doc_common.tsx";
-import { CodeBlockClass, DocBlockClass } from "../doc/classes.tsx";
+import { tagVariants } from "../doc/doc_common.tsx";
+import { DocBlockClass } from "../doc/classes.tsx";
 import {
   type DocNode,
   type DocNodeClass,
@@ -12,24 +14,21 @@ import {
   type DocNodeInterface,
   type DocNodeNamespace,
   type DocNodeTypeAlias,
-  type DocNodeVariable,
 } from "../deps.ts";
-import { CodeBlockEnum, DocBlockEnum } from "../doc/enums.tsx";
-import { CodeBlockFn, DocBlockFn } from "../doc/functions.tsx";
-import { CodeBlockInterface, DocBlockInterface } from "../doc/interfaces.tsx";
+import { DocBlockEnum } from "../doc/enums.tsx";
+import { DocBlockFunction } from "../doc/functions.tsx";
+import { DocBlockInterface } from "../doc/interfaces.tsx";
 import { MarkdownSummary } from "../doc/markdown.tsx";
 import { ModuleDoc } from "../doc/module_doc.tsx";
 import { ModuleIndex } from "../doc/module_index.tsx";
 import { ModuleIndexPanel } from "../doc/module_index_panel.tsx";
 import { runtime } from "../services.ts";
 import { SymbolDoc } from "../doc/symbol_doc.tsx";
-import { CodeBlockTypeAlias, DocBlockTypeAlias } from "../doc/type_aliases.tsx";
+import { DocBlockTypeAlias } from "../doc/type_aliases.tsx";
 import { Usage } from "../doc/usage.tsx";
 import { type Child, take } from "../doc/utils.ts";
-import { CodeBlockVariable } from "../doc/variables.tsx";
 import { DocBlockNamespace } from "../doc/namespaces.tsx";
 
-// deno-lint-ignore no-explicit-any
 type ModuleIndexWithDoc = any;
 
 const app = css({
@@ -57,14 +56,14 @@ function ComponentTitle(
 }
 
 export function Showcase(
-  { docNodes, moduleIndex, symbol, url }: {
-    docNodes: DocNode[];
+  { moduleIndex, moduleDoc, symbolDoc, symbol, url }: {
     url: string;
     symbol: string;
-    moduleIndex: ModuleIndexWithDoc;
+    moduleIndex: any;
+    moduleDoc: any;
+    symbolDoc: any;
   },
 ) {
-  const itemNodes = docNodes.filter(({ name }) => name === symbol);
   return (
     <div
       class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
@@ -73,33 +72,41 @@ export function Showcase(
       <h2 class={tw`text-2xl py-2`}>Component Showcase</h2>
       <hr />
       <ComponentTitle module="/markdown.tsx">MarkdownSummary</ComponentTitle>
-      <MarkdownSummary url={url}>
+      <MarkdownSummary markdownContext={{ url }}>
         {`Some _markdown_ with [links](https://deno.land/) and symbol links, like: {@linkcode Router}`}
       </MarkdownSummary>
-      <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
-      <ModuleDoc url={url} sourceUrl={url}>
-        {docNodes}
-      </ModuleDoc>
+
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
       <ModuleIndex
-        base="https://deno.land/std@0.142.0"
-        sourceUrl="https://deno.land/std@0.142.0"
+        base="https://deno.land/std@0.154.0"
+        sourceUrl="https://deno.land/std@0.154.0"
       >
-        {moduleIndex}
+        {moduleIndex.items}
       </ModuleIndex>
+
+      <ComponentTitle module="/module_index_panel.tsx">
+        ModuleIndexPanel
+      </ComponentTitle>
       <ModuleIndexPanel
-        base="https://deno.land/std@0.142.0"
-        path="/"
-        current="/version.ts"
+        base="https://deno.land/oak@v11.0.0"
+        path="/mod.ts"
+        current="/mod.ts"
       >
-        {moduleIndex}
+        {moduleDoc.nav}
       </ModuleIndexPanel>
-      <ComponentTitle module="/symbod_doc.ts">SymbolDoc</ComponentTitle>
-      <SymbolDoc url={url}>{itemNodes}</SymbolDoc>
-      <ComponentTitle module="/jsdoc.tsx">Tag</ComponentTitle>
-      <Tag color="yellow">abstract</Tag>
-      <Tag color="gray">👎 deprecated</Tag>
-      <ComponentTitle module="/usage.tsx">Usage</ComponentTitle>
+
+      <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
+      <ModuleDoc url={url} sourceUrl={url}>
+        {moduleDoc.docNodes}
+      </ModuleDoc>
+
+      <ComponentTitle module="/doc/symbol_doc.ts">SymbolDoc</ComponentTitle>
+      <SymbolDoc url={url}>{symbolDoc.docNodes}</SymbolDoc>
+
+      <ComponentTitle module="/doc/doc_common.tsx">Tag</ComponentTitle>
+      {Object.values(tagVariants).map((tag) => tag())}
+
+      <ComponentTitle module="/doc/usage.tsx">Usage</ComponentTitle>
       <Usage url="https://deno.land/x/example@v1.0.0/mod.ts" />
       <Usage
         url="https://deno.land/x/example@v1.0.0/mod.ts"
@@ -145,66 +152,25 @@ export function ShowcaseDocBlocks(
       <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
       <hr />
       <ComponentTitle module="/classes.tsx">DocBlockClass</ComponentTitle>
-      <DocBlockClass url={url}>{classNode}</DocBlockClass>
+      <DocBlockClass markdownContext={{ url }}>{classNode}</DocBlockClass>
       <ComponentTitle module="/enum.tsx">DocBlockEnum</ComponentTitle>
-      <DocBlockEnum url={url}>{enumNode}</DocBlockEnum>
+      <DocBlockEnum markdownContext={{ url }}>{enumNode}</DocBlockEnum>
       <ComponentTitle module="/interfaces.tsx">
         DocBlockInterface
       </ComponentTitle>
-      <DocBlockInterface url={url}>{interfaceNode}</DocBlockInterface>
+      <DocBlockInterface markdownContext={{ url }}>
+        {interfaceNode}
+      </DocBlockInterface>
       <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
-      <DocBlockFn url={url}>{fnNodes}</DocBlockFn>
+      <DocBlockFunction markdownContext={{ url }}>{fnNodes}</DocBlockFunction>
       <ComponentTitle module="/type_alias.tsx">DocNodeTypeAlias</ComponentTitle>
-      <DocBlockTypeAlias url={url}>{typeAliasNode}</DocBlockTypeAlias>
+      <DocBlockTypeAlias markdownContext={{ url }}>
+        {typeAliasNode}
+      </DocBlockTypeAlias>
       <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>
-      <DocBlockNamespace url={url}>{namespaceNode}</DocBlockNamespace>
-    </div>
-  );
-}
-
-export function ShowcaseCodeBlocks(
-  { docNodes, url }: { docNodes: DocNode[]; url: string },
-) {
-  const classNode = docNodes.find(({ kind }) =>
-    kind === "class"
-  ) as DocNodeClass;
-  const enumNode = docNodes.find(({ kind }) => kind === "enum") as DocNodeEnum;
-  const interfaceNode = docNodes.find(({ kind }) =>
-    kind === "interface"
-  ) as DocNodeInterface;
-  const typeAliasNode = docNodes.find(({ kind }) =>
-    kind === "typeAlias"
-  ) as DocNodeTypeAlias;
-  const variableNode = docNodes.find(({ kind }) =>
-    kind === "variable"
-  ) as DocNodeVariable;
-  const fnName = docNodes.find(({ kind }) => kind === "function")?.name;
-  const fnNodes = docNodes.filter(({ kind, name }) =>
-    kind === "function" && name === fnName
-  ) as DocNodeFunction[];
-  return (
-    <div
-      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 px-4`}
-    >
-      <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
-      <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
-      <hr />
-      <ComponentTitle module="/classes.tsx">CodeBlockClass</ComponentTitle>
-      <CodeBlockClass url={url}>{classNode}</CodeBlockClass>
-      <ComponentTitle module="/enums.tsx">CodeBlockEnum</ComponentTitle>
-      <CodeBlockEnum url={url}>{enumNode}</CodeBlockEnum>
-      <ComponentTitle module="/functions.tsx">CodeBlockFn</ComponentTitle>
-      <CodeBlockFn url={url}>{fnNodes}</CodeBlockFn>
-      <ComponentTitle module="/interfaces.tsx">
-        CodeBlockInterface
-      </ComponentTitle>
-      <CodeBlockInterface url={url}>{interfaceNode}</CodeBlockInterface>
-      <ComponentTitle module="/type_aliases.tsx">
-        CodeBlockTypeAlias
-      </ComponentTitle>
-      <CodeBlockTypeAlias url={url}>{typeAliasNode}</CodeBlockTypeAlias>
-      <ComponentTitle module="/variables.tsx">CodeBlockVariable</ComponentTitle>
-      <CodeBlockVariable url={url}>{variableNode}</CodeBlockVariable>
+      <DocBlockNamespace markdownContext={{ url }}>
+        {namespaceNode}
+      </DocBlockNamespace>
     </div>
   );
 }

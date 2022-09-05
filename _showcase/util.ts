@@ -1,17 +1,10 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { type DocNode } from "../deps.ts";
+// deno-lint-ignore-file no-explicit-any
 
-// deno-lint-ignore no-explicit-any
-type ModuleIndexWithDoc = any;
-
-export async function getDocNodes(
-  module: string,
-  version: string,
-  path: string,
-): Promise<DocNode[]> {
+export async function getModuleDoc(): Promise<any> {
   const response = await fetch(
-    `https://apiland.deno.dev/v2/modules/${module}/${version}/doc${path}`,
+    "https://apiland.deno.dev/v2/pages/mod/doc/oak/v11.0.0/mod.ts",
   );
   if (response.status !== 200) {
     console.error(response);
@@ -20,20 +13,9 @@ export async function getDocNodes(
   return response.json();
 }
 
-export async function getEntries(
-  module: string,
-  version: string,
-  modules: string[],
-): Promise<Record<string, DocNode[]>> {
+export async function getSymbolDoc(): Promise<any> {
   const response = await fetch(
-    `https://apiland.deno.dev/v2/modules/${module}/${version}/doc`,
-    {
-      method: "POST",
-      body: JSON.stringify(modules),
-      headers: {
-        "content-type": "application/json",
-      },
-    },
+    "https://apiland.deno.dev/v2/pages/mod/doc/oak/v11.0.0/mod.ts?symbol=Router",
   );
   if (response.status !== 200) {
     console.error(response);
@@ -42,13 +24,9 @@ export async function getEntries(
   return response.json();
 }
 
-export async function getModuleIndex(
-  module: string,
-  version: string,
-  path = "/",
-): Promise<ModuleIndexWithDoc> {
+export async function getModuleIndex(): Promise<any> {
   const response = await fetch(
-    `https://apiland.deno.dev/v2/modules/${module}/${version}/index${path}`,
+    "https://apiland.deno.dev/v2/pages/mod/doc/std/0.154.0/",
   );
   if (response.status !== 200) {
     console.error(response);

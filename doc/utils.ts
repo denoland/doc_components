@@ -107,6 +107,13 @@ export function camelize(str: string): string {
   ).join("");
 }
 
+/** Convert a camelCased string into a normal string. */
+export function decamelize(str: string): string {
+  return str.split("").map((char) =>
+    /[A-Z]/.test(char) ? ` ${char.toLowerCase()}` : char
+  ).join("");
+}
+
 export function isAbstract(node: DocNode) {
   if (node.kind === "class") {
     return node.classDef.isAbstract;

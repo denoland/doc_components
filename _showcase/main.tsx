@@ -10,7 +10,7 @@ import {
   namespaceNode,
   typeAliasNode,
 } from "./fixtures.ts";
-import { runtime, setup, theme } from "../services.ts";
+import { plugins, runtime, setup, theme } from "../services.ts";
 import {
   Application,
   colors,
@@ -22,12 +22,8 @@ import {
   Router,
   virtualSheet,
 } from "./deps.ts";
-import {
-  Showcase,
-  ShowcaseCodeBlocks,
-  ShowcaseDocBlocks,
-} from "./showcase.tsx";
-import { getDocNodes, getModuleIndex } from "./util.ts";
+import { Showcase, ShowcaseDocBlocks } from "./showcase.tsx";
+import { getModuleDoc, getModuleIndex, getSymbolDoc } from "./util.ts";
 
 const sheet = virtualSheet();
 const page = "/";
@@ -53,44 +49,23 @@ await setup({
     return `/${url}`;
   },
   runtime: { Fragment, h },
-  tw: { sheet, theme, darkMode: "class" },
+  tw: { sheet, theme, plugins, darkMode: "class" },
 });
 
 const router = new Router();
 
 router.get("/", async (ctx, next) => {
   sheet.reset();
-  const moduleIndex = await getModuleIndex("std", "0.142.0");
-  const docNodes = await getDocNodes("oak", "v10.6.0", "/mod.ts");
+  const moduleIndex = await getModuleIndex();
+  const moduleDoc = await getModuleDoc();
+  const symbolDoc = await getSymbolDoc();
   const body = renderSSR(
     <Showcase
-      url="https://deno.land/x/oak@v10.5.1/mod.ts"
+      url="https://deno.land/x/oak@v11.0.0/mod.ts"
       symbol="Application"
       moduleIndex={moduleIndex}
-      docNodes={docNodes}
-    />,
-  );
-  const styles = getStyleTag(sheet);
-  ctx.response.body = `<!DOCTYPE html>
-  <html lang="en">
-    <head>
-      ${styles}
-    </head>
-    <body>
-      ${body}
-    </body>
-  </html>`;
-  ctx.response.type = "html";
-  await next();
-});
-
-router.get("/codeblocks", async (ctx, next) => {
-  sheet.reset();
-  const docNodes = await getDocNodes("oak", "v10.6.0", "/mod.ts");
-  const body = renderSSR(
-    <ShowcaseCodeBlocks
-      url="https://deno.land/x/oak@v10.6.0/mod.ts"
-      docNodes={docNodes}
+      moduleDoc={moduleDoc}
+      symbolDoc={symbolDoc}
     />,
   );
   const styles = getStyleTag(sheet);

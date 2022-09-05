@@ -5,7 +5,7 @@ import { tw } from "../deps.ts";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 
-export const colors = {
+export const docNodeKindColors = {
   "namespace": ["#D25646", "#D256461A"],
   "class": ["#20B44B", "#2FA8501A"],
   "enum": ["#22ABB0", "#22ABB01A"],
@@ -29,10 +29,8 @@ export const docNodeKindMap = {
   "import": () => null,
 } as const;
 
-export const docNodeKindOrder = Object.keys(colors);
-
 export function Namespace() {
-  const [text, bg] = colors["namespace"];
+  const [text, bg] = docNodeKindColors["namespace"];
   return (
     <div class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
       N
@@ -41,7 +39,7 @@ export function Namespace() {
 }
 
 export function Class() {
-  const [text, bg] = colors["class"];
+  const [text, bg] = docNodeKindColors["class"];
   return (
     <div
       class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
@@ -53,7 +51,7 @@ export function Class() {
 }
 
 export function Enum() {
-  const [text, bg] = colors["enum"];
+  const [text, bg] = docNodeKindColors["enum"];
   return (
     <div
       class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
@@ -65,7 +63,7 @@ export function Enum() {
 }
 
 export function Variable() {
-  const [text, bg] = colors["variable"];
+  const [text, bg] = docNodeKindColors["variable"];
   return (
     <div
       class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
@@ -77,7 +75,7 @@ export function Variable() {
 }
 
 export function Function() {
-  const [text, bg] = colors["function"];
+  const [text, bg] = docNodeKindColors["function"];
   return (
     <div
       class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
@@ -89,7 +87,7 @@ export function Function() {
 }
 
 export function Interface() {
-  const [text, bg] = colors["interface"];
+  const [text, bg] = docNodeKindColors["interface"];
   return (
     <div
       class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
@@ -101,7 +99,7 @@ export function Interface() {
 }
 
 export function TypeAlias() {
-  const [text, bg] = colors["typeAlias"];
+  const [text, bg] = docNodeKindColors["typeAlias"];
   return (
     <div
       class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}

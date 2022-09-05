@@ -3,7 +3,9 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import {
+  type DocNode,
   htmlEntities,
+  type JsDocTagNamed,
   type LiteralCallSignatureDef,
   type LiteralIndexSignatureDef,
   type LiteralMethodDef,
@@ -16,161 +18,140 @@ import {
   type TsTypeParamDef,
   type TsTypeTupleDef,
   type TsTypeUnionDef,
+  tw,
 } from "../deps.ts";
-import { Anchor, DocEntry, SectionTitle } from "./doc_common.tsx";
-import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, maybe, take } from "./utils.ts";
+import { MarkdownContext } from "./markdown.tsx";
+import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
 
 function LiteralIndexSignatures(
-  { children, ...props }: {
+  { children, markdownContext }: {
     children: Child<LiteralIndexSignatureDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-    inline?: boolean;
+    markdownContext: MarkdownContext;
   },
 ) {
   const signatures = take(children, true);
   if (!signatures.length) {
     return null;
   }
-  const { code, inline } = props;
-  const items = signatures.map(({ params, readonly, tsType }) => {
-    const item = (
-      <>
-        {maybe(
-          readonly,
-          <span class={style(code ? "codeKeyword" : "keyword")}>
-            readonly{" "}
-          </span>,
-        )}[<Params {...props}>{params}</Params>]{tsType && (
+  const items = signatures.map(({ params, readonly, tsType }) => (
+    <>
+      {maybe(
+        readonly,
+        <span>
+          readonly{" "}
+        </span>,
+      )}[<Params markdownContext={markdownContext}>{params}</Params>]{tsType &&
+        (
           <>
-            : <TypeDef {...props} inline>{tsType}</TypeDef>
+            : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
           </>
         )};{" "}
-      </>
-    );
-    return inline ? item : <div>{item}</div>;
-  });
-  return inline ? <>{items}</> : <div class={style("indent")}>{items}</div>;
+    </>
+  ));
+
+  return <>{items}</>;
 }
 
-function LiteralCallSignatures({ children, ...props }: {
+function LiteralCallSignatures({ children, markdownContext }: {
   children: Child<LiteralCallSignatureDef[]>;
-  url: string;
-  namespace?: string;
-  code?: boolean;
-  inline?: boolean;
+  markdownContext: MarkdownContext;
 }) {
   const signatures = take(children, true);
   if (!signatures.length) {
     return null;
   }
-  const { inline } = props;
-  const items = signatures.map(({ typeParams, params, tsType }) => {
-    const item = (
-      <>
-        <TypeParams {...props}>{typeParams}</TypeParams>(<Params {...props}>
-          {params}
-        </Params>){tsType && (
-          <>
-            : <TypeDef {...props} inline>{tsType}</TypeDef>
-          </>
-        )};{" "}
-      </>
-    );
-    return inline ? item : <div>{item}</div>;
-  });
-  return inline ? <>{items}</> : <div class={style("indent")}>{items}</div>;
+  const items = signatures.map(({ typeParams, params, tsType }) => (
+    <>
+      <DocTypeParamsSummary markdownContext={markdownContext}>
+        {typeParams}
+      </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
+        {params}
+      </Params>){tsType && (
+        <>
+          : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+        </>
+      )};{" "}
+    </>
+  ));
+  return <>{items}</>;
 }
 
 function LiteralProperties(
-  { children, ...props }: {
+  { children, markdownContext }: {
     children: Child<LiteralPropertyDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-    inline?: boolean;
+    markdownContext: MarkdownContext;
   },
 ) {
   const properties = take(children, true);
   if (!properties.length) {
     return null;
   }
-  const { code, inline } = props;
   const items = properties.map(
-    ({ name, readonly, computed, optional, tsType }) => {
-      const item = (
-        <>
-          {maybe(
-            readonly,
-            <span class={style(code ? "codeKeyword" : "keyword")}>
-              readonly{" "}
-            </span>,
-          )}
-          {maybe(computed, `[${name}]`, name)}
-          {maybe(optional, "?")}
-          {tsType
-            ? (
-              <>
-                : <TypeDef {...props} terminate>{tsType}</TypeDef>
-              </>
-            )
-            : "; "}
-        </>
-      );
-      return inline ? item : <div>{item}</div>;
-    },
+    ({ name, readonly, computed, optional, tsType }) => (
+      <>
+        {maybe(
+          readonly,
+          <span>
+            readonly{" "}
+          </span>,
+        )}
+        {maybe(computed, `[${name}]`, name)}
+        {maybe(optional, "?")}
+        {tsType
+          ? (
+            <>
+              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+            </>
+          )
+          : "; "}
+      </>
+    ),
   );
-  return inline ? <>{items}</> : <div class={style("indent")}>{items}</div>;
+  return <>{items}</>;
 }
 
-function LiteralMethods({ children, ...props }: {
+function LiteralMethods({ children, markdownContext }: {
   children: Child<LiteralMethodDef[]>;
-  url: string;
-  namespace?: string;
-  code?: boolean;
-  inline?: boolean;
+  markdownContext: MarkdownContext;
 }) {
   const methods = take(children, true);
   if (!methods.length) {
     return null;
   }
-  const { code, inline } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
   const items = methods.map(
-    ({ name, kind, optional, computed, returnType, typeParams, params }) => {
-      const item = (
-        <>
-          {kind === "getter"
-            ? <span class={keyword}>get{" "}</span>
-            : kind === "setter"
-            ? <span class={keyword}>set{" "}</span>
-            : undefined}
-          {name === "new"
-            ? <span class={keyword}>{name}{" "}</span>
-            : computed
-            ? `[${name}]`
-            : name}
-          {maybe(optional, "?")}
-          <TypeParams {...props}>{typeParams}</TypeParams>(<Params {...props}>
-            {params}
-          </Params>){returnType
-            ? (
-              <>
-                : <TypeDef {...props} terminate>{returnType}</TypeDef>
-              </>
-            )
-            : "; "}
-        </>
-      );
-      return inline ? item : <div>{item}</div>;
-    },
+    ({ name, kind, optional, computed, returnType, typeParams, params }) => (
+      <>
+        {kind === "getter"
+          ? <span>get{" "}</span>
+          : kind === "setter"
+          ? <span>set{" "}</span>
+          : undefined}
+        {name === "new"
+          ? <span>{name}{" "}</span>
+          : computed
+          ? `[${name}]`
+          : name}
+        {maybe(optional, "?")}
+        <DocTypeParamsSummary markdownContext={markdownContext}>
+          {typeParams}
+        </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
+          {params}
+        </Params>){returnType
+          ? (
+            <>
+              :{" "}
+              <TypeDef markdownContext={markdownContext}>{returnType}</TypeDef>
+            </>
+          )
+          : "; "}
+      </>
+    ),
   );
-  return inline ? <>{items}</> : <div class={style("indent")}>{items}</div>;
+  return <>{items}</>;
 }
 
 function MappedOptional(
@@ -190,32 +171,27 @@ function MappedOptional(
 }
 
 function MappedReadOnly(
-  { children, code }: {
+  { children }: {
     children: Child<TruePlusMinus | undefined>;
-    code?: boolean;
   },
 ) {
   const readonly = take(children);
-  const keyword = style(code ? "codeKeyword" : "keyword");
   switch (readonly) {
     case true:
-      return <span class={keyword}>readonly{" "}</span>;
+      return <span>readonly{" "}</span>;
     case "+":
-      return <span class={keyword}>+readonly{" "}</span>;
+      return <span>+readonly{" "}</span>;
     case "-":
-      return <span class={keyword}>-readonly{" "}</span>;
+      return <span>-readonly{" "}</span>;
     default:
       return null;
   }
 }
 
 export function TypeArguments(
-  { children, ...props }: {
+  { children, markdownContext }: {
     children: Child<TsTypeDef[] | undefined>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-    inline?: boolean;
+    markdownContext: MarkdownContext;
   },
 ) {
   const args = take(children, true);
@@ -224,7 +200,7 @@ export function TypeArguments(
   }
   const items = [];
   for (let i = 0; i < args.length; i++) {
-    items.push(<TypeDef {...props} inline>{args[i]}</TypeDef>);
+    items.push(<TypeDef markdownContext={markdownContext}>{args[i]}</TypeDef>);
     if (i < args.length - 1) {
       items.push(<>{", "}</>);
     }
@@ -232,24 +208,16 @@ export function TypeArguments(
   return <>&lt;{items}&gt;</>;
 }
 
-export function TypeDef({ children, terminate, ...props }: {
+export function TypeDef({ children, markdownContext }: {
   children: Child<TsTypeDef>;
-  url: string;
-  namespace?: string;
-  code?: boolean;
-  inline?: boolean;
-  terminate?: boolean;
+  markdownContext: MarkdownContext;
 }) {
   const def = take(children);
-  const terminalChar = terminate ? ";" : "";
-  const { code } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
   switch (def.kind) {
     case "array":
       return (
         <>
-          <TypeDef {...props} inline>{def.array}</TypeDef>[]
-          {terminalChar}
+          <TypeDef markdownContext={markdownContext}>{def.array}</TypeDef>[]
         </>
       );
     case "conditional": {
@@ -258,12 +226,12 @@ export function TypeDef({ children, terminate, ...props }: {
       } = def;
       return (
         <>
-          <TypeDef {...props}>{checkType}</TypeDef>{" "}
-          <span class={keyword}>extends</span>{" "}
-          <TypeDef {...props}>{extendsType}</TypeDef> ?{" "}
-          <TypeDef {...props}>{trueType}</TypeDef> :{" "}
-          <TypeDef {...props}>{falseType}</TypeDef>
-          {terminalChar}
+          <TypeDef markdownContext={markdownContext}>{checkType}</TypeDef>{" "}
+          <span>extends</span>{" "}
+          <TypeDef markdownContext={markdownContext}>{extendsType}</TypeDef> ?
+          {" "}
+          <TypeDef markdownContext={markdownContext}>{trueType}</TypeDef> :{" "}
+          <TypeDef markdownContext={markdownContext}>{falseType}</TypeDef>
         </>
       );
     }
@@ -273,11 +241,13 @@ export function TypeDef({ children, terminate, ...props }: {
       } = def;
       return (
         <>
-          {maybe(constructor, <span class={keyword}>new{" "}</span>)}
-          <TypeParams {...props}>{typeParams}</TypeParams>(<Params {...props}>
+          {maybe(constructor, <span>new{" "}</span>)}
+          <DocTypeParamsSummary markdownContext={markdownContext}>
+            {typeParams}
+          </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
             {params}
-          </Params>) =&gt; <TypeDef {...props}>{tsType}</TypeDef>
-          {terminalChar}
+          </Params>) =&gt;{" "}
+          <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
         </>
       );
     }
@@ -285,11 +255,12 @@ export function TypeDef({ children, terminate, ...props }: {
       const { importType: { specifier, qualifier, typeParams } } = def;
       return (
         <>
-          <span class={keyword}>import</span>("{specifier}"){qualifier && (
+          <span>import</span>("{specifier}"){qualifier && (
             <span>.{qualifier}</span>
           )}
-          <TypeArguments {...props}>{typeParams}</TypeArguments>
-          {terminalChar}
+          <TypeArguments markdownContext={markdownContext}>
+            {typeParams}
+          </TypeArguments>
         </>
       );
     }
@@ -297,12 +268,10 @@ export function TypeDef({ children, terminate, ...props }: {
       const { indexedAccess: { objType, indexType } } = def;
       return (
         <>
-          <TypeDef {...props} inline>{objType}</TypeDef>[<TypeDef
-            {...props}
-            inline
-          >
+          <TypeDef markdownContext={markdownContext}>{objType}
+          </TypeDef>[<TypeDef markdownContext={markdownContext}>
             {indexType}
-          </TypeDef>]{terminalChar}
+          </TypeDef>]
         </>
       );
     }
@@ -310,27 +279,24 @@ export function TypeDef({ children, terminate, ...props }: {
       const { infer: { typeParam } } = def;
       return (
         <>
-          <span class={keyword}>infer{" "}</span>
-          <TypeParam {...props}>{typeParam}</TypeParam>
-          {terminalChar}
+          <span>infer{" "}</span>
+          <TypeParamSummary markdownContext={markdownContext}>
+            {typeParam}
+          </TypeParamSummary>
         </>
       );
     }
     case "intersection":
       return (
-        <TypeDefIntersection {...props} terminate={terminate}>
+        <TypeDefIntersection markdownContext={markdownContext}>
           {def}
         </TypeDefIntersection>
       );
     case "keyword": {
-      const { keyword } = def;
       return (
-        <>
-          <span class={style(code ? "codeTypeKeyword" : "typeKeyword")}>
-            {keyword}
-          </span>
-          {terminalChar}
-        </>
+        <span class={tw`text-[#056CF0]`}>
+          {def.keyword}
+        </span>
       );
     }
     case "literal": {
@@ -338,60 +304,33 @@ export function TypeDef({ children, terminate, ...props }: {
       let item;
       switch (kind) {
         case "bigInt":
-          item = (
-            <span class={style(code ? "codeNumberLiteral" : "numberLiteral")}>
-              {repr}
-            </span>
-          );
-          break;
         case "boolean":
-          item = (
-            <span class={style(code ? "codeBoolean" : "boolean")}>{repr}</span>
-          );
-          break;
         case "number":
-          item = (
-            <span class={style(code ? "codeNumberLiteral" : "numberLiteral")}>
-              {repr}
-            </span>
-          );
+          item = <span>{repr}</span>;
           break;
         case "string":
-          item = (
-            <span class={style(code ? "codeStringLiteral" : "stringLiteral")}>
-              {JSON.stringify(repr)}
-            </span>
-          );
+          item = <span>{JSON.stringify(repr)}</span>;
           break;
         case "template":
           // TODO(@kitsonk) do this properly and escape properly
-          item = (
-            <span class={style(code ? "codeStringLiteral" : "stringLiteral")}>
-              `{repr}`
-            </span>
-          );
+          item = <span>`{repr}`</span>;
           break;
       }
-      return <>{item}{terminalChar}</>;
+      return <>{item}</>;
     }
     case "mapped":
       return (
-        <TypeDefMapped {...props} terminate={terminate}>{def}</TypeDefMapped>
+        <TypeDefMapped markdownContext={markdownContext}>{def}</TypeDefMapped>
       );
     case "optional": {
       const { optional } = def;
-      return (
-        <>
-          <TypeDef {...props}>{optional}</TypeDef>
-          {terminalChar}
-        </>
-      );
+      return <TypeDef markdownContext={markdownContext}>{optional}</TypeDef>;
     }
     case "parenthesized": {
       const { parenthesized } = def;
       return (
         <>
-          (<TypeDef {...props}>{parenthesized}</TypeDef>){terminalChar}
+          (<TypeDef markdownContext={markdownContext}>{parenthesized}</TypeDef>)
         </>
       );
     }
@@ -399,22 +338,16 @@ export function TypeDef({ children, terminate, ...props }: {
       const { rest } = def;
       return (
         <>
-          ...<TypeDef {...props}>{rest}</TypeDef>
-          {terminalChar}
+          ...<TypeDef markdownContext={markdownContext}>{rest}</TypeDef>
         </>
       );
     }
     case "this": {
-      return (
-        <>
-          <span class={keyword}>this</span>
-          {terminalChar}
-        </>
-      );
+      return <span>this</span>;
     }
     case "tuple": {
       return (
-        <TypeDefTuple {...props} terminate={terminate}>
+        <TypeDefTuple markdownContext={markdownContext}>
           {def}
         </TypeDefTuple>
       );
@@ -425,15 +358,18 @@ export function TypeDef({ children, terminate, ...props }: {
       } = def;
       return (
         <>
-          &#123;<LiteralIndexSignatures {...props}>
+          &#123;<LiteralIndexSignatures markdownContext={markdownContext}>
             {indexSignatures}
           </LiteralIndexSignatures>
-          <LiteralCallSignatures {...props}>
+          <LiteralCallSignatures markdownContext={markdownContext}>
             {callSignatures}
           </LiteralCallSignatures>
-          <LiteralProperties {...props}>{properties}</LiteralProperties>
-          <LiteralMethods {...props}>{methods}
-          </LiteralMethods>&#125;{terminalChar}
+          <LiteralProperties markdownContext={markdownContext}>
+            {properties}
+          </LiteralProperties>
+          <LiteralMethods markdownContext={markdownContext}>
+            {methods}
+          </LiteralMethods>&#125;
         </>
       );
     }
@@ -441,9 +377,8 @@ export function TypeDef({ children, terminate, ...props }: {
       const { typeOperator: { operator, tsType } } = def;
       return (
         <>
-          <span class={keyword}>{operator}</span>{" "}
-          <TypeDef {...props}>{tsType}</TypeDef>
-          {terminalChar}
+          <span>{operator}</span>{" "}
+          <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
         </>
       );
     }
@@ -453,42 +388,46 @@ export function TypeDef({ children, terminate, ...props }: {
       } = def;
       return (
         <>
-          {maybe(asserts, <span class={keyword}>asserts{" "}</span>)}
-          {maybe(paramType === "this", <span class={keyword}>this</span>, name)}
+          {maybe(asserts, <span>asserts{" "}</span>)}
+          {maybe(paramType === "this", <span>this</span>, name)}
           {type && (
             <>
               {" is "}
-              <TypeDef {...props}>{type}</TypeDef>
+              <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
             </>
           )}
-          {terminalChar}
         </>
       );
     }
     case "typeQuery": {
       const { typeQuery } = def;
-      return <>{typeQuery}{terminalChar}</>;
+      return <>{typeQuery}</>;
     }
     case "typeRef": {
       const { typeRef: { typeName, typeParams } } = def;
-      const href = services.lookupHref(props.url, props.namespace, typeName);
+      const href = services.lookupHref(
+        markdownContext.url,
+        markdownContext.namespace,
+        typeName,
+      );
       return (
         <>
           {href
             ? (
-              <a href={href} class={style(code ? "codeTypeLink" : "typeLink")}>
+              <a href={href} class={style("typeLink")}>
                 {typeName}
               </a>
             )
-            : typeName}
-          <TypeArguments {...props}>{typeParams}</TypeArguments>
-          {terminalChar}
+            : <span class={tw`text-[#056CF0]`}>{typeName}</span>}
+          <TypeArguments markdownContext={markdownContext}>
+            {typeParams}
+          </TypeArguments>
         </>
       );
     }
     case "union":
       return (
-        <TypeDefUnion {...props} terminate={terminate}>
+        <TypeDefUnion markdownContext={markdownContext}>
           {def}
         </TypeDefUnion>
       );
@@ -496,56 +435,44 @@ export function TypeDef({ children, terminate, ...props }: {
       return (
         <>
           {htmlEntities.encode((def as TsTypeDef).repr)}
-          {terminalChar}
         </>
       );
   }
 }
 
 function TypeDefIntersection(
-  { children, terminate, ...props }: {
+  { children, markdownContext }: {
     children: Child<TsTypeIntersectionDef>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-    inline?: boolean;
-    terminate?: boolean;
+    markdownContext: MarkdownContext;
   },
 ) {
   const { intersection } = take(children);
-  const keyword = style(props.code ? "codeKeyword" : "keyword");
   const lastIndex = intersection.length - 1;
-  if (props.inline || intersection.length <= 3) {
+  if (intersection.length <= 3) {
     const items = [];
     for (let i = 0; i < intersection.length; i++) {
-      items.push(<TypeDef {...props}>{intersection[i]}</TypeDef>);
+      items.push(
+        <TypeDef markdownContext={markdownContext}>{intersection[i]}</TypeDef>,
+      );
       if (i < lastIndex) {
-        items.push(<span class={keyword}>{" & "}</span>);
+        items.push(<span>{" & "}</span>);
       }
-    }
-    if (terminate) {
-      items.push(";");
     }
     return <>{items}</>;
   }
-  const items = intersection.map((def, i) => (
+  const items = intersection.map((def) => (
     <div>
-      <span class={keyword}>{" & "}</span>
-      <TypeDef {...props}>{def}</TypeDef>
-      {maybe(terminate && i === lastIndex, ";")}
+      <span>{" & "}</span>
+      <TypeDef markdownContext={markdownContext}>{def}</TypeDef>
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
 }
 
 function TypeDefMapped(
-  { children, terminate, ...props }: {
+  { children, markdownContext }: {
     children: Child<TsTypeMappedDef>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-    inline?: boolean;
-    terminate?: boolean;
+    markdownContext: MarkdownContext;
   },
 ) {
   const {
@@ -553,46 +480,42 @@ function TypeDefMapped(
   } = take(children);
   return (
     <>
-      <MappedReadOnly {...props}>{readonly}</MappedReadOnly>[<TypeParam
+      <MappedReadOnly>{readonly}</MappedReadOnly>[<TypeParamSummary
         constraintKind="in"
-        {...props}
+        markdownContext={markdownContext}
       >
         {typeParam}
-      </TypeParam>
+      </TypeParamSummary>
       {nameType && (
         <>
-          <span class={style(props.code ? "codeKeyword" : "keyword")}>
+          <span>
             in keyof{" "}
           </span>
-          <TypeDef {...props}>{nameType}</TypeDef>
+          <TypeDef markdownContext={markdownContext}>{nameType}</TypeDef>
         </>
       )}]<MappedOptional>{optional}</MappedOptional>
       {tsType && (
         <>
-          : <TypeDef {...props}>{tsType}</TypeDef>
+          : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
         </>
       )}
-      {maybe(terminate, ";")}
     </>
   );
 }
 
 function TypeDefTuple(
-  { children, ...props }: {
+  { children, markdownContext }: {
     children: Child<TsTypeTupleDef>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-    inline?: boolean;
-    terminate?: boolean;
+    markdownContext: MarkdownContext;
   },
 ) {
   const { tuple } = take(children);
-  const { inline } = props;
-  if (inline || tuple.length <= 3) {
+  if (tuple.length <= 3) {
     const items = [];
     for (let i = 0; i < tuple.length; i++) {
-      items.push(<TypeDef {...props}>{tuple[i]}</TypeDef>);
+      items.push(
+        <TypeDef markdownContext={markdownContext}>{tuple[i]}</TypeDef>,
+      );
       if (i < tuple.length - 1) {
         items.push(", ");
       }
@@ -601,126 +524,185 @@ function TypeDefTuple(
   }
   const items = tuple.map((def) => (
     <div>
-      <TypeDef {...props}>{def}</TypeDef>,{" "}
+      <TypeDef markdownContext={markdownContext}>{def}</TypeDef>,{" "}
     </div>
   ));
   return <div class={style("indent")}>[{items}]</div>;
 }
 
 function TypeDefUnion(
-  { children, terminate, ...props }: {
+  { children, markdownContext }: {
     children: Child<TsTypeUnionDef>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
-    inline?: boolean;
-    terminate?: boolean;
+    markdownContext: MarkdownContext;
   },
 ) {
   const { union } = take(children);
-  const keyword = style(props.code ? "codeKeyword" : "keyword");
   const lastIndex = union.length - 1;
-  if (props.inline || union.length <= 3) {
+  if (union.length <= 3) {
     const items = [];
     for (let i = 0; i < union.length; i++) {
-      items.push(<TypeDef {...props}>{union[i]}</TypeDef>);
+      items.push(
+        <TypeDef markdownContext={markdownContext}>{union[i]}</TypeDef>,
+      );
       if (i < lastIndex) {
-        items.push(<span class={keyword}>{" | "}</span>);
+        items.push(<span>{" | "}</span>);
       }
-    }
-    if (terminate) {
-      items.push(";");
     }
     return <span>{items}</span>;
   }
-  const items = union.map((def, i) => (
+  const items = union.map((def) => (
     <div>
-      <span class={keyword}>{" | "}</span>
-      <TypeDef {...props}>{def}</TypeDef>
-      {maybe(terminate && i === lastIndex, ";")}
+      <span>{" | "}</span>
+      <TypeDef markdownContext={markdownContext}>{def}</TypeDef>
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
 }
 
-export function TypeParam(
-  { children, constraintKind = "extends", ...props }: {
+function TypeParamSummary(
+  { children, constraintKind = "extends", markdownContext }: {
     children: Child<TsTypeParamDef>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
     constraintKind?: string;
+    markdownContext: MarkdownContext;
   },
 ) {
   const { name, constraint, default: def } = take(children);
-  const { code } = props;
-  const keyword = style(code ? "codeKeyword" : "keyword");
   return (
     <>
-      <span class={style(code ? "codeTypeParam" : "typeParam")}>{name}</span>
+      <span>{name}</span>
       {constraint && (
         <>
-          <span class={keyword}>{` ${constraintKind} `}</span>
-          <TypeDef {...props} inline>{constraint}</TypeDef>
+          <span>{` ${constraintKind} `}</span>
+          <TypeDef markdownContext={markdownContext}>{constraint}</TypeDef>
         </>
       )}
       {def && (
         <>
-          <span class={keyword}>{` = `}</span>
-          <TypeDef {...props} inline>{def}</TypeDef>
+          <span>{` = `}</span>
+          <TypeDef markdownContext={markdownContext}>{def}</TypeDef>
         </>
       )}
     </>
   );
 }
 
-export function TypeParams(
-  { children, ...props }: {
+export function DocTypeParamsSummary(
+  { children, markdownContext }: {
     children: Child<TsTypeParamDef[]>;
-    url: string;
-    namespace?: string;
-    code?: boolean;
+    markdownContext: MarkdownContext;
   },
 ) {
-  const params = take(children, true);
-  if (!params.length) {
-    return null;
+  const typeParams = take(children, true);
+  if (typeParams.length === 0) {
+    return <></>;
   }
-  const items = [];
-  for (let i = 0; i < params.length; i++) {
-    items.push(<TypeParam {...props}>{params[i]}</TypeParam>);
-    if (i < params.length - 1) {
-      items.push(<>,{" "}</>);
-    }
+
+  return (
+    <span>
+      {"<"}
+      {typeParams.map((typeParam, i) => (
+        <>
+          <span>
+            <span class={tw`text-[#056CF0]`}>{typeParam.name}</span>
+            {typeParam.constraint && (
+              <span>
+                <span>{" extends "}</span>
+                <TypeDef markdownContext={markdownContext}>
+                  {typeParam.constraint}
+                </TypeDef>
+              </span>
+            )}
+            {typeParam.default && (
+              <span>
+                <span>{" = "}</span>
+                <TypeDef markdownContext={markdownContext}>
+                  {typeParam.default}
+                </TypeDef>
+              </span>
+            )}
+          </span>
+          {i !== (typeParams.length - 1) && <span>,{" "}</span>}
+        </>
+      ))}
+      {">"}
+    </span>
+  );
+}
+
+export function TypeParam(
+  { children, id, location, doc, markdownContext }: {
+    children: Child<TsTypeParamDef>;
+    id: string;
+    location: Location;
+    doc?: JsDocTagNamed;
+    markdownContext: MarkdownContext;
+  },
+) {
+  const def = take(children);
+
+  const tags = [];
+  if (def.default) {
+    tags.push(tagVariants.optional());
   }
-  return <>&lt;{items}&gt;</>;
+
+  return (
+    <DocEntry
+      id={id}
+      location={location}
+      name={def.name}
+      tags={tags}
+      jsDoc={doc}
+      markdownContext={markdownContext}
+    >
+      {def.constraint && (
+        <span>
+          {" extends "}
+          <TypeDef markdownContext={markdownContext}>
+            {def.constraint}
+          </TypeDef>
+        </span>
+      )}
+      {def.default && (
+        <span>
+          {" = "}
+          <TypeDef markdownContext={markdownContext}>
+            {def.default}
+          </TypeDef>
+        </span>
+      )}
+    </DocEntry>
+  );
 }
 
 export function TypeParamsDoc(
-  { children, location, ...markdownContext }: {
+  { children, base, markdownContext }: {
     children: Child<TsTypeParamDef[]>;
-    location: Location;
-  } & MarkdownContext,
+    base: DocNode;
+    markdownContext: MarkdownContext;
+  },
 ) {
   const defs = take(children, true);
-  if (!defs.length) {
-    return null;
-  }
-  const items = defs.map((def) => {
-    const id = `typedef_${def.name}`;
+
+  const typeParamDocs: JsDocTagNamed[] =
+    (base.jsDoc?.tags?.filter(({ kind }) => kind === "template") as
+      | JsDocTagNamed[]
+      | undefined) ??
+      [];
+
+  const items = defs.map((typeParam) => {
+    const id = nameToId("type_param", typeParam.name);
+
     return (
-      <div class={style("docItem")} id={id}>
-        <Anchor>{id}</Anchor>
-        <DocEntry location={location}>
-          <TypeParam {...markdownContext}>{def}</TypeParam>
-        </DocEntry>
-      </div>
+      <TypeParam
+        id={id}
+        location={base.location}
+        doc={typeParamDocs.find(({ name }) => name === typeParam.name)}
+        markdownContext={markdownContext}
+      >
+        {typeParam}
+      </TypeParam>
     );
   });
-  return (
-    <div>
-      <SectionTitle>Type Parameters</SectionTitle>
-      {items}
-    </div>
-  );
+
+  return <Section title="Type Parameters">{items}</Section>;
 }

@@ -7,23 +7,37 @@ import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, take } from "./utils.ts";
+import { MarkdownContext } from "./markdown.tsx";
+import { DocEntry, nameToId, Section } from "./doc_common.tsx";
 
-export function CodeBlockVariable({ children, ...props }: {
-  children: Child<DocNodeVariable>;
-  url: string;
-  namespace?: string;
-}) {
-  const { name, variableDef: { kind, tsType } } = take(children);
+export function DocBlockVariable(
+  { children, markdownContext }: {
+    children: Child<DocNodeVariable>;
+    markdownContext: MarkdownContext;
+  },
+) {
+  const def = take(children);
+  const id = nameToId("variable", def.name);
+
+  if (!def.variableDef.tsType) {
+    return null;
+  }
+
   return (
-    <div class={style("codeBlock")}>
-      <span class={style("codeKeyword")}>{kind}</span> {name}
-      {tsType
-        ? (
-          <>
-            : <TypeDef terminate code {...props}>{tsType}</TypeDef>
-          </>
-        )
-        : ";"}
+    <div class={style("docBlockItems")}>
+      <Section>
+        {[
+          <DocEntry
+            id={id}
+            location={def.location}
+            markdownContext={markdownContext}
+          >
+            <TypeDef markdownContext={markdownContext}>
+              {def.variableDef.tsType}
+            </TypeDef>
+          </DocEntry>,
+        ]}
+      </Section>
     </div>
   );
 }

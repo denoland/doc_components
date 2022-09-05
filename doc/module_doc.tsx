@@ -1,9 +1,10 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+/** @jsxFrag runtime.Fragment */
 import { type DocNode, tw } from "../deps.ts";
 import { getDocSummary } from "./doc.ts";
-import { SectionTitle, Tag } from "./doc_common.tsx";
+import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
 import { JsDocModule } from "./jsdoc.tsx";
 import { type MarkdownContext, MarkdownSummary } from "./markdown.tsx";
@@ -15,6 +16,7 @@ import {
   asCollection,
   byName,
   type Child,
+  DocNodeCollection,
   DocNodeTupleArray,
   isAbstract,
   isDeprecated,
@@ -22,27 +24,31 @@ import {
   take,
 } from "./utils.ts";
 
-export const TARGET_RE = /(\s|[\[\]])/g;
-
 function Entry<Node extends DocNode>(
-  { children, icon, ...context }: {
+  { children, icon, markdownContext }: {
     children: Child<[label: string, node: Node]>;
     icon: ComponentChildren;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const [label, node] = take(children, true);
+  const href = services.resolveHref(
+    markdownContext.url,
+    markdownContext.namespace ? `${markdownContext.namespace}.${label}` : label,
+  );
+
   return (
     <tr class={style("symbolListRow")}>
       <td class={style("symbolListCellSymbol")}>
         <div>
           {icon}
-          <DocLink {...context}>{label}</DocLink>
-          {maybe(isAbstract(node), <Tag color="yellow">abstract</Tag>)}
-          {maybe(isDeprecated(node), <Tag color="gray">👎 deprecated</Tag>)}
+          <a href={href}>{label}</a>
+          {maybe(isAbstract(node), tagVariants.abstract())}
+          {maybe(isDeprecated(node), tagVariants.deprecated())}
         </div>
       </td>
       <td class={style("symbolListCellDoc")}>
-        <MarkdownSummary {...context}>
+        <MarkdownSummary markdownContext={markdownContext}>
           {getDocSummary(node)}
         </MarkdownSummary>
       </td>
@@ -50,27 +56,13 @@ function Entry<Node extends DocNode>(
   );
 }
 
-export function DocLink(
-  { children, url, namespace }: {
-    children: Child<string>;
-    url: string;
-    namespace?: string;
-  },
-) {
-  const label = take(children);
-  const href = services.resolveHref(
-    url,
-    namespace ? `${namespace}.${label}` : label,
-  );
-  return <a href={href}>{label}</a>;
-}
-
-export function Section<Node extends DocNode>(
-  { children, title, icon, ...markdownContext }: {
+function Section<Node extends DocNode>(
+  { children, title, icon, markdownContext }: {
     children: Child<DocNodeTupleArray<Node>>;
     title: string;
     icon: ComponentChildren;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const tuples = take(children, true, true);
   const displayed = new Set();
@@ -79,13 +71,93 @@ export function Section<Node extends DocNode>(
       return null;
     }
     displayed.add(label);
-    return <Entry {...markdownContext} icon={icon}>{[label, node]}</Entry>;
+    return (
+      <Entry markdownContext={markdownContext} icon={icon}>
+        {[label, node]}
+      </Entry>
+    );
   });
   return (
     <div>
       <SectionTitle>{title}</SectionTitle>
       <table class={style("symbolListTable")}>{items}</table>
     </div>
+  );
+}
+
+export function DocTypeSections(
+  { children, markdownContext }: {
+    children: Child<DocNodeCollection>;
+    markdownContext: MarkdownContext;
+  },
+) {
+  const collection = take(children);
+  return (
+    <>
+      {collection.namespace && (
+        <Section
+          title="Namespaces"
+          icon={<SymbolKind.Namespace />}
+          markdownContext={markdownContext}
+        >
+          {collection.namespace}
+        </Section>
+      )}
+      {collection.class && (
+        <Section
+          title="Classes"
+          icon={<SymbolKind.Class />}
+          markdownContext={markdownContext}
+        >
+          {collection.class}
+        </Section>
+      )}
+      {collection.enum && (
+        <Section
+          title="Enums"
+          icon={<SymbolKind.Enum />}
+          markdownContext={markdownContext}
+        >
+          {collection.enum}
+        </Section>
+      )}
+      {collection.variable && (
+        <Section
+          title="Variables"
+          icon={<SymbolKind.Variable />}
+          markdownContext={markdownContext}
+        >
+          {collection.variable}
+        </Section>
+      )}
+      {collection.function && (
+        <Section
+          title="Functions"
+          icon={<SymbolKind.Function />}
+          markdownContext={markdownContext}
+        >
+          {collection.function}
+        </Section>
+      )}
+      {collection.interface && (
+        <Section
+          title="Interfaces"
+          icon={<SymbolKind.Interface />}
+          markdownContext={markdownContext}
+        >
+          {collection.interface}
+        </Section>
+      )}
+      {collection.typeAlias && (
+        <Section
+          title="Type Aliases"
+          icon={<SymbolKind.TypeAlias />}
+          markdownContext={markdownContext}
+        >
+          {collection.typeAlias}
+        </Section>
+      )}
+    </>
   );
 }
 
@@ -96,7 +168,6 @@ export function ModuleDoc(
     sourceUrl: string;
   } & MarkdownContext,
 ) {
-  const { url } = markdownContext;
   const collection = asCollection(take(children, true));
   return (
     <div>
@@ -104,86 +175,26 @@ export function ModuleDoc(
         <div>{/* TODO: add module name */}</div>
         <a
           href={services.resolveSourceHref(sourceUrl)}
-          class={style("sourceButton")}
+          class={tw`icon-button`}
         >
-          <Icons.SourceFile />
+          <Icons.Source />
         </a>
       </div>
       <article class={style("main")}>
         {maybe(
-          !(library || url.endsWith(".d.ts")),
+          !(library || markdownContext.url.endsWith(".d.ts")),
           <div class={style("moduleDoc")}>
             <div class={tw`space-y-3`}>
-              <Usage url={url} />
+              <Usage url={markdownContext.url} />
               {collection.moduleDoc && (
-                <JsDocModule url={url} markdownStyle="usage">
+                <JsDocModule markdownContext={markdownContext}>
                   {collection.moduleDoc}
                 </JsDocModule>
               )}
             </div>
-            {collection.namespace && (
-              <Section
-                title="Namespaces"
-                icon={<SymbolKind.Namespace />}
-                {...markdownContext}
-              >
-                {collection.namespace}
-              </Section>
-            )}
-            {collection.class && (
-              <Section
-                title="Classes"
-                icon={<SymbolKind.Class />}
-                {...markdownContext}
-              >
-                {collection.class}
-              </Section>
-            )}
-            {collection.enum && (
-              <Section
-                title="Enums"
-                icon={<SymbolKind.Enum />}
-                {...markdownContext}
-              >
-                {collection.enum}
-              </Section>
-            )}
-            {collection.variable && (
-              <Section
-                title="Variables"
-                icon={<SymbolKind.Variable />}
-                {...markdownContext}
-              >
-                {collection.variable}
-              </Section>
-            )}
-            {collection.function && (
-              <Section
-                title="Functions"
-                icon={<SymbolKind.Function />}
-                {...markdownContext}
-              >
-                {collection.function}
-              </Section>
-            )}
-            {collection.interface && (
-              <Section
-                title="Interfaces"
-                icon={<SymbolKind.Interface />}
-                {...markdownContext}
-              >
-                {collection.interface}
-              </Section>
-            )}
-            {collection.typeAlias && (
-              <Section
-                title="Type Aliases"
-                icon={<SymbolKind.TypeAlias />}
-                {...markdownContext}
-              >
-                {collection.typeAlias}
-              </Section>
-            )}
+            <DocTypeSections markdownContext={markdownContext}>
+              {collection}
+            </DocTypeSections>
           </div>,
         )}
       </article>

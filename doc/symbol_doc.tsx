@@ -1,77 +1,24 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
-import { CodeBlockClass } from "./classes.tsx";
+/** @jsxFrag runtime.Fragment */
 import {
   type DocNode,
-  type DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
+  type JsDocTagTags,
+  tw,
 } from "../deps.ts";
-import { byKind, isAbstract, isDeprecated } from "./doc.ts";
+import { byKind } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
-import { Tag } from "./doc_common.tsx";
-import { CodeBlockEnum } from "./enums.tsx";
-import { CodeBlockFn } from "./functions.tsx";
-import { CodeBlockInterface } from "./interfaces.tsx";
+import { Tag, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import * as Icons from "../icons.tsx";
-import { type MarkdownContext } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
-import { CodeBlockTypeAlias } from "./type_aliases.tsx";
 import { Usage } from "./usage.tsx";
-import { type Child, maybe, take } from "./utils.ts";
-import { CodeBlockVariable } from "./variables.tsx";
-
-function CodeBlock(
-  { children, ...markdownContext }:
-    & { children: Child<DocNode[]> }
-    & MarkdownContext,
-) {
-  const docNodes = take(children, true);
-  const elements = [];
-  for (const docNode of docNodes) {
-    switch (docNode.kind) {
-      case "class":
-        elements.push(
-          <CodeBlockClass {...markdownContext}>{docNode}</CodeBlockClass>,
-        );
-        break;
-      case "enum":
-        elements.push(
-          <CodeBlockEnum {...markdownContext}>{docNode}</CodeBlockEnum>,
-        );
-        break;
-      case "interface":
-        elements.push(
-          <CodeBlockInterface {...markdownContext}>
-            {docNode}
-          </CodeBlockInterface>,
-        );
-        break;
-      case "typeAlias":
-        elements.push(
-          <CodeBlockTypeAlias {...markdownContext}>
-            {docNode}
-          </CodeBlockTypeAlias>,
-        );
-        break;
-      case "variable":
-        elements.push(
-          <CodeBlockVariable {...markdownContext}>{docNode}</CodeBlockVariable>,
-        );
-        break;
-    }
-  }
-  const fnNodes = docNodes.filter(({ kind }) =>
-    kind === "function"
-  ) as DocNodeFunction[];
-  if (fnNodes.length) {
-    elements.push(<CodeBlockFn {...markdownContext}>{fnNodes}</CodeBlockFn>);
-  }
-  return <div>{elements}</div>;
-}
+import { type Child, isAbstract, isDeprecated, maybe, take } from "./utils.ts";
+import { DocTitle } from "./doc_title.tsx";
 
 function isTypeOnly(
   docNodes: DocNode[],
@@ -95,28 +42,66 @@ export function SymbolDoc(
   const [{ name, location }] = docNodes;
   const title = namespace ? `${namespace}.${name}` : name;
   const markdownContext = { url, namespace };
+
+  const tags = [];
+
+  const jsDocTags: string[] = docNodes.flatMap(({ jsDoc }) =>
+    (jsDoc?.tags?.filter(({ kind }) => kind === "tags") as
+      | JsDocTagTags[]
+      | undefined)?.flatMap(({ tags }) => tags) ?? []
+  );
+  if (jsDocTags.length !== 0) {
+    tags.push(
+      <Tag color="cyan" large>
+        <span class={tw`space-x-2`}>
+          {jsDocTags.map((tag, i) => (
+            <>
+              {i !== 0 && <div class={tw`inline border-l-2 border-gray-300`} />}
+              <span>{tag}</span>
+            </>
+          ))}
+        </span>
+      </Tag>,
+    );
+  }
+
+  if (isAbstract(docNodes[0])) {
+    tags.push(tagVariants.abstractLg());
+  }
+  if (isDeprecated(docNodes[0])) {
+    tags.push(tagVariants.deprecatedLg());
+  }
+
+  const isFunction = docNodes[0].kind === "function";
+
   return (
     <article class={style("main")}>
       <div class={style("symbolDocHeader")}>
-        <h1 class={style("title")}>{title}</h1>
+        <div class={tw`space-y-2`}>
+          <DocTitle markdownContext={markdownContext}>{docNodes[0]}</DocTitle>
+
+          {tags.length !== 0 && (
+            <div>
+              {tags}
+            </div>
+          )}
+        </div>
         <a
           href={services.resolveSourceHref(location.filename, location.line)}
-          class={style("sourceButton")}
+          class={tw`icon-button`}
         >
-          <Icons.SourceFile />
+          <Icons.Source />
         </a>
       </div>
-      {maybe(
-        !(url.endsWith(".d.ts") || library),
-        <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
-      )}
-      {maybe(isAbstract(docNodes[0]), <Tag color="yellow">abstract</Tag>)}
-      {maybe(isDeprecated(docNodes[0]), <Tag color="gray">deprecated</Tag>)}
-      <JsDoc tagKinds="deprecated" tagsWithDoc {...markdownContext}>
-        {jsDoc}
-      </JsDoc>
-      <CodeBlock {...markdownContext}>{docNodes}</CodeBlock>
-      <DocBlock {...markdownContext}>{docNodes}</DocBlock>
+      <div class={tw`space-y-3`}>
+        {maybe(
+          !(url.endsWith(".d.ts") || library),
+          <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
+        )}
+        {!isFunction && <JsDoc markdownContext={markdownContext}>{jsDoc}
+        </JsDoc>}
+      </div>
+      <DocBlock markdownContext={markdownContext}>{docNodes}</DocBlock>
     </article>
   );
 }

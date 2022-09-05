@@ -5,7 +5,7 @@
  * @module
  */
 
-import { type DocNode, type DocNodeClass, type DocNodeKind } from "../deps.ts";
+import { type DocNode, type DocNodeKind } from "../deps.ts";
 
 const EXT = [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"];
 const INDEX_MODULES = ["mod", "lib", "main", "index"].flatMap((idx) =>
@@ -40,21 +40,6 @@ export function getDocSummary(docNode: DocNode): string | undefined {
   }
 }
 
-export function isAbstract(node: DocNode): node is DocNodeClass {
-  if (node.kind === "class") {
-    return node.classDef.isAbstract;
-  } else {
-    return false;
-  }
-}
-
-export function isDeprecated(node: DocNode): boolean {
-  if (node.jsDoc && node.jsDoc.tags) {
-    return !!node.jsDoc.tags.find(({ kind }) => kind === "deprecated");
-  }
-  return false;
-}
-
 /** Given a set of paths which are expected to be siblings within a folder/dir
  * return what appears to be the "index" module. If none can be identified,
  * `undefined` is returned. */
@@ -65,20 +50,4 @@ export function getIndex(paths: string[]): string | undefined {
       return item;
     }
   }
-}
-
-/** Given a record where the key is a folder and the value is an array of
- * sibling modules, return a combined array of all the module paths that should
- * be loaded for documentation. */
-export function getPaths(index: Record<string, string[]>): string[] {
-  let paths: string[] = [];
-  for (const values of Object.values(index)) {
-    const index = getIndex(values);
-    if (index) {
-      paths.push(index);
-    } else {
-      paths = paths.concat(values);
-    }
-  }
-  return paths;
 }

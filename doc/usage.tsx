@@ -4,6 +4,8 @@
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { camelize, maybe, parseURL } from "./utils.ts";
+import * as Icons from "../icons.tsx";
+import { tw } from "../deps.ts";
 
 interface ParsedUsage {
   /** The symbol that the item should be imported as. If `usageSymbol` and
@@ -57,8 +59,6 @@ export function parseUsage(
   return { importSymbol, usageSymbol, localVar, importStatement };
 }
 
-let guid = 1;
-
 export function Usage(
   { url, name, isType }: { url: string; name?: string; isType?: boolean },
 ) {
@@ -68,26 +68,16 @@ export function Usage(
     usageSymbol,
     localVar,
   } = parseUsage(url, name, isType);
-  const fnName = `cis${guid++}`;
   return (
     <div class={style("usage")}>
-      <pre>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: `<button id="${fnName}" class="${
-              style("copyButton")
-            }" type="button" onclick="${fnName}()">Copy</button>`,
-          }}
-        />
-        <code>
+      <pre class={tw`flex items-center justify-between gap-2.5`}>
+        <code class={tw`overflow-scroll`}>
           <span class="code-keyword">import</span>
           {name
             ? (
               <span>
                 {" "}&#123;{" "}
-                {isType
-                  ? <span class="code-keyword">type{" "}</span>
-                  : undefined}
+                {isType && <span class="code-keyword">type{" "}</span>}
                 {importSymbol} &#125;{" "}
               </span>
             )
@@ -107,18 +97,13 @@ export function Usage(
             </div>,
           )}
         </code>
+        <button
+          class={style("copyButton")}
+          onClick={`navigator?.clipboard?.writeText("${importStatement}");`}
+        >
+          <Icons.Copy />
+        </button>
       </pre>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `function ${fnName}() { 
-              navigator?.clipboard?.writeText(\`${importStatement}\`); 
-              document.querySelector(\'#${fnName}\').innerHTML = "✅ Copied"; 
-              setTimeout(() => {
-                document.querySelector(\'#${fnName}\').innerHTML = "Copy";
-              }, 5000);
-            }`,
-        }}
-      />
     </div>
   );
 }

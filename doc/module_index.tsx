@@ -2,11 +2,12 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { MarkdownSummary } from "./markdown.tsx";
+import { getSummary, MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "../icons.tsx";
+import { tw } from "../deps.ts";
 
 export interface IndexItem {
   kind: "dir" | "module" | "file";
@@ -14,13 +15,6 @@ export interface IndexItem {
   size: number;
   ignored: boolean;
   doc?: string;
-}
-
-function getSummary(doc: string | undefined): string | undefined {
-  if (doc) {
-    const [summary] = doc.split("\n\n");
-    return summary;
-  }
 }
 
 function Folder({ children, base, parent }: {
@@ -40,7 +34,7 @@ function Folder({ children, base, parent }: {
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary url={url}>{summary}</MarkdownSummary>
+        <MarkdownSummary markdownContext={{ url }}>{summary}</MarkdownSummary>
       </td>
     </tr>
   );
@@ -59,11 +53,11 @@ function Module({ children, base, parent }: {
   return (
     <tr class={style("moduleIndexRow")}>
       <td class={style("moduleIndexLinkCell")}>
-        <Icons.SourceFile class={style("moduleIndexLinkCellIcon")} />
+        <Icons.Source class={style("moduleIndexLinkCellIcon")} />
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary url={url}>{summary}</MarkdownSummary>
+        <MarkdownSummary markdownContext={{ url }}>{summary}</MarkdownSummary>
       </td>
     </tr>
   );
@@ -109,9 +103,9 @@ export function ModuleIndex(
         </div>
         <a
           href={services.resolveSourceHref(sourceUrl)}
-          class={style("sourceButton")}
+          class={tw`icon-button`}
         >
-          <Icons.SourceFile />
+          <Icons.Source />
         </a>
       </div>
       <table class={style("moduleIndexTable")}>{entries}</table>

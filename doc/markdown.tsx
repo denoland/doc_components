@@ -114,37 +114,54 @@ export interface MarkdownContext {
 }
 
 export function Markdown(
-  { children, id, url, namespace, markdownStyle = "markdown" }: {
+  { children, id, markdownContext }: {
     children: Child<string | undefined>;
     id?: string;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const md = take(children);
   return md
     ? (
       <div
-        class={style(markdownStyle)}
+        class={style(markdownContext.markdownStyle ?? "markdown")}
         id={id}
         dangerouslySetInnerHTML={{
-          __html: services.markdownToHTML(md, url, namespace),
+          __html: services.markdownToHTML(
+            md,
+            markdownContext.url,
+            markdownContext.namespace,
+          ),
         }}
       />
     )
     : null;
 }
 
+export function getSummary(doc: string | undefined): string | undefined {
+  if (doc) {
+    const [summary] = doc.split("\n\n");
+    return summary;
+  }
+}
+
 export function MarkdownSummary(
-  { children, url, namespace, markdownStyle = "markdownSummary" }: {
+  { children, markdownContext }: {
     children: Child<string | undefined>;
-  } & MarkdownContext,
+    markdownContext: MarkdownContext;
+  },
 ) {
   const md = take(children);
   return md
     ? (
       <span
-        class={style(markdownStyle)}
+        class={style(markdownContext.markdownStyle ?? "markdownSummary")}
         dangerouslySetInnerHTML={{
-          __html: services.markdownToHTML(md, url, namespace),
+          __html: services.markdownToHTML(
+            md,
+            markdownContext.url,
+            markdownContext.namespace,
+          ),
         }}
       />
     )
