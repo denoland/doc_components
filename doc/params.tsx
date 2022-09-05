@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type ObjectPatPropDef, type ParamDef } from "../deps.ts";
+import { type ObjectPatPropDef, type ParamDef, tw } from "../deps.ts";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
@@ -10,13 +10,14 @@ import { type Child, take } from "./utils.ts";
 import { MarkdownContext } from "./markdown.tsx";
 
 function Param(
-  { children, markdownContext }: {
+  { children, i, markdownContext }: {
     children: Child<ParamDef>;
+    i: number;
     markdownContext: MarkdownContext;
   },
 ) {
   const param = take(children);
-  const name = paramName(param);
+  const name = paramName(param, i);
 
   return (
     <span>
@@ -44,7 +45,7 @@ export function Params(
   if (params.length < 3) {
     const items = [];
     for (let i = 0; i < params.length; i++) {
-      items.push(<Param markdownContext={markdownContext}>{params[i]}</Param>);
+      items.push(<Param i={i} markdownContext={markdownContext}>{params[i]}</Param>);
       if (i < params.length - 1) {
         items.push(<span>{", "}</span>);
       }
@@ -53,9 +54,9 @@ export function Params(
   } else {
     return (
       <div class={style("indent")}>
-        {params.map((param) => (
+        {params.map((param, i) => (
           <div>
-            <Param markdownContext={markdownContext}>{param}</Param>,
+            <Param i={i} markdownContext={markdownContext}>{param}</Param>,
           </div>
         ))}
       </div>
@@ -63,40 +64,16 @@ export function Params(
   }
 }
 
-function ObjectPatName(pattern: ObjectPatPropDef): string {
-  switch (pattern.kind) {
-    case "assign": {
-      return pattern.key/* + (pattern.value ? ` = ${pattern.value}` : "")*/;
-    }
-    case "keyValue": {
-      return pattern.key/* + ": " + paramName(pattern.value)*/;
-    }
-    case "rest": {
-      return `...${paramName(pattern.arg)}`;
-    }
-  }
-}
-
-export function paramName(param: ParamDef): string {
+export function paramName(param: ParamDef, i: number): unknown {
   switch (param.kind) {
     case "array":
-      return `[${
-        param.elements.map((param) => {
-          if (param) {
-            return paramName(param);
-          } else {
-            return "undefined";
-          }
-        }).join(", ")
-      }]`;
+    case "object":
+      return <span class={tw`italic`}>unnamed {i}</span>;
     case "assign":
-      return paramName(param.left);
+      return paramName(param.left, i);
     case "identifier":
       return param.name;
-    case "object":
-      return `{ ${param.props.map(ObjectPatName).join(", ")} }`;
-      break;
     case "rest":
-      return `...${paramName(param.arg)}`;
+      return <span>...{paramName(param.arg, i)}</span>;
   }
 }

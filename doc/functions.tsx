@@ -120,7 +120,7 @@ function DocFunction(
 
   const parameters = def.functionDef.params.map((param, i) => {
     const id = nameToId("function", `${def.name}_${n}_parameters_${i}`);
-    const name = paramName(param);
+    const name = paramName(param, i);
 
     const defaultValue = param.kind === "assign" ? param.right : undefined;
     const type = param.kind === "assign" ? param.left.tsType : param.tsType;
