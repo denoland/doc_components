@@ -11,47 +11,42 @@ import { MarkdownContext } from "./markdown.tsx";
 
 export function DocTitle(
   { children, markdownContext }: {
-    children: Child<DocNode[]>;
+    children: Child<DocNode>;
     markdownContext: MarkdownContext;
   },
 ) {
-  const docNodes = take(children, true);
-  const elements = [];
-  for (const docNode of [docNodes[0]]) {
-    let subTitle;
-    switch (docNode.kind) {
-      case "class":
-        subTitle = (
-          <DocSubTitleClass markdownContext={markdownContext}>
-            {docNode}
-          </DocSubTitleClass>
-        );
-        break;
-      case "interface":
-        subTitle = (
-          <DocSubTitleInterface markdownContext={markdownContext}>
-            {docNode}
-          </DocSubTitleInterface>
-        );
-        break;
-    }
-
-    elements.push(
-      <div class={tw`font-medium space-y-1`}>
-        <div class={tw`text-xl`}>
-          <span class={tw`text-[${docNodeKindColors[docNode.kind][0]}]`}>
-            {decamelize(docNode.kind)}
-          </span>{" "}
-          <span class={tw`font-bold`}>{docNode.name}</span>
-        </div>
-        {subTitle && (
-          <div class={tw`text-sm leading-4 space-y-0.5`}>
-            {subTitle}
-          </div>
-        )}
-      </div>,
-    );
+  const docNode = take(children, true);
+  let subTitle;
+  switch (docNode.kind) {
+    case "class":
+      subTitle = (
+        <DocSubTitleClass markdownContext={markdownContext}>
+          {docNode}
+        </DocSubTitleClass>
+      );
+      break;
+    case "interface":
+      subTitle = (
+        <DocSubTitleInterface markdownContext={markdownContext}>
+          {docNode}
+        </DocSubTitleInterface>
+      );
+      break;
   }
 
-  return <div>{elements}</div>;
+  return (
+    <div class={tw`font-medium space-y-1`}>
+      <div class={tw`text-xl`}>
+        <span class={tw`text-[${docNodeKindColors[docNode.kind][0]}]`}>
+          {decamelize(docNode.kind)}
+        </span>{" "}
+        <span class={tw`font-bold`}>{docNode.name}</span>
+      </div>
+      {subTitle && (
+        <div class={tw`text-sm leading-4 space-y-0.5`}>
+          {subTitle}
+        </div>
+      )}
+    </div>
+  );
 }

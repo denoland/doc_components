@@ -78,7 +78,7 @@ export function SymbolDoc(
     <article class={style("main")}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
-          <DocTitle markdownContext={markdownContext}>{docNodes}</DocTitle>
+          <DocTitle markdownContext={markdownContext}>{docNodes[0]}</DocTitle>
 
           {tags.length !== 0 && (
             <div>
