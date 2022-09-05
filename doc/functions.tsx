@@ -64,7 +64,7 @@ function DocFunctionOverload({
 }) {
   const def = take(children, true);
 
-  if (def.functionDef.hasBody) {
+  if (def.functionDef.hasBody && i !== 0) {
     return <></>;
   }
 
@@ -85,11 +85,13 @@ function DocFunctionOverload({
         </span>
       </div>
 
-      <div class={tw`w-full`}>
-        <MarkdownSummary markdownContext={markdownContext}>
-          {summary}
-        </MarkdownSummary>
-      </div>
+      {!(def.functionDef.hasBody && i === 0) && (
+        <div class={tw`w-full`}>
+          <MarkdownSummary markdownContext={markdownContext}>
+            {summary}
+          </MarkdownSummary>
+        </div>
+      )}
     </label>
   );
 }
@@ -208,38 +210,34 @@ export function DocBlockFunction(
 
   return (
     <div class={style("docBlockItems")}>
-      {defs.length !== 1 && (
-        <>
-          {defs.map((def, i) => {
-            const id = nameToId("function", def.name);
-            const overloadId = nameToId("function", `${def.name}_${i}`);
+      {defs.map((def, i) => {
+        const id = nameToId("function", def.name);
+        const overloadId = nameToId("function", `${def.name}_${i}`);
 
-            return (
-              <input
-                type="radio"
-                name={id}
-                id={overloadId}
-                class={tw`hidden ${
-                  css({
-                    [`&:checked ~ *:last-child > :not(#${overloadId}_div)`]:
-                      apply`hidden`,
-                    [`&:checked ~ div:first-of-type > label[for='${overloadId}']`]:
-                      apply`bg-[#056CF00C] border-[#056CF0] border-2`,
-                  })
-                }`}
-                checked={i === 0}
-              />
-            );
-          })}
-          <div class={tw`space-y-2`}>
-            {defs.map((def, i) => (
-              <DocFunctionOverload i={i} markdownContext={markdownContext}>
-                {def}
-              </DocFunctionOverload>
-            ))}
-          </div>
-        </>
-      )}
+        return (
+          <input
+            type="radio"
+            name={id}
+            id={overloadId}
+            class={tw`hidden ${
+              css({
+                [`&:checked ~ *:last-child > :not(#${overloadId}_div)`]:
+                  apply`hidden`,
+                [`&:checked ~ div:first-of-type > label[for='${overloadId}']`]:
+                  apply`bg-[#056CF00C] border-[#056CF0] border-2`,
+              })
+            }`}
+            checked={i === 0}
+          />
+        );
+      })}
+      <div class={tw`space-y-2`}>
+        {defs.map((def, i) => (
+          <DocFunctionOverload i={i} markdownContext={markdownContext}>
+            {def}
+          </DocFunctionOverload>
+        ))}
+      </div>
 
       <div>
         {items}
