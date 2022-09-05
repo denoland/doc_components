@@ -35,7 +35,7 @@ export function DocEntry(
     name?: unknown;
     location: Location;
     id: string;
-    jsDoc: { doc?: string } | undefined;
+    jsDoc?: { doc?: string };
     markdownContext: MarkdownContext;
   },
 ) {
@@ -78,12 +78,12 @@ export function SectionTitle({ children }: { children: Child<string> }) {
 }
 
 export function Section(
-  { children, title }: { children: Child<any[]>; title: string },
+  { children, title }: { children: Child<any[]>; title?: string },
 ) {
   const entries = take(children, true);
   return (
     <div>
-      <SectionTitle>{title}</SectionTitle>
+      {title && <SectionTitle>{title}</SectionTitle>}
       <div class={tw`mt-2 space-y-3`}>
         {entries}
       </div>
