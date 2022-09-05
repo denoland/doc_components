@@ -18,14 +18,16 @@ function Param(
 ) {
   const param = take(children);
   const name = paramName(param, i);
+  const type = param.kind === "assign" ? param.left.tsType : param.tsType;
 
   return (
     <span>
       {name}
-      {("optional" in param) && param.optional ? "?" : ""}
-      {param.tsType && (
+      {((("optional" in param) && param.optional) || param.kind === "assign") &&
+        "?"}
+      {type && (
         <span>
-          : <TypeDef markdownContext={markdownContext}>{param.tsType}</TypeDef>
+          : <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
         </span>
       )}
     </span>

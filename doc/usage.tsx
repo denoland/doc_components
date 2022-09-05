@@ -69,7 +69,7 @@ export function Usage(
     localVar,
   } = parseUsage(url, name, isType);
   return (
-    <div class={style("usage")}>
+    <div class={style("markdown")}>
       <pre class={tw`flex items-center justify-between gap-2.5`}>
         <code class={tw`overflow-scroll`}>
           <span class="code-keyword">import</span>
