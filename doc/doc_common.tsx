@@ -81,6 +81,10 @@ export function Section(
   { children, title }: { children: Child<any[]>; title?: string },
 ) {
   const entries = take(children, true);
+  if (entries.length === 0) {
+    return null;
+  }
+
   return (
     <div>
       {title && <SectionTitle>{title}</SectionTitle>}

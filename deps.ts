@@ -28,6 +28,7 @@ export type {
   JsDocTag,
   JsDocTagDoc,
   JsDocTagKind,
+  JsDocTagNamed,
   JsDocTagParam,
   JsDocTagReturn,
   JsDocTagTags,

@@ -11,6 +11,7 @@ import { DocBlockNamespace } from "./namespaces.tsx";
 import { runtime } from "../services.ts";
 import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
+import { DocBlockVariable } from "./variables.tsx";
 
 export function DocBlock(
   { children, markdownContext }: {
@@ -55,6 +56,13 @@ export function DocBlock(
           <DocBlockTypeAlias markdownContext={markdownContext}>
             {docNode}
           </DocBlockTypeAlias>,
+        );
+        break;
+      case "variable":
+        elements.push(
+          <DocBlockVariable markdownContext={markdownContext}>
+            {docNode}
+          </DocBlockVariable>,
         );
         break;
     }

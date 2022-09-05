@@ -23,7 +23,7 @@ import { MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
-import { DocTypeParams, TypeDef } from "./types.tsx";
+import { DocTypeParamsSummary, TypeDef, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, maybe, take } from "./utils.ts";
 
 type IndexSignatureDef =
@@ -55,9 +55,9 @@ function CallSignaturesDoc(
           jsDoc={jsDoc}
           markdownContext={markdownContext}
         >
-          <DocTypeParams markdownContext={markdownContext}>
+          <DocTypeParamsSummary markdownContext={markdownContext}>
             {typeParams}
-          </DocTypeParams>(<Params markdownContext={markdownContext}>
+          </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
             {params}
           </Params>){tsType && (
             <>
@@ -88,7 +88,7 @@ export function IndexSignaturesDoc(
         <Anchor>{id}</Anchor>
         {maybe(
           readonly,
-          <span class={style("keyword")}>readonly{" "}</span>,
+          <span>readonly{" "}</span>,
         )}[<Params markdownContext={markdownContext}>
           {params}
         </Params>]{tsType && (
@@ -147,16 +147,16 @@ function MethodsDoc(
           location={location}
           tags={tags}
           name={name === "new"
-            ? <span class={style("keyword")}>new</span>
+            ? <span>new</span>
             : computed
             ? `[${name}]`
             : name}
           jsDoc={jsDoc}
           markdownContext={markdownContext}
         >
-          <DocTypeParams markdownContext={markdownContext}>
+          <DocTypeParamsSummary markdownContext={markdownContext}>
             {typeParams}
-          </DocTypeParams>
+          </DocTypeParamsSummary>
           (<Params markdownContext={markdownContext}>{params}</Params>)
           {returnType && (
             <span>
@@ -259,29 +259,28 @@ export function DocBlockInterface(
     markdownContext: MarkdownContext;
   },
 ) {
-  const {
-    interfaceDef: {
-      indexSignatures,
-      callSignatures,
-      properties,
-      methods,
-    },
-  } = take(children);
+  const def = take(children);
   return (
     <div class={style("docBlockItems")}>
       <IndexSignaturesDoc markdownContext={markdownContext}>
-        {indexSignatures}
+        {def.interfaceDef.indexSignatures}
       </IndexSignaturesDoc>
 
       <CallSignaturesDoc markdownContext={markdownContext}>
-        {callSignatures}
+        {def.interfaceDef.callSignatures}
       </CallSignaturesDoc>
 
+      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+        {def.interfaceDef.typeParams}
+      </TypeParamsDoc>
+
       <PropertiesDoc markdownContext={markdownContext}>
-        {properties}
+        {def.interfaceDef.properties}
       </PropertiesDoc>
 
-      <MethodsDoc markdownContext={markdownContext}>{methods}</MethodsDoc>
+      <MethodsDoc markdownContext={markdownContext}>
+        {def.interfaceDef.methods}
+      </MethodsDoc>
     </div>
   );
 }

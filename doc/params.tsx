@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { type ObjectPatPropDef, type ParamDef, tw } from "../deps.ts";
+import { type ParamDef, tw } from "../deps.ts";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
@@ -45,7 +45,9 @@ export function Params(
   if (params.length < 3) {
     const items = [];
     for (let i = 0; i < params.length; i++) {
-      items.push(<Param i={i} markdownContext={markdownContext}>{params[i]}</Param>);
+      items.push(
+        <Param i={i} markdownContext={markdownContext}>{params[i]}</Param>,
+      );
       if (i < params.length - 1) {
         items.push(<span>{", "}</span>);
       }

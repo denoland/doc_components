@@ -21,7 +21,7 @@ import {
 import { paramName, Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
-import { DocTypeParams, TypeDef } from "./types.tsx";
+import { DocTypeParamsSummary, TypeDef, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";
 
 export function DocFunctionSummary({
@@ -35,9 +35,9 @@ export function DocFunctionSummary({
 
   return (
     <>
-      <DocTypeParams markdownContext={markdownContext}>
+      <DocTypeParamsSummary markdownContext={markdownContext}>
         {def.typeParams}
-      </DocTypeParams>
+      </DocTypeParamsSummary>
       (
       <Params markdownContext={markdownContext}>
         {def.params}
@@ -113,14 +113,14 @@ function DocFunction(
   }
 
   const paramDocs: JsDocTagParam[] =
-    (def.jsDoc?.tags?.filter(({ kind }) =>
-      kind === "param"
-    ) as JsDocTagParam[]) ??
+    (def.jsDoc?.tags?.filter(({ kind }) => kind === "param") as
+      | JsDocTagParam[]
+      | undefined) ??
       [];
 
   const parameters = def.functionDef.params.map((param, i) => {
-    const id = nameToId("function", `${def.name}_${n}_parameters_${i}`);
     const name = paramName(param, i);
+    const id = nameToId("function", `${def.name}_${n}_parameters_${name}`);
 
     const defaultValue = param.kind === "assign" ? param.right : undefined;
     const type = param.kind === "assign" ? param.left.tsType : param.tsType;
@@ -172,9 +172,11 @@ function DocFunction(
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
       <JsDoc markdownContext={markdownContext}>{def.jsDoc}</JsDoc>
 
-      {parameters.length !== 0 && (
-        <Section title="Parameters">{parameters}</Section>
-      )}
+      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+        {def.functionDef.typeParams}
+      </TypeParamsDoc>
+
+      <Section title="Parameters">{parameters}</Section>
 
       {def.functionDef.returnType && (
         <Section title="Returns">

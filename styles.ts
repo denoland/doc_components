@@ -26,8 +26,6 @@ const markdownStyles = css({
   ul: apply`lg:(list-disc list-inside)`,
 });
 
-const none = apply``;
-
 const syntaxHighlightingStyles = css({
   ".code-comment": apply`text-gray(500 dark:400)`,
   ".code-function": apply`text-green(700 dark:300)`,
@@ -43,13 +41,11 @@ const syntaxHighlightingStyles = css({
 const styles = {
   anchor:
     apply`float-left leading-none hidden group-hover:block text-gray-600 -ml-[18px] pr-[4px]`,
-  boolean: none,
   copyButton: apply`rounded border border-[#D2D2DC] p-1.5`,
   docBlockItems: apply`space-y-7`,
   docEntry: apply`flex justify-between`,
   docEntryChildren: apply`break-words flex items-center gap-2`,
   docItem: apply`group relative`,
-  keyword: none,
   indent: apply`ml-4`,
   link: apply`text([#056CF0] dark:blue-300) hover:(underline text-blue-500)`,
   main: apply`space-y-7 md:(col-span-3)`,
@@ -88,15 +84,12 @@ const styles = {
   moduleIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
   moduleIndexPanelSymbol:
     apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50) children:(flex-none last-child:(truncate flex-shrink-1))`,
-  none,
-  numberLiteral: none,
   section: apply`text-sm leading-6 font-semibold text-gray-400 py-1`,
   symbolDocHeader: apply`flex justify-between items-start`,
   symbolKind:
     apply`rounded-full w-6 h-6 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0 select-none`,
   sourceLink:
     apply`pl-2 break-words text-gray-600 hover:text-gray-800 dark:(text-gray-400 hover:text-gray-200) hover:underline`,
-  stringLiteral: none,
   symbolListCellSymbol:
     apply`block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(space-x-2 min-w-[13rem] flex items-center)`,
   symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-[#9CA0AA]`,
@@ -105,7 +98,6 @@ const styles = {
   tag:
     apply`inline-block rounded-full font-medium text-sm leading-none font-sans`,
   typeLink: apply`underline`,
-  typeParam: none,
 } as const;
 
 export type StyleKey = keyof typeof styles;

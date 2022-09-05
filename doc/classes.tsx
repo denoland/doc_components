@@ -22,7 +22,7 @@ import { type MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
-import { TypeDef } from "./types.tsx";
+import { TypeDef, TypeParamsDoc } from "./types.tsx";
 import { assert, type Child, isDeprecated, take } from "./utils.ts";
 import { DocFunctionSummary } from "./functions.tsx";
 
@@ -457,24 +457,21 @@ export function DocBlockClass(
     markdownContext: MarkdownContext;
   },
 ) {
-  const classNode = take(children);
-  const {
-    name,
-    classDef: {
-      constructors,
-      indexSignatures,
-    },
-  } = classNode;
-  const classItems = getClassItems(classNode);
+  const def = take(children);
+  const classItems = getClassItems(def);
   return (
     <div class={style("docBlockItems")}>
-      <ConstructorsDoc name={name} markdownContext={markdownContext}>
-        {constructors}
+      <ConstructorsDoc name={def.name} markdownContext={markdownContext}>
+        {def.classDef.constructors}
       </ConstructorsDoc>
 
       <IndexSignaturesDoc markdownContext={markdownContext}>
-        {indexSignatures}
+        {def.classDef.indexSignatures}
       </IndexSignaturesDoc>
+
+      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+        {def.classDef.typeParams}
+      </TypeParamsDoc>
 
       <ClassItemsDoc markdownContext={markdownContext}>
         {classItems}
