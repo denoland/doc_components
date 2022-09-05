@@ -121,19 +121,25 @@ function DocFunction(
     const name = paramName(param);
 
     const defaultValue = param.kind === "assign" ? param.right : undefined;
+    const type = param.kind === "assign" ? param.left.tsType : param.tsType;
+
+    const tags = [];
+    if (("optional" in param && param.optional) || defaultValue) {
+      tags.push(tagVariants.optional());
+    }
 
     return (
       <DocEntry
         id={id}
         location={def.location}
         name={name}
+        tags={tags}
         jsDoc={paramDocs[i]}
         markdownContext={markdownContext}
       >
-        {param.tsType && (
+        {type && (
           <span>
-            :{" "}
-            <TypeDef markdownContext={markdownContext}>{param.tsType}</TypeDef>
+            : <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
             {defaultValue && ` = ${defaultValue}`}
           </span>
         )}

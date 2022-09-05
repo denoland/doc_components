@@ -21,6 +21,7 @@ function Param(
   return (
     <span>
       {name}
+      {("optional" in param) && param.optional ? "?" : ""}
       {param.tsType && (
         <span>
           : <TypeDef markdownContext={markdownContext}>{param.tsType}</TypeDef>
@@ -87,15 +88,13 @@ export function paramName(param: ParamDef): string {
             return "undefined";
           }
         }).join(", ")
-      }]${param.optional ? "?" : ""}`;
+      }]`;
     case "assign":
       return paramName(param.left);
     case "identifier":
-      return param.name + (param.optional ? "?" : "");
+      return param.name;
     case "object":
-      return `{ ${param.props.map(ObjectPatName).join(", ")} }${
-        param.optional ? "?" : ""
-      }`;
+      return `{ ${param.props.map(ObjectPatName).join(", ")} }`;
       break;
     case "rest":
       return `...${paramName(param.arg)}`;
