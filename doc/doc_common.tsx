@@ -41,6 +41,8 @@ export function DocEntry(
 ) {
   const href = services.resolveSourceHref(location.filename, location.line);
 
+  markdownContext.markdownStyle ??= "docItemMarkdown";
+
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>
