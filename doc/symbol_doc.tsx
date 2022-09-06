@@ -32,12 +32,12 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, library = false, url, namespace, method }: {
+  { children, library = false, url, namespace, property }: {
     children: Child<DocNode[]>;
     library?: boolean;
     url: string;
     namespace?: string;
-    method?: string;
+    property?: string;
   },
 ) {
   const docNodes = [...take(children, true)];
@@ -50,11 +50,21 @@ export function SymbolDoc(
     splitNodes[docNode.kind].push(docNode);
   }
 
-  if (method && ("class" in splitNodes)) {
+  let propertyName: string | undefined;
+  if (property && ("class" in splitNodes)) {
+    const parts = property.split(".");
+
     const classNode = (splitNodes["class"] as DocNodeClass[])[0];
     const functionNodes: DocNodeFunction[] = classNode.classDef.methods.filter((
       def,
-    ) => def.name === method).map((def) => {
+    ) => {
+      if (parts[0] === "prototype") {
+        return def.name === parts[1] && !def.isStatic;
+      } else {
+        return def.name === parts[0] && def.isStatic;
+      }
+    }).map((def) => {
+      console.log(def);
       return {
         declarationKind: classNode.declarationKind,
         functionDef: def.functionDef,
@@ -67,6 +77,7 @@ export function SymbolDoc(
 
     if (functionNodes.length !== 0) {
       splitNodes = { function: functionNodes };
+      propertyName = `${classNode.name}.${functionNodes[0].name}`;
     }
   }
 
@@ -82,6 +93,7 @@ export function SymbolDoc(
         <Symbol
           showUsage={showUsage}
           title={title}
+          property={propertyName}
           markdownContext={markdownContext}
         >
           {nodes}
@@ -92,10 +104,11 @@ export function SymbolDoc(
 }
 
 function Symbol(
-  { children, showUsage, title, markdownContext }: {
+  { children, showUsage, title, property, markdownContext }: {
     children: Child<DocNode[]>;
     showUsage: boolean;
     title: string;
+    property?: string;
     markdownContext: MarkdownContext;
   },
 ) {
@@ -136,7 +149,9 @@ function Symbol(
     <div class={tw`space-y-7`}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
-          <DocTitle markdownContext={markdownContext}>{docNodes[0]}</DocTitle>
+          <DocTitle property={property} markdownContext={markdownContext}>
+            {docNodes[0]}
+          </DocTitle>
 
           {tags.length !== 0 && (
             <div>

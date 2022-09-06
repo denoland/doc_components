@@ -54,7 +54,7 @@ const styles = {
   markdown:
     apply`flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
   docItemMarkdown:
-    apply`pl-5 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
+    apply`pl-5 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles} text-gray-600`,
   markdownSummary: apply`text-gray(600 dark:400) ${
     css({
       "p": apply`inline-block`,

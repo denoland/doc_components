@@ -10,7 +10,7 @@ import { JsDoc } from "./jsdoc.tsx";
 import { MarkdownContext } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
-export const TARGET_RE = /(\s|[\[\]])/g;
+export const TARGET_RE = /(\s|[\[\]]|\.)/g;
 
 export function nameToId(kind: string, name: string) {
   return `${kind}_${name.replaceAll(TARGET_RE, "_")}`;
