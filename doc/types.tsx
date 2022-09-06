@@ -101,13 +101,12 @@ function LiteralProperties(
         )}
         {maybe(computed, `[${name}]`, name)}
         {maybe(optional, "?")}
-        {tsType
-          ? (
-            <>
-              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
-            </>
-          )
-          : "; "}
+        {tsType && (
+          <>
+            : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+          </>
+        )}
+        {"; "}
       </>
     ),
   );
@@ -140,14 +139,12 @@ function LiteralMethods({ children, markdownContext }: {
           {typeParams}
         </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
           {params}
-        </Params>){returnType
-          ? (
-            <>
-              :{" "}
-              <TypeDef markdownContext={markdownContext}>{returnType}</TypeDef>
-            </>
-          )
-          : "; "}
+        </Params>){returnType && (
+          <>
+            : <TypeDef markdownContext={markdownContext}>{returnType}</TypeDef>
+          </>
+        )}
+        {"; "}
       </>
     ),
   );
@@ -358,7 +355,8 @@ export function TypeDef({ children, markdownContext }: {
       } = def;
       return (
         <>
-          &#123;<LiteralIndexSignatures markdownContext={markdownContext}>
+          {"{ "}
+          <LiteralIndexSignatures markdownContext={markdownContext}>
             {indexSignatures}
           </LiteralIndexSignatures>
           <LiteralCallSignatures markdownContext={markdownContext}>
@@ -369,7 +367,8 @@ export function TypeDef({ children, markdownContext }: {
           </LiteralProperties>
           <LiteralMethods markdownContext={markdownContext}>
             {methods}
-          </LiteralMethods>&#125;
+          </LiteralMethods>
+          {" }"}
         </>
       );
     }
