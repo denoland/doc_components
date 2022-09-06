@@ -85,6 +85,7 @@ const styles = {
   moduleIndexPanelSymbol:
     apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50) children:(flex-none last-child:(truncate flex-shrink-1))`,
   section: apply`text-sm leading-6 font-semibold text-gray-400 py-1`,
+  symbolDoc: apply`space-y-12 md:(col-span-3)`,
   symbolDocHeader: apply`flex justify-between items-start`,
   symbolKind:
     apply`rounded-full w-6 h-6 inline-flex items-center justify-center font-medium text-xs leading-none flex-shrink-0 select-none`,

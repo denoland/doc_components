@@ -17,8 +17,9 @@ import * as Icons from "../icons.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
-import { type Child, isAbstract, isDeprecated, maybe, take } from "./utils.ts";
+import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
+import { type MarkdownContext } from "./markdown.tsx";
 
 function isTypeOnly(
   docNodes: DocNode[],
@@ -38,10 +39,46 @@ export function SymbolDoc(
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
-  const jsDoc = docNodes.map(({ jsDoc }) => jsDoc).find((jsDoc) => !!jsDoc);
-  const [{ name, location }] = docNodes;
-  const title = namespace ? `${namespace}.${name}` : name;
+  const splitNodes: Record<string, DocNode[]> = {};
+  for (const docNode of docNodes) {
+    if (!(docNode.kind in splitNodes)) {
+      splitNodes[docNode.kind] = [];
+    }
+    splitNodes[docNode.kind].push(docNode);
+  }
+
+  const title = namespace
+    ? `${namespace}.${docNodes[0].name}`
+    : docNodes[0].name;
   const markdownContext = { url, namespace };
+  const showUsage = !(url.endsWith(".d.ts") || library);
+
+  return (
+    <article class={style("symbolDoc")}>
+      {Object.values(splitNodes).map((nodes) => (
+        <Symbol
+          showUsage={showUsage}
+          title={title}
+          markdownContext={markdownContext}
+        >
+          {nodes}
+        </Symbol>
+      ))}
+    </article>
+  );
+}
+
+function Symbol(
+  { children, showUsage, title, markdownContext }: {
+    children: Child<DocNode[]>;
+    showUsage: boolean;
+    title: string;
+    markdownContext: MarkdownContext;
+  },
+) {
+  const docNodes = take(children, true);
+  const jsDoc = docNodes.map(({ jsDoc }) => jsDoc).find((jsDoc) => !!jsDoc);
+  const isFunction = docNodes[0].kind === "function";
 
   const tags = [];
 
@@ -72,10 +109,8 @@ export function SymbolDoc(
     tags.push(tagVariants.deprecatedLg());
   }
 
-  const isFunction = docNodes[0].kind === "function";
-
   return (
-    <article class={style("main")}>
+    <div class={tw`space-y-7`}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
           <DocTitle markdownContext={markdownContext}>{docNodes[0]}</DocTitle>
@@ -87,21 +122,29 @@ export function SymbolDoc(
           )}
         </div>
         <a
-          href={services.resolveSourceHref(location.filename, location.line)}
+          href={services.resolveSourceHref(
+            docNodes[0].location.filename,
+            docNodes[0].location.line,
+          )}
           class={tw`icon-button`}
         >
           <Icons.Source />
         </a>
       </div>
+
       <div class={tw`space-y-3`}>
-        {maybe(
-          !(url.endsWith(".d.ts") || library),
-          <Usage url={url} name={title} isType={isTypeOnly(docNodes)} />,
+        {showUsage && (
+          <Usage
+            url={markdownContext.url}
+            name={title}
+            isType={isTypeOnly(docNodes)}
+          />
         )}
         {!isFunction && <JsDoc markdownContext={markdownContext}>{jsDoc}
         </JsDoc>}
       </div>
+
       <DocBlock markdownContext={markdownContext}>{docNodes}</DocBlock>
-    </article>
+    </div>
   );
 }
