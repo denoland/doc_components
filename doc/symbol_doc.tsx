@@ -3,10 +3,11 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import {
-  type DocNode,
+  DecoratorDef,
+  type DocNode, type DocNodeClass, DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
-  type JsDocTagTags,
+  type JsDocTagTags, ParamDef, TsTypeDef, TsTypeParamDef,
   tw,
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
@@ -30,21 +31,40 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, library = false, url, namespace }: {
+  { children, library = false, url, namespace, method }: {
     children: Child<DocNode[]>;
     library?: boolean;
     url: string;
     namespace?: string;
+    method?: string;
   },
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
-  const splitNodes: Record<string, DocNode[]> = {};
+  let splitNodes: Record<string, DocNode[]> = {};
   for (const docNode of docNodes) {
     if (!(docNode.kind in splitNodes)) {
       splitNodes[docNode.kind] = [];
     }
     splitNodes[docNode.kind].push(docNode);
+  }
+
+  if (method && ("class" in splitNodes)) {
+    const classNode = (splitNodes["class"] as DocNodeClass[])[0];
+    const functionNodes: DocNodeFunction[] = classNode.classDef.methods.filter((def) => def.name === method).map((def) => {
+      return {
+        declarationKind: classNode.declarationKind,
+        functionDef: def.functionDef,
+        jsDoc: def.jsDoc,
+        kind: "function",
+        location: def.location,
+        name: def.name,
+      };
+    });
+
+    if (functionNodes.length !== 0) {
+      splitNodes = { function: functionNodes };
+    }
   }
 
   const title = namespace

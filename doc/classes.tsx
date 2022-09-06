@@ -198,6 +198,10 @@ function ClassMethodDoc(
   ) => {
     const id = nameToId("method", `${defs[0].name}_${i}`);
 
+    if (functionDef.hasBody && i !== 0) {
+      return <></>;
+    }
+
     const tags = [];
     const accessibilityTag = getAccessibilityTag(accessibility);
     if (accessibilityTag) {
