@@ -20,7 +20,7 @@ import {
 import { IndexSignaturesDoc } from "./interfaces.tsx";
 import { type MarkdownContext } from "./markdown.tsx";
 import { Params } from "./params.tsx";
-import { runtime } from "../services.ts";
+import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef, TypeParamsDoc } from "./types.tsx";
 import { assert, type Child, isDeprecated, take } from "./utils.ts";
@@ -178,8 +178,9 @@ function ClassAccessorDoc(
 }
 
 function ClassMethodDoc(
-  { children, markdownContext }: {
+  { children, className, markdownContext }: {
     children: Child<ClassMethodDef[]>;
+    className: string;
     markdownContext: MarkdownContext;
   },
 ) {
@@ -225,6 +226,7 @@ function ClassMethodDoc(
         location={location}
         name={name}
         jsDoc={jsDoc}
+        href={services.resolveHref(markdownContext.url, className, name)}
         markdownContext={markdownContext}
       >
         <DocFunctionSummary markdownContext={markdownContext}>
@@ -292,8 +294,9 @@ function ClassPropertyDoc(
 }
 
 function ClassItemsDoc(
-  { children, markdownContext }: {
+  { children, className, markdownContext }: {
     children: Child<ClassItemDef[]>;
+    className: string;
     markdownContext: MarkdownContext;
   },
 ) {
@@ -340,7 +343,7 @@ function ClassItemsDoc(
         methodList.push(next);
       }
       (def.isStatic ? staticMethods : methods).push(
-        <ClassMethodDoc markdownContext={markdownContext}>
+        <ClassMethodDoc className={className} markdownContext={markdownContext}>
           {methodList}
         </ClassMethodDoc>,
       );
@@ -477,7 +480,7 @@ export function DocBlockClass(
         {def.classDef.indexSignatures}
       </IndexSignaturesDoc>
 
-      <ClassItemsDoc markdownContext={markdownContext}>
+      <ClassItemsDoc className={def.name} markdownContext={markdownContext}>
         {classItems}
       </ClassItemsDoc>
     </div>

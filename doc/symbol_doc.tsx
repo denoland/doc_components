@@ -4,10 +4,15 @@
 /** @jsxFrag runtime.Fragment */
 import {
   DecoratorDef,
-  type DocNode, type DocNodeClass, DocNodeFunction,
+  type DocNode,
+  type DocNodeClass,
+  DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
-  type JsDocTagTags, ParamDef, TsTypeDef, TsTypeParamDef,
+  type JsDocTagTags,
+  ParamDef,
+  TsTypeDef,
+  TsTypeParamDef,
   tw,
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
@@ -51,7 +56,9 @@ export function SymbolDoc(
 
   if (method && ("class" in splitNodes)) {
     const classNode = (splitNodes["class"] as DocNodeClass[])[0];
-    const functionNodes: DocNodeFunction[] = classNode.classDef.methods.filter((def) => def.name === method).map((def) => {
+    const functionNodes: DocNodeFunction[] = classNode.classDef.methods.filter((
+      def,
+    ) => def.name === method).map((def) => {
       return {
         declarationKind: classNode.declarationKind,
         functionDef: def.functionDef,

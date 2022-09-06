@@ -1,6 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 /** @jsx runtime.h */
+/** @jsxFrag runtime.Fragment */
 import { type Accessibility, type Location, tw } from "../deps.ts";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
@@ -29,34 +30,54 @@ export function Anchor({ children: name }: { children: string }) {
 }
 
 export function DocEntry(
-  { children, tags, name, location, id, jsDoc, markdownContext }: {
+  { children, tags, name, location, id, jsDoc, href, markdownContext }: {
     children: unknown;
     tags?: unknown[];
     name?: unknown;
     location: Location;
     id: string;
     jsDoc?: { doc?: string };
+    href?: string;
     markdownContext: MarkdownContext;
   },
 ) {
-  const href = services.resolveSourceHref(location.filename, location.line);
+  const sourceHref = services.resolveSourceHref(
+    location.filename,
+    location.line,
+  );
 
   markdownContext.markdownStyle ??= "docItemMarkdown";
+
+  const docEntryChildren = (
+    <>
+      {!!tags?.length && <span>{tags}</span>}
+      <span class={tw`font-mono`}>
+        {name && <span class={tw`font-bold`}>{name}</span>}
+        <span class={tw`font-medium`}>{children}</span>
+      </span>
+    </>
+  );
 
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>
 
       <div class={style("docEntry")}>
-        <span class={style("docEntryChildren")}>
-          {!!tags?.length && <span>{tags}</span>}
-          <span class={tw`font-mono`}>
-            {name && <span class={tw`font-bold`}>{name}</span>}
-            <span class={tw`font-medium`}>{children}</span>
-          </span>
-        </span>
-        {href && (
-          <a href={href} target="_blank" class={style("sourceLink")}>[src]</a>
+        {href
+          ? (
+            <a class={style("docEntryChildren")} href={href}>
+              {docEntryChildren}
+            </a>
+          )
+          : (
+            <span class={style("docEntryChildren")}>
+              {docEntryChildren}
+            </span>
+          )}
+        {sourceHref && (
+          <a href={sourceHref} target="_blank" class={style("sourceLink")}>
+            [src]
+          </a>
         )}
       </div>
 
