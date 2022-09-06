@@ -194,6 +194,7 @@ function ClassMethodDoc(
       optional,
       isAbstract,
       functionDef,
+      isStatic,
     },
     i,
   ) => {
@@ -226,7 +227,11 @@ function ClassMethodDoc(
         location={location}
         name={name}
         jsDoc={jsDoc}
-        href={services.resolveHref(markdownContext.url, className, name)}
+        href={services.resolveHref(
+          markdownContext.url,
+          className,
+          isStatic ? name : `prototype.${name}`,
+        )}
         markdownContext={markdownContext}
       >
         <DocFunctionSummary markdownContext={markdownContext}>

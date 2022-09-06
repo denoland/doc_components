@@ -45,7 +45,7 @@ export interface Configuration {
    *
    * Implementors should return a string which will be used as the `href` value
    * for a link. */
-  resolveHref?: (url: string, symbol?: string, method?: string) => string;
+  resolveHref?: (url: string, symbol?: string, property?: string) => string;
   /** Called when doc components are trying to generate a link to a source file.
    *
    * Implementors should return a string which which will be used as the `href`
@@ -147,10 +147,10 @@ const runtimeConfig: Required<
     | "runtime"
   >
 > = {
-  resolveHref(current, symbol, method) {
+  resolveHref(current, symbol, property) {
     return symbol
-      ? (method
-        ? `/${current}/~/${symbol}/~/${method}`
+      ? (property
+        ? `/${current}/~/${symbol}/~/${property}`
         : `/${current}/~/${symbol}`)
       : `/${current}`;
   },
@@ -203,7 +203,11 @@ export const runtime: JsxRuntime = {
 
 export const services = {
   /** Return a link to the provided URL and optional symbol. */
-  get resolveHref(): (url: string, symbol?: string, method?: string) => string {
+  get resolveHref(): (
+    url: string,
+    symbol?: string,
+    property?: string,
+  ) => string {
     return runtimeConfig.resolveHref;
   },
 
