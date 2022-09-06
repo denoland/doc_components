@@ -65,7 +65,7 @@ export function DocEntry(
       <div class={style("docEntry")}>
         {href
           ? (
-            <a class={style("docEntryChildren")} href={href}>
+            <a class={style("docEntryChildrenHref")} href={href}>
               {docEntryChildren}
             </a>
           )

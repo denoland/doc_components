@@ -45,6 +45,8 @@ const styles = {
   docBlockItems: apply`space-y-7`,
   docEntry: apply`flex justify-between`,
   docEntryChildren: apply`break-words flex items-center gap-2`,
+  docEntryChildrenHref:
+    apply`break-words flex items-center gap-2 hover:underline`,
   docItem: apply`group relative`,
   indent: apply`ml-4`,
   link: apply`text([#056CF0] dark:blue-300) hover:(underline text-blue-500)`,
