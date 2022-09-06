@@ -3,16 +3,12 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import {
-  DecoratorDef,
   type DocNode,
   type DocNodeClass,
-  DocNodeFunction,
+  type DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
   type JsDocTagTags,
-  ParamDef,
-  TsTypeDef,
-  TsTypeParamDef,
   tw,
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
