@@ -64,7 +64,6 @@ export function SymbolDoc(
         return def.name === parts[0] && def.isStatic;
       }
     }).map((def) => {
-      console.log(def);
       return {
         declarationKind: classNode.declarationKind,
         functionDef: def.functionDef,
