@@ -105,7 +105,7 @@ function Symbol(
   }
 
   if (jsDocTags.includes("unstable")) {
-    tags.push(tagVariants.unstableLg())
+    tags.push(tagVariants.unstableLg());
   }
 
   if (isAbstract(docNodes[0])) {

@@ -28,7 +28,9 @@ function Symbol(
 ) {
   const symbol = take(children);
 
-  const isUnstable = symbol.jsDoc?.tags?.some((tag) => tag.kind === "tags" && tag.tags.includes("unstable"));
+  const isUnstable = symbol.jsDoc?.tags?.some((tag) =>
+    tag.kind === "tags" && tag.tags.includes("unstable")
+  );
 
   const Icon = docNodeKindMap[symbol.kind];
   return (
@@ -43,11 +45,11 @@ function Symbol(
       href={services.resolveHref(base, symbol.name)}
       title={symbol.name}
     >
-      <div class={tw`flex items-center flex-auto gap-2`}>
+      <span>
         <Icon />
-        <span class={tw`bg-red-100`}>{symbol.name}</span>
-      </div>
-      <div class={tw`flex-initial`}>{isUnstable && tagVariants.unstable()}</div>
+        <span>{symbol.name}</span>
+      </span>
+      {isUnstable && tagVariants.unstable()}
     </a>
   );
 }
