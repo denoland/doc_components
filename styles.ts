@@ -83,7 +83,7 @@ const styles = {
     apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:(text-gray-500  bg-gray-50) children:last-child:(truncate flex-shrink-1)`,
   moduleIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
   moduleIndexPanelSymbol:
-    apply`flex items-center gap-2 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50) children:(flex-none last-child:(truncate flex-shrink-1))`,
+    apply`flex items-center justify-between gap-1 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50)`,
   section: apply`text-sm leading-6 font-semibold text-gray-400 py-1`,
   symbolDoc: apply`space-y-12 md:(col-span-3)`,
   symbolDocHeader: apply`flex justify-between items-start`,

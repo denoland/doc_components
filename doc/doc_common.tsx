@@ -114,7 +114,7 @@ export function Tag(
   return (
     <div
       class={tw`bg-${bg} text-${text} ${large ? "py-2 px-3" : "py-1 px-2"} ${
-        style("tag", true)
+        style("tag")
       }`}
     >
       {children}
@@ -130,6 +130,8 @@ export const tagVariants = {
   readonly: () => <Tag color="purple">readonly</Tag>,
   writeonly: () => <Tag color="purple">readonly</Tag>,
   optional: () => <Tag color="cyan">optional</Tag>,
+  unstableLg: () => <Tag color="gray" large>Unstable</Tag>,
+  unstable: () => <Tag color="gray">unstable</Tag>,
 } as const;
 
 export function getAccessibilityTag(accessibility?: Accessibility) {
