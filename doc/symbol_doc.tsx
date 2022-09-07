@@ -87,11 +87,13 @@ function Symbol(
       | JsDocTagTags[]
       | undefined)?.flatMap(({ tags }) => tags) ?? []
   );
-  if (jsDocTags.length !== 0) {
+
+  const permTags = jsDocTags.filter((tag) => tag.startsWith("allow-"));
+  if (permTags.length !== 0) {
     tags.push(
       <Tag color="cyan" large>
         <span class={tw`space-x-2`}>
-          {jsDocTags.map((tag, i) => (
+          {permTags.map((tag, i) => (
             <>
               {i !== 0 && <div class={tw`inline border-l-2 border-gray-300`} />}
               <span>{tag}</span>
@@ -100,6 +102,10 @@ function Symbol(
         </span>
       </Tag>,
     );
+  }
+
+  if (jsDocTags.includes("unstable")) {
+    tags.push(tagVariants.unstableLg());
   }
 
   if (isAbstract(docNodes[0])) {
