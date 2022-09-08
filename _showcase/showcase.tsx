@@ -57,7 +57,7 @@ function ComponentTitle(
 
 export function Showcase(
   { moduleIndex, moduleDoc, symbolDoc, symbol, url }: {
-    url: string;
+    url: URL;
     symbol: string;
     moduleIndex: any;
     moduleDoc: any;
@@ -78,7 +78,7 @@ export function Showcase(
 
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
       <ModuleIndex
-        base="https://deno.land/std@0.154.0"
+        url={new URL("https://deno.land/std@0.154.0")}
         sourceUrl="https://deno.land/std@0.154.0"
       >
         {moduleIndex.items}
@@ -88,7 +88,7 @@ export function Showcase(
         ModuleIndexPanel
       </ComponentTitle>
       <ModuleIndexPanel
-        base="https://deno.land/oak@v11.0.0"
+        base={new URL("https://deno.land/oak@v11.0.0")}
         path="/mod.ts"
         current="/mod.ts"
       >
@@ -96,7 +96,7 @@ export function Showcase(
       </ModuleIndexPanel>
 
       <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
-      <ModuleDoc url={url} sourceUrl={url}>
+      <ModuleDoc url={url} sourceUrl={url.href}>
         {moduleDoc.docNodes}
       </ModuleDoc>
 
@@ -126,7 +126,7 @@ export function Showcase(
 }
 
 export function ShowcaseDocBlocks(
-  { docNodes, url }: { docNodes: DocNode[]; url: string },
+  { docNodes, url }: { docNodes: DocNode[]; url: URL },
 ) {
   const classNode = docNodes.find(({ kind }) =>
     kind === "class"

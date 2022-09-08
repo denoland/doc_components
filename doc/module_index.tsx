@@ -23,7 +23,8 @@ function Folder({ children, parent, markdownContext }: {
   markdownContext: MarkdownContext;
 }) {
   const item = take(children);
-  const url = `${markdownContext.url}${item.path}`;
+  const url = new URL(markdownContext.url);
+  url.pathname += item.path;
   const href = services.resolveHref(url);
   const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
@@ -48,7 +49,8 @@ function Module({ children, parent, markdownContext }: {
   markdownContext: MarkdownContext;
 }) {
   const item = take(children);
-  const url = `${markdownContext.url}${item.path}`;
+  const url = new URL(markdownContext.url);
+  url.pathname += item.path;
   const href = services.resolveHref(url);
   const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);

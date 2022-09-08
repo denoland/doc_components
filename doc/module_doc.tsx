@@ -182,10 +182,10 @@ export function ModuleDoc(
       </div>
       <article class={style("main")}>
         {maybe(
-          !(library || markdownContext.url.endsWith(".d.ts")),
+          !(library || markdownContext.url.pathname.endsWith(".d.ts")),
           <div class={style("moduleDoc")}>
             <div class={tw`space-y-3`}>
-              <Usage url={markdownContext.url} />
+              <Usage url={markdownContext.url.href} />
               {collection.moduleDoc && (
                 <JsDocModule markdownContext={markdownContext}>
                   {collection.moduleDoc}
