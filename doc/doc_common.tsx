@@ -49,7 +49,7 @@ export function DocEntry(
 
       <div class={style("docEntry")}>
         <span class={style("docEntryChildren")}>
-          {!!tags?.length && <span>{tags}</span>}
+          {!!tags?.length && <span class={tw`space-x-1`}>{tags}</span>}
           <span class={tw`font-mono`}>
             {name && <span class={tw`font-bold`}>{name}</span>}
             <span class={tw`font-medium`}>{children}</span>

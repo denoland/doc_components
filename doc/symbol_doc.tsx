@@ -85,7 +85,9 @@ function Symbol(
       | undefined)?.flatMap(({ tags }) => tags) ?? []
   );
 
-  const permTags = jsDocTags.filter((tag) => tag.startsWith("allow-"));
+  const permTags = jsDocTags.filter((tag, i) =>
+    tag.startsWith("allow-") && jsDocTags.indexOf(tag) === i
+  );
   if (permTags.length !== 0) {
     tags.push(
       <Tag color="cyan" large>
@@ -119,7 +121,7 @@ function Symbol(
           <DocTitle markdownContext={markdownContext}>{docNodes[0]}</DocTitle>
 
           {tags.length !== 0 && (
-            <div>
+            <div class={tw`space-x-2`}>
               {tags}
             </div>
           )}
