@@ -9,6 +9,7 @@ import { type Child, take } from "./utils.ts";
 import * as Icons from "../icons.tsx";
 import { docNodeKindMap } from "./symbol_kind.tsx";
 import { byKindValue } from "./doc.ts";
+import { tagVariants } from "./doc_common.tsx";
 
 export interface SymbolItem {
   name: string;
@@ -26,6 +27,11 @@ function Symbol(
   },
 ) {
   const symbol = take(children);
+
+  const isUnstable = symbol.jsDoc?.tags?.some((tag) =>
+    tag.kind === "tags" && tag.tags.includes("unstable")
+  );
+
   const Icon = docNodeKindMap[symbol.kind];
   return (
     <a
@@ -39,8 +45,11 @@ function Symbol(
       href={services.resolveHref(base, symbol.name)}
       title={symbol.name}
     >
-      <Icon />
-      <span>{symbol.name}</span>
+      <span>
+        <Icon />
+        <span>{symbol.name}</span>
+      </span>
+      {isUnstable && tagVariants.unstable()}
     </a>
   );
 }

@@ -118,8 +118,10 @@ function Module(
             href={services.resolveHref(url, symbol.name)}
             title={symbol.name}
           >
-            <Icon />
-            <span>{symbol.name}</span>
+            <span>
+              <Icon />
+              <span>{symbol.name}</span>
+            </span>
           </a>
         );
       })}

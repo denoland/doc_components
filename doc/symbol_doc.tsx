@@ -32,13 +32,11 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, library = false, url, namespace, property }: {
+  { children, library = false, property, ...markdownContext  }: {
     children: Child<DocNode[]>;
     library?: boolean;
-    url: string;
-    namespace?: string;
     property?: string;
-  },
+  } & MarkdownContext,
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
@@ -80,11 +78,10 @@ export function SymbolDoc(
     }
   }
 
-  const title = namespace
-    ? `${namespace}.${docNodes[0].name}`
+  const title = markdownContext.namespace
+    ? `${markdownContext.namespace}.${docNodes[0].name}`
     : docNodes[0].name;
-  const markdownContext = { url, namespace };
-  const showUsage = !(url.endsWith(".d.ts") || library);
+  const showUsage = !(markdownContext.url.endsWith(".d.ts") || library);
 
   return (
     <article class={style("symbolDoc")}>
@@ -122,11 +119,13 @@ function Symbol(
       | JsDocTagTags[]
       | undefined)?.flatMap(({ tags }) => tags) ?? []
   );
-  if (jsDocTags.length !== 0) {
+
+  const permTags = jsDocTags.filter((tag) => tag.startsWith("allow-"));
+  if (permTags.length !== 0) {
     tags.push(
       <Tag color="cyan" large>
         <span class={tw`space-x-2`}>
-          {jsDocTags.map((tag, i) => (
+          {permTags.map((tag, i) => (
             <>
               {i !== 0 && <div class={tw`inline border-l-2 border-gray-300`} />}
               <span>{tag}</span>
@@ -135,6 +134,10 @@ function Symbol(
         </span>
       </Tag>,
     );
+  }
+
+  if (jsDocTags.includes("unstable")) {
+    tags.push(tagVariants.unstableLg());
   }
 
   if (isAbstract(docNodes[0])) {

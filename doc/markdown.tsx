@@ -111,6 +111,7 @@ export interface MarkdownContext {
   url: string;
   namespace?: string;
   markdownStyle?: StyleKey;
+  replace?: [string, string];
 }
 
 export function Markdown(
@@ -128,7 +129,12 @@ export function Markdown(
         id={id}
         dangerouslySetInnerHTML={{
           __html: services.markdownToHTML(
-            md,
+            markdownContext.replace
+              ? md.replaceAll(
+                markdownContext.replace[0],
+                markdownContext.replace[1],
+              )
+              : md,
             markdownContext.url,
             markdownContext.namespace,
           ),
@@ -158,7 +164,12 @@ export function MarkdownSummary(
         class={style(markdownContext.markdownStyle ?? "markdownSummary")}
         dangerouslySetInnerHTML={{
           __html: services.markdownToHTML(
-            md,
+            markdownContext.replace
+              ? md.replaceAll(
+                markdownContext.replace[0],
+                markdownContext.replace[1],
+              )
+              : md,
             markdownContext.url,
             markdownContext.namespace,
           ),
