@@ -30,12 +30,10 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, library = false, url, namespace }: {
+  { children, library = false, ...markdownContext }: {
     children: Child<DocNode[]>;
     library?: boolean;
-    url: string;
-    namespace?: string;
-  },
+  } & MarkdownContext,
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
@@ -47,11 +45,10 @@ export function SymbolDoc(
     splitNodes[docNode.kind].push(docNode);
   }
 
-  const title = namespace
-    ? `${namespace}.${docNodes[0].name}`
+  const title = markdownContext.namespace
+    ? `${markdownContext.namespace}.${docNodes[0].name}`
     : docNodes[0].name;
-  const markdownContext = { url, namespace };
-  const showUsage = !(url.endsWith(".d.ts") || library);
+  const showUsage = !(markdownContext.url.endsWith(".d.ts") || library);
 
   return (
     <article class={style("symbolDoc")}>

@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { getSummary, MarkdownSummary } from "./markdown.tsx";
+import { getSummary, MarkdownContext, MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
@@ -17,13 +17,13 @@ export interface IndexItem {
   doc?: string;
 }
 
-function Folder({ children, base, parent }: {
+function Folder({ children, parent, markdownContext }: {
   children: Child<IndexItem>;
-  base: string;
   parent: string;
+  markdownContext: MarkdownContext;
 }) {
   const item = take(children);
-  const url = `${base}${item.path}`;
+  const url = `${markdownContext.url}${item.path}`;
   const href = services.resolveHref(url);
   const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
@@ -34,19 +34,21 @@ function Folder({ children, base, parent }: {
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary markdownContext={{ url }}>{summary}</MarkdownSummary>
+        <MarkdownSummary markdownContext={{ ...markdownContext, url }}>
+          {summary}
+        </MarkdownSummary>
       </td>
     </tr>
   );
 }
 
-function Module({ children, base, parent }: {
+function Module({ children, parent, markdownContext }: {
   children: Child<IndexItem>;
-  base: string;
   parent: string;
+  markdownContext: MarkdownContext;
 }) {
   const item = take(children);
-  const url = `${base}${item.path}`;
+  const url = `${markdownContext.url}${item.path}`;
   const href = services.resolveHref(url);
   const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
@@ -57,7 +59,9 @@ function Module({ children, base, parent }: {
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary markdownContext={{ url }}>{summary}</MarkdownSummary>
+        <MarkdownSummary markdownContext={{ ...markdownContext, url }}>
+          {summary}
+        </MarkdownSummary>
       </td>
     </tr>
   );
@@ -66,13 +70,18 @@ function Module({ children, base, parent }: {
 const order = ["dir", "module", "file"] as const;
 
 export function ModuleIndex(
-  { children, path = "/", base, skipMods = false, sourceUrl }: {
+  {
+    children,
+    path = "/",
+    skipMods = false,
+    sourceUrl,
+    ...markdownContext
+  }: {
     children: Child<IndexItem[]>;
-    base: string;
     skipMods?: boolean;
     path?: string;
     sourceUrl: string;
-  },
+  } & MarkdownContext,
 ) {
   const items = take(children, true);
   items.sort((a, b) =>
@@ -85,9 +94,17 @@ export function ModuleIndex(
       continue;
     }
     if (item.kind === "dir") {
-      entries.push(<Folder base={base} parent={path}>{item}</Folder>);
+      entries.push(
+        <Folder parent={path} markdownContext={markdownContext}>
+          {item}
+        </Folder>,
+      );
     } else if (item.kind === "module" && !skipMods) {
-      entries.push(<Module base={base} parent={path}>{item}</Module>);
+      entries.push(
+        <Module parent={path} markdownContext={markdownContext}>
+          {item}
+        </Module>,
+      );
     }
   }
 
