@@ -99,7 +99,7 @@ export function Usage(
         </code>
         <button
           class={style("copyButton")}
-          onClick={`navigator?.clipboard?.writeText("${importStatement}");`}
+          onClick={`navigator?.clipboard?.writeText('${importStatement.trim()}');`}
         >
           <Icons.Copy />
         </button>
