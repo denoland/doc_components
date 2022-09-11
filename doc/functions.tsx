@@ -206,13 +206,23 @@ export function DocBlockFunction(
 ) {
   const defs = take(children, true);
 
-  const items = defs.map((def, i) => (
-    <DocFunction n={i} markdownContext={markdownContext}>{def}</DocFunction>
-  ));
+  const items = defs.map((def, i) => {
+    if (def.functionDef.hasBody && i !== 0) {
+      return <></>;
+    }
+
+    return (
+      <DocFunction n={i} markdownContext={markdownContext}>{def}</DocFunction>
+    );
+  });
 
   return (
     <div class={style("docBlockItems")}>
       {defs.map((def, i) => {
+        if (def.functionDef.hasBody && i !== 0) {
+          return <></>;
+        }
+
         const id = nameToId("function", def.name);
         const overloadId = nameToId("function", `${def.name}_${i}`);
 
