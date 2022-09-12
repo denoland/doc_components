@@ -5,7 +5,7 @@
  * @module
  */
 
-import { type DocNode, type DocNodeKind } from "../deps.ts";
+import { type DocNode, type DocNodeKind, JsDoc } from "../deps.ts";
 
 const EXT = [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"];
 const INDEX_MODULES = ["mod", "lib", "main", "index"].flatMap((idx) =>
@@ -33,9 +33,9 @@ export function byKindValue(a: DocNodeKind, b: DocNodeKind): number {
 }
 
 /** If a doc node has JSDoc, return the first paragraph of the JSDoc doc. */
-export function getDocSummary(docNode: DocNode): string | undefined {
-  if (docNode.jsDoc?.doc) {
-    const [summary] = docNode.jsDoc.doc.split("\n\n");
+export function getDocSummary(jsDoc?: JsDoc): string | undefined {
+  if (jsDoc?.doc) {
+    const [summary] = jsDoc.doc.split("\n\n");
     return summary;
   }
 }

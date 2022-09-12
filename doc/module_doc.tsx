@@ -49,7 +49,7 @@ function Entry<Node extends DocNode>(
       </td>
       <td class={style("symbolListCellDoc")}>
         <MarkdownSummary markdownContext={markdownContext}>
-          {getDocSummary(node)}
+          {getDocSummary(node.jsDoc)}
         </MarkdownSummary>
       </td>
     </tr>
@@ -162,9 +162,8 @@ export function DocTypeSections(
 }
 
 export function ModuleDoc(
-  { children, library = false, sourceUrl, ...markdownContext }: {
+  { children, sourceUrl, ...markdownContext }: {
     children: Child<DocNode[]>;
-    library?: boolean;
     sourceUrl: string;
   } & MarkdownContext,
 ) {
@@ -181,22 +180,19 @@ export function ModuleDoc(
         </a>
       </div>
       <article class={style("main")}>
-        {maybe(
-          !(library || markdownContext.url.pathname.endsWith(".d.ts")),
-          <div class={style("moduleDoc")}>
-            <div class={tw`space-y-3`}>
-              <Usage url={markdownContext.url.href} />
-              {collection.moduleDoc && (
-                <JsDocModule markdownContext={markdownContext}>
-                  {collection.moduleDoc}
-                </JsDocModule>
-              )}
-            </div>
-            <DocTypeSections markdownContext={markdownContext}>
-              {collection}
-            </DocTypeSections>
-          </div>,
-        )}
+        <div class={style("moduleDoc")}>
+          <div class={tw`space-y-3`}>
+            <Usage url={markdownContext.url.href} />
+            {collection.moduleDoc && (
+              <JsDocModule markdownContext={markdownContext}>
+                {collection.moduleDoc}
+              </JsDocModule>
+            )}
+          </div>
+          <DocTypeSections markdownContext={markdownContext}>
+            {collection}
+          </DocTypeSections>
+        </div>,
       </article>
     </div>
   );

@@ -10,11 +10,31 @@ import * as Icons from "../icons.tsx";
 import { docNodeKindMap } from "./symbol_kind.tsx";
 import { byKindValue } from "./doc.ts";
 import { tagVariants } from "./doc_common.tsx";
+import { SymbolItem } from "./module_index_panel.tsx";
 
-export interface SymbolItem {
-  name: string;
-  kind: DocNodeKind;
-  jsDoc?: JsDoc | null;
+export function categorize(
+  items: SymbolItem[],
+): [categories: Record<string, SymbolItem[]>, uncategorized: SymbolItem[]] {
+  const categories: Record<string, SymbolItem[]> = {};
+  const uncategorized: SymbolItem[] = [];
+
+  for (const item of items) {
+    const category = (item.jsDoc?.tags?.find(({ kind }) =>
+      kind === "category"
+    ) as (JsDocTagDoc | undefined))?.doc?.trim();
+
+    if (category) {
+      if (!(category in categories)) {
+        categories[category] = [];
+      }
+
+      categories[category].push(item);
+    } else {
+      uncategorized.push(item);
+    }
+  }
+
+  return [categories, uncategorized];
 }
 
 function Symbol(
@@ -95,7 +115,7 @@ function Category(
   );
 }
 
-export function LibraryCategoryPanel(
+export function LibraryIndexPanel(
   { children, base, currentSymbol }: {
     children: Child<SymbolItem[]>;
     base: URL;
@@ -104,24 +124,7 @@ export function LibraryCategoryPanel(
 ) {
   const items = take(children, true);
 
-  const categories: Record<string, SymbolItem[]> = {};
-  const uncategorized: SymbolItem[] = [];
-
-  for (const item of items) {
-    const category = (item.jsDoc?.tags?.find(({ kind }) =>
-      kind === "category"
-    ) as (JsDocTagDoc | undefined))?.doc?.trim();
-
-    if (category) {
-      if (!(category in categories)) {
-        categories[category] = [];
-      }
-
-      categories[category].push(item);
-    } else {
-      uncategorized.push(item);
-    }
-  }
+  const [categories, uncategorized] = categorize(items);
 
   const entries = [];
   for (

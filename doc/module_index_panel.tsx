@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { DocNode, DocNodeKind, JsDoc, tw } from "../deps.ts";
+import { DocNodeKind, JsDoc } from "../deps.ts";
 import { byKindValue, getIndex } from "./doc.ts";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
@@ -15,7 +15,7 @@ interface DocPageDirItem {
   path: string;
 }
 
-interface SymbolItem {
+export interface SymbolItem {
   name: string;
   kind: DocNodeKind;
   jsDoc?: JsDoc | null;
