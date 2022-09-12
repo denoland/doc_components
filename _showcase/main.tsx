@@ -31,22 +31,22 @@ const page = "/";
 await setup({
   lookupHref(url, namespace, symbol) {
     return namespace
-      ? `/${url}/~/${namespace}.${symbol}`
-      : `/${url}/~/${symbol}`;
+      ? `/${url.href}/~/${namespace}.${symbol}`
+      : `/${url.href}/~/${symbol}`;
   },
   resolveHref(url, symbol) {
     if (symbol) {
-      return `https://doc.deno.land/${url}/~/${symbol}`;
+      return `https://doc.deno.land/${url.href}/~/${symbol}`;
     }
     const pattern = new URLPattern(
       "https://deno.land/x/:module@:version/:path*",
     );
-    const result = pattern.exec(url);
+    const result = pattern.exec(url.href);
     if (result) {
       const { module, version, path } = result.pathname.groups;
       return `${page}/${module}/${version}/${path}`;
     }
-    return `/${url}`;
+    return `/${url.href}`;
   },
   runtime: { Fragment, h },
   tw: { sheet, theme, plugins, darkMode: "class" },
@@ -61,7 +61,7 @@ router.get("/", async (ctx, next) => {
   const symbolDoc = await getSymbolDoc();
   const body = renderSSR(
     <Showcase
-      url="https://deno.land/x/oak@v11.0.0/mod.ts"
+      url={new URL("https://deno.land/x/oak@v11.0.0/mod.ts")}
       symbol="Application"
       moduleIndex={moduleIndex}
       moduleDoc={moduleDoc}
@@ -94,7 +94,7 @@ router.get("/docblocks", async (ctx, next) => {
   ];
   const body = renderSSR(
     <ShowcaseDocBlocks
-      url="https://deno.land/x/oak@v10.6.0/mod.ts"
+      url={new URL("https://deno.land/x/oak@v10.6.0/mod.ts")}
       docNodes={docNodes}
     />,
   );

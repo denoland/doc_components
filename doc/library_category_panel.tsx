@@ -20,7 +20,7 @@ export interface SymbolItem {
 function Symbol(
   { children, base, active, currentSymbol, uncategorized }: {
     children: Child<SymbolItem>;
-    base: string;
+    base: URL;
     active: boolean;
     currentSymbol?: string;
     uncategorized?: boolean;
@@ -58,7 +58,7 @@ function Category(
   { children, base, name, currentSymbol }: {
     children: Child<SymbolItem[]>;
     name: string;
-    base: string;
+    base: URL;
     currentSymbol?: string;
   },
 ) {
@@ -98,7 +98,7 @@ function Category(
 export function LibraryCategoryPanel(
   { children, base, currentSymbol }: {
     children: Child<SymbolItem[]>;
-    base: string;
+    base: URL;
     currentSymbol?: string;
   },
 ) {

@@ -48,7 +48,7 @@ export function SymbolDoc(
   const title = markdownContext.namespace
     ? `${markdownContext.namespace}.${docNodes[0].name}`
     : docNodes[0].name;
-  const showUsage = !(markdownContext.url.endsWith(".d.ts") || library);
+  const showUsage = !(markdownContext.url.href.endsWith(".d.ts") || library);
 
   return (
     <article class={style("symbolDoc")}>
@@ -140,7 +140,7 @@ function Symbol(
       <div class={tw`space-y-3`}>
         {showUsage && (
           <Usage
-            url={markdownContext.url}
+            url={markdownContext.url.href}
             name={title}
             isType={isTypeOnly(docNodes)}
           />

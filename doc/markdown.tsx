@@ -47,7 +47,7 @@ function isLink(link: string): boolean {
 
 function parseLinks(
   markdown: string,
-  url: string,
+  url: URL,
   namespace?: string,
 ): string {
   let match;
@@ -96,7 +96,7 @@ function parseLinks(
 
 export function mdToHtml(
   markdown: string,
-  url: string,
+  url: URL,
   namespace?: string,
 ): string {
   return syntaxHighlight(
@@ -108,7 +108,7 @@ export function mdToHtml(
 }
 
 export interface MarkdownContext {
-  url: string;
+  url: URL;
   namespace?: string;
   markdownStyle?: StyleKey;
   replace?: [string, string];
