@@ -76,22 +76,24 @@ function DocFunctionOverload({
       htmlFor={overloadId}
       class={tw`block p-4 rounded-lg border border-[#DDDDDD] hover:bg-ultralight cursor-pointer`}
     >
-      <div class={tw`font-mono`}>
-        <span class={tw`font-bold`}>{def.name}</span>
-        <span class={tw`font-medium`}>
-          <DocFunctionSummary markdownContext={markdownContext}>
-            {def.functionDef}
-          </DocFunctionSummary>
-        </span>
-      </div>
-
-      {!(def.functionDef.hasBody && i === 0) && (
-        <div class={tw`w-full`}>
-          <MarkdownSummary markdownContext={markdownContext}>
-            {summary}
-          </MarkdownSummary>
+      <div>
+        <div class={tw`font-mono`}>
+          <span class={tw`font-bold`}>{def.name}</span>
+          <span class={tw`font-medium`}>
+            <DocFunctionSummary markdownContext={markdownContext}>
+              {def.functionDef}
+            </DocFunctionSummary>
+          </span>
         </div>
-      )}
+
+        {!(def.functionDef.hasBody && i === 0) && (
+          <div class={tw`w-full`}>
+            <MarkdownSummary markdownContext={markdownContext}>
+              {summary}
+            </MarkdownSummary>
+          </div>
+        )}
+      </div>
     </label>
   );
 }
@@ -237,6 +239,8 @@ export function DocBlockFunction(
                   apply`hidden`,
                 [`&:checked ~ div:first-of-type > label[for='${overloadId}']`]:
                   apply`bg-[#056CF00C] border-[#056CF0] border-2 cursor-default`,
+                [`&:checked ~ div:first-of-type > label[for='${overloadId}'] > div`]:
+                  apply`-m-px`,
               })
             }`}
             checked={i === 0}
