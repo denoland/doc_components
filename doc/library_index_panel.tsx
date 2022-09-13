@@ -19,16 +19,12 @@ export function categorize(
   const uncategorized: SymbolItem[] = [];
 
   for (const item of items) {
-    const category = (item.jsDoc?.tags?.find(({ kind }) =>
-      kind === "category"
-    ) as (JsDocTagDoc | undefined))?.doc?.trim();
-
-    if (category) {
-      if (!(category in categories)) {
-        categories[category] = [];
+    if (item.category) {
+      if (!(item.category in categories)) {
+        categories[item.category] = [];
       }
 
-      categories[category].push(item);
+      categories[item.category].push(item);
     } else {
       uncategorized.push(item);
     }
