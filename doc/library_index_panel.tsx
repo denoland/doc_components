@@ -19,12 +19,13 @@ export function categorize(
   const uncategorized: SymbolItem[] = [];
 
   for (const item of items) {
-    if (item.category) {
-      if (!(item.category in categories)) {
-        categories[item.category] = [];
+    const category = item.category?.trim();
+    if (category) {
+      if (!(category in categories)) {
+        categories[category] = [];
       }
 
-      categories[item.category].push(item);
+      categories[category].push(item);
     } else {
       uncategorized.push(item);
     }
