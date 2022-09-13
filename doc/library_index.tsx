@@ -9,7 +9,7 @@ import * as Icons from "../icons.tsx";
 import { type MarkdownContext, MarkdownSummary } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
-import { type Child, isDeprecated, maybe, take } from "./utils.ts";
+import { type Child, isDeprecated, take } from "./utils.ts";
 import { docNodeKindMap } from "./symbol_kind.tsx";
 import { categorize } from "./library_index_panel.tsx";
 import { type SymbolItem } from "./module_index_panel.tsx";
@@ -27,6 +27,9 @@ function Entry(
       ? `${markdownContext.namespace}.${item.name}`
       : item.name,
   );
+  const isUnstable = item.jsDoc?.tags?.some((tag) =>
+    tag.kind === "tags" && tag.tags.includes("unstable")
+  );
 
   return (
     <tr class={style("symbolListRow")}>
@@ -34,10 +37,11 @@ function Entry(
         <div>
           {docNodeKindMap[item.kind]()}
           <a href={href}>{item.name}</a>
-          {maybe(
-            isDeprecated({ jsDoc: item.jsDoc ?? undefined }),
-            tagVariants.deprecated(),
-          )}
+          <span class={tw`space-x-1`}>
+            {isDeprecated({ jsDoc: item.jsDoc ?? undefined }) &&
+              tagVariants.deprecated()}
+            {isUnstable && tagVariants.unstable()}
+          </span>
         </div>
       </td>
       <td class={style("symbolListCellDoc")}>

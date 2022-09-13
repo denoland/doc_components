@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { DocNodeKind, JsDoc, JsDocTagDoc, tw } from "../deps.ts";
+import { tw } from "../deps.ts";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
