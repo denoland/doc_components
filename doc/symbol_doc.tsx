@@ -112,6 +112,11 @@ function Symbol(
     tags.push(tagVariants.deprecatedLg());
   }
 
+  const lastSymbolIndex = name.lastIndexOf(".");
+  markdownContext.namespace = lastSymbolIndex !== -1
+    ? name.slice(0, lastSymbolIndex)
+    : undefined;
+
   return (
     <div class={tw`space-y-7`}>
       <div class={style("symbolDocHeader")}>
