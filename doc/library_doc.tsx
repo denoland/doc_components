@@ -11,8 +11,9 @@ import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, isDeprecated, take } from "./utils.ts";
 import { docNodeKindMap } from "./symbol_kind.tsx";
-import { categorize } from "./library_index_panel.tsx";
+import { categorize } from "./library_doc_panel.tsx";
 import { type SymbolItem } from "./module_index_panel.tsx";
+import { JsDoc } from "./jsdoc.tsx";
 
 function Entry(
   { children, markdownContext }: {
@@ -73,9 +74,10 @@ function Section(
   );
 }
 
-export function LibraryIndex(
-  { children, sourceUrl, ...markdownContext }: {
+export function LibraryDoc(
+  { children, sourceUrl, jsDoc, ...markdownContext }: {
     children: Child<SymbolItem[]>;
+    jsDoc?: string;
     sourceUrl: string;
   } & Pick<MarkdownContext, "url" | "replace">,
 ) {
@@ -96,6 +98,10 @@ export function LibraryIndex(
       </div>
       <article class={style("main")}>
         <div class={style("moduleDoc")}>
+          {jsDoc && (
+            <JsDoc markdownContext={markdownContext}>{{ doc: jsDoc }}</JsDoc>
+          )}
+
           {Object.entries(categories).sort(([a], [b]) => a.localeCompare(b))
             .map(([category, items]) => (
               <Section title={category} markdownContext={markdownContext}>

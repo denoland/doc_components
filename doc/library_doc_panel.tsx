@@ -112,7 +112,7 @@ function Category(
   );
 }
 
-export function LibraryIndexPanel(
+export function LibraryDocPanel(
   { children, base, currentSymbol }: {
     children: Child<SymbolItem[]>;
     base: URL;
