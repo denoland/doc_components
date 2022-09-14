@@ -15,8 +15,8 @@ export function DocBlockNamespace(
     markdownContext: MarkdownContext;
   },
 ) {
-  const { namespaceDef: { elements } } = take(children);
-  const collection = asCollection(elements);
+  const def = take(children);
+  const collection = asCollection(def.namespaceDef.elements);
   return (
     <div class={style("docBlockItems")}>
       <DocTypeSections markdownContext={markdownContext}>
