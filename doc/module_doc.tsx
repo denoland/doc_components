@@ -32,7 +32,10 @@ function Entry<Node extends DocNode>(
   },
 ) {
   const [label, node] = take(children, true);
-  const href = services.resolveHref(markdownContext.url, label);
+  const href = services.resolveHref(
+    markdownContext.url,
+    markdownContext.namespace ? `${markdownContext.namespace}.${label}` : label,
+  );
 
   return (
     <tr class={style("symbolListRow")}>
