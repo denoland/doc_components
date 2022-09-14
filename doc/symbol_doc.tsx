@@ -30,10 +30,11 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, library = false, ...markdownContext }: {
+  { children, name, library = false, ...markdownContext }: {
     children: Child<DocNode[]>;
+    name: string;
     library?: boolean;
-  } & MarkdownContext,
+  } & Pick<MarkdownContext, "url" | "replace">,
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
@@ -45,9 +46,6 @@ export function SymbolDoc(
     splitNodes[docNode.kind].push(docNode);
   }
 
-  const title = markdownContext.namespace
-    ? `${markdownContext.namespace}.${docNodes[0].name}`
-    : docNodes[0].name;
   const showUsage = !(markdownContext.url.href.endsWith(".d.ts") || library);
 
   return (
@@ -55,7 +53,7 @@ export function SymbolDoc(
       {Object.values(splitNodes).map((nodes) => (
         <Symbol
           showUsage={showUsage}
-          title={title}
+          name={name}
           markdownContext={markdownContext}
         >
           {nodes}
@@ -66,10 +64,10 @@ export function SymbolDoc(
 }
 
 function Symbol(
-  { children, showUsage, title, markdownContext }: {
+  { children, showUsage, name, markdownContext }: {
     children: Child<DocNode[]>;
     showUsage: boolean;
-    title: string;
+    name: string;
     markdownContext: MarkdownContext;
   },
 ) {
@@ -118,7 +116,9 @@ function Symbol(
     <div class={tw`space-y-7`}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
-          <DocTitle markdownContext={markdownContext}>{docNodes[0]}</DocTitle>
+          <DocTitle name={name} markdownContext={markdownContext}>
+            {docNodes[0]}
+          </DocTitle>
 
           {tags.length !== 0 && (
             <div class={tw`space-x-2`}>
@@ -141,7 +141,7 @@ function Symbol(
         {showUsage && (
           <Usage
             url={markdownContext.url.href}
-            name={title}
+            name={name}
             isType={isTypeOnly(docNodes)}
           />
         )}
@@ -149,7 +149,9 @@ function Symbol(
         </JsDoc>}
       </div>
 
-      <DocBlock markdownContext={markdownContext}>{docNodes}</DocBlock>
+      <DocBlock name={name} markdownContext={markdownContext}>
+        {docNodes}
+      </DocBlock>
     </div>
   );
 }
