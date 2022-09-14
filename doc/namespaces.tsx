@@ -20,7 +20,7 @@ export function DocBlockNamespace(
     ? `${markdownContext.namespace}.${name}`
     : name;
   const collection = asCollection(elements);
-  const context = { namespace, ...markdownContext };
+  const context = { ...markdownContext, namespace };
   return (
     <div class={style("docBlockItems")}>
       <DocTypeSections markdownContext={context}>
