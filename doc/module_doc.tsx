@@ -165,7 +165,7 @@ export function ModuleDoc(
   { children, sourceUrl, ...markdownContext }: {
     children: Child<DocNode[]>;
     sourceUrl: string;
-  } & MarkdownContext,
+  } & Pick<MarkdownContext, "url" | "replace">,
 ) {
   const collection = asCollection(take(children, true));
   return (

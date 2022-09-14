@@ -14,8 +14,9 @@ import { type Child, take } from "./utils.ts";
 import { DocBlockVariable } from "./variables.tsx";
 
 export function DocBlock(
-  { children, markdownContext }: {
+  { children, name, markdownContext }: {
     children: Child<DocNode[]>;
+    name: string;
     markdownContext: MarkdownContext;
   },
 ) {
@@ -46,7 +47,9 @@ export function DocBlock(
         break;
       case "namespace":
         elements.push(
-          <DocBlockNamespace markdownContext={markdownContext}>
+          <DocBlockNamespace
+            markdownContext={{ ...markdownContext, namespace: name }}
+          >
             {docNode}
           </DocBlockNamespace>,
         );
