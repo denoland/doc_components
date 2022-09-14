@@ -32,10 +32,7 @@ function Entry<Node extends DocNode>(
   },
 ) {
   const [label, node] = take(children, true);
-  const href = services.resolveHref(
-    markdownContext.url,
-    markdownContext.namespace ? `${markdownContext.namespace}.${label}` : label,
-  );
+  const href = services.resolveHref(markdownContext.url, label);
 
   return (
     <tr class={style("symbolListRow")}>
@@ -165,7 +162,7 @@ export function ModuleDoc(
   { children, sourceUrl, ...markdownContext }: {
     children: Child<DocNode[]>;
     sourceUrl: string;
-  } & MarkdownContext,
+  } & Pick<MarkdownContext, "url" | "replace">,
 ) {
   const collection = asCollection(take(children, true));
   return (

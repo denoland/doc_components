@@ -21,12 +21,7 @@ function Entry(
   },
 ) {
   const item = take(children);
-  const href = services.resolveHref(
-    markdownContext.url,
-    markdownContext.namespace
-      ? `${markdownContext.namespace}.${item.name}`
-      : item.name,
-  );
+  const href = services.resolveHref(markdownContext.url, item.name);
   const isUnstable = item.jsDoc?.tags?.some((tag) =>
     tag.kind === "tags" && tag.tags.includes("unstable")
   );
@@ -82,7 +77,7 @@ export function LibraryIndex(
   { children, sourceUrl, ...markdownContext }: {
     children: Child<SymbolItem[]>;
     sourceUrl: string;
-  } & MarkdownContext,
+  } & Pick<MarkdownContext, "url" | "replace">,
 ) {
   const items = take(children, true);
 
