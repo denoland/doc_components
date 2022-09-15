@@ -192,7 +192,7 @@ export function ModuleDoc(
           <DocTypeSections markdownContext={markdownContext}>
             {collection}
           </DocTypeSections>
-        </div>,
+        </div>
       </article>
     </div>
   );
