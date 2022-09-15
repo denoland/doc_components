@@ -32,17 +32,17 @@ function Entry<Node extends DocNode>(
   },
 ) {
   const [label, node] = take(children, true);
-  const href = services.resolveHref(
-    markdownContext.url,
-    markdownContext.namespace ? `${markdownContext.namespace}.${label}` : label,
-  );
+  const name = markdownContext.namespace
+    ? `${markdownContext.namespace}.${label}`
+    : label;
+  const href = services.resolveHref(markdownContext.url, name);
 
   return (
     <tr class={style("symbolListRow")}>
       <td class={style("symbolListCellSymbol")}>
         <div>
           {icon}
-          <a href={href}>{label}</a>
+          <a href={href}>{name}</a>
           {maybe(isAbstract(node), tagVariants.abstract())}
           {maybe(isDeprecated(node), tagVariants.deprecated())}
         </div>
