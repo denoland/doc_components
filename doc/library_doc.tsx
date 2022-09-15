@@ -79,7 +79,7 @@ export function LibraryDoc(
     children: Child<SymbolItem[]>;
     jsDoc?: string;
     sourceUrl: string;
-  } & Pick<MarkdownContext, "url" | "replace">,
+  } & Pick<MarkdownContext, "url" | "replacers">,
 ) {
   const items = take(children, true);
 

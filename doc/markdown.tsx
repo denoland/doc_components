@@ -111,7 +111,7 @@ export interface MarkdownContext {
   url: URL;
   namespace?: string;
   markdownStyle?: StyleKey;
-  replace?: [string, string];
+  replacers?: [string, string][];
 }
 
 export function Markdown(
@@ -121,27 +121,28 @@ export function Markdown(
     markdownContext: MarkdownContext;
   },
 ) {
-  const md = take(children);
-  return md
-    ? (
-      <div
-        class={style(markdownContext.markdownStyle ?? "markdown")}
-        id={id}
-        dangerouslySetInnerHTML={{
-          __html: services.markdownToHTML(
-            markdownContext.replace
-              ? md.replaceAll(
-                markdownContext.replace[0],
-                markdownContext.replace[1],
-              )
-              : md,
-            markdownContext.url,
-            markdownContext.namespace,
-          ),
-        }}
-      />
-    )
-    : null;
+  let md = take(children);
+  if (!md) {
+    return null;
+  }
+  if (markdownContext.replacers) {
+    for (const [pattern, replacement] of markdownContext.replacers) {
+      md = md.replaceAll(pattern, replacement);
+    }
+  }
+  return (
+    <div
+      class={style(markdownContext.markdownStyle ?? "markdown")}
+      id={id}
+      dangerouslySetInnerHTML={{
+        __html: services.markdownToHTML(
+          md,
+          markdownContext.url,
+          markdownContext.namespace,
+        ),
+      }}
+    />
+  );
 }
 
 export function getSummary(doc: string | undefined): string | undefined {
@@ -157,24 +158,25 @@ export function MarkdownSummary(
     markdownContext: MarkdownContext;
   },
 ) {
-  const md = take(children);
-  return md
-    ? (
-      <span
-        class={style(markdownContext.markdownStyle ?? "markdownSummary")}
-        dangerouslySetInnerHTML={{
-          __html: services.markdownToHTML(
-            markdownContext.replace
-              ? md.replaceAll(
-                markdownContext.replace[0],
-                markdownContext.replace[1],
-              )
-              : md,
-            markdownContext.url,
-            markdownContext.namespace,
-          ),
-        }}
-      />
-    )
-    : null;
+  let md = take(children);
+  if (!md) {
+    return null;
+  }
+  if (markdownContext.replacers) {
+    for (const [pattern, replacement] of markdownContext.replacers) {
+      md = md.replaceAll(pattern, replacement);
+    }
+  }
+  return (
+    <span
+      class={style(markdownContext.markdownStyle ?? "markdownSummary")}
+      dangerouslySetInnerHTML={{
+        __html: services.markdownToHTML(
+          md,
+          markdownContext.url,
+          markdownContext.namespace,
+        ),
+      }}
+    />
+  );
 }

@@ -34,7 +34,7 @@ export function SymbolDoc(
     children: Child<DocNode[]>;
     name: string;
     library?: boolean;
-  } & Pick<MarkdownContext, "url" | "replace">,
+  } & Pick<MarkdownContext, "url" | "replacers">,
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);

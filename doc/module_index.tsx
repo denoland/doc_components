@@ -83,7 +83,7 @@ export function ModuleIndex(
     skipMods?: boolean;
     path?: string;
     sourceUrl: string;
-  } & Pick<MarkdownContext, "url" | "replace">,
+  } & Pick<MarkdownContext, "url" | "replacers">,
 ) {
   const items = take(children, true);
   items.sort((a, b) =>
