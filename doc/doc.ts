@@ -35,7 +35,8 @@ export function byKindValue(a: DocNodeKind, b: DocNodeKind): number {
 /** If a doc node has JSDoc, return the first paragraph of the JSDoc doc. */
 export function getDocSummary(jsDoc?: JsDoc): string | undefined {
   if (jsDoc?.doc) {
-    const [summary] = jsDoc.doc.split("\n\n");
+    let [summary] = jsDoc.doc.split("\n\n");
+    [summary] = summary.split("```");
     return summary;
   }
 }
