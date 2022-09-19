@@ -53,11 +53,7 @@ export interface Configuration {
    * be resolved, `undefined` should be returned. */
   resolveSourceHref?: (url: string, line?: number) => string;
   /** Called when markdown needs to be rendered. */
-  markdownToHTML?: (
-    markdown: string,
-    url: URL,
-    namespace?: string,
-  ) => string;
+  markdownToHTML?: (markdown: string) => string;
   /** The JSX runtime that should be used. */
   runtime?: JsxRuntime;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
@@ -218,11 +214,7 @@ export const services = {
   },
 
   /** Render Markdown to HTML */
-  get markdownToHTML(): (
-    markdown: string,
-    url: URL,
-    namespace?: string,
-  ) => string {
+  get markdownToHTML(): (markdown: string) => string {
     return runtimeConfig.markdownToHTML;
   },
 };

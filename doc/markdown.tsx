@@ -45,11 +45,7 @@ function isLink(link: string): boolean {
   return /^\.{0,2}\//.test(link) || /^[A-Za-z]+:\S/.test(link);
 }
 
-function parseLinks(
-  markdown: string,
-  url: URL,
-  namespace?: string,
-): string {
+function parseLinks(markdown: string, url: URL, namespace?: string): string {
   let match;
   while ((match = JSDOC_LINK_RE.exec(markdown))) {
     const [text, modifier, value] = match;
@@ -94,17 +90,8 @@ function parseLinks(
   return markdown;
 }
 
-export function mdToHtml(
-  markdown: string,
-  url: URL,
-  namespace?: string,
-): string {
-  return syntaxHighlight(
-    comrak.markdownToHTML(
-      parseLinks(markdown, url, namespace),
-      MARKDOWN_OPTIONS,
-    ),
-  );
+export function mdToHtml(markdown: string): string {
+  return syntaxHighlight(comrak.markdownToHTML(markdown, MARKDOWN_OPTIONS));
 }
 
 export interface MarkdownContext {
@@ -141,9 +128,7 @@ export function Markdown(
       class={style(mdStyle)}
       dangerouslySetInnerHTML={{
         __html: services.markdownToHTML(
-          md,
-          markdownContext.url,
-          markdownContext.namespace,
+          parseLinks(md, markdownContext.url, markdownContext.namespace),
         ),
       }}
     />
