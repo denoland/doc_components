@@ -3,11 +3,10 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { type DocNode, tw } from "../deps.ts";
-import { getDocSummary } from "./doc.ts";
 import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
 import { JsDocModule } from "./jsdoc.tsx";
-import { type MarkdownContext, MarkdownSummary } from "./markdown.tsx";
+import { Markdown, type MarkdownContext } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
@@ -48,9 +47,9 @@ function Entry<Node extends DocNode>(
         </div>
       </td>
       <td class={style("symbolListCellDoc")}>
-        <MarkdownSummary markdownContext={markdownContext}>
-          {getDocSummary(node.jsDoc)}
-        </MarkdownSummary>
+        <Markdown summary markdownContext={markdownContext}>
+          {node.jsDoc?.doc}
+        </Markdown>
       </td>
     </tr>
   );

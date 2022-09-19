@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { getSummary, MarkdownContext, MarkdownSummary } from "./markdown.tsx";
+import { Markdown, type MarkdownContext } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
@@ -26,7 +26,6 @@ function Folder({ children, parent, markdownContext }: {
   const url = new URL(markdownContext.url);
   url.pathname += item.path;
   const href = services.resolveHref(url);
-  const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
   return (
     <tr class={style("moduleIndexRow")}>
@@ -35,9 +34,9 @@ function Folder({ children, parent, markdownContext }: {
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary markdownContext={{ ...markdownContext, url }}>
-          {summary}
-        </MarkdownSummary>
+        <Markdown summary markdownContext={{ ...markdownContext, url }}>
+          {item.doc}
+        </Markdown>
       </td>
     </tr>
   );
@@ -52,7 +51,6 @@ function Module({ children, parent, markdownContext }: {
   const url = new URL(markdownContext.url);
   url.pathname += item.path;
   const href = services.resolveHref(url);
-  const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
   return (
     <tr class={style("moduleIndexRow")}>
@@ -61,9 +59,9 @@ function Module({ children, parent, markdownContext }: {
         <a href={href} class={style("link")}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary markdownContext={{ ...markdownContext, url }}>
-          {summary}
-        </MarkdownSummary>
+        <Markdown summary markdownContext={{ ...markdownContext, url }}>
+          {item.doc}
+        </Markdown>
       </td>
     </tr>
   );

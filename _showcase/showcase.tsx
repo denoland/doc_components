@@ -18,7 +18,7 @@ import {
 import { DocBlockEnum } from "../doc/enums.tsx";
 import { DocBlockFunction } from "../doc/functions.tsx";
 import { DocBlockInterface } from "../doc/interfaces.tsx";
-import { MarkdownSummary } from "../doc/markdown.tsx";
+import { Markdown } from "../doc/markdown.tsx";
 import { ModuleDoc } from "../doc/module_doc.tsx";
 import { ModuleIndex } from "../doc/module_index.tsx";
 import { ModuleIndexPanel } from "../doc/module_index_panel.tsx";
@@ -71,10 +71,10 @@ export function Showcase(
       <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
       <h2 class={tw`text-2xl py-2`}>Component Showcase</h2>
       <hr />
-      <ComponentTitle module="/markdown.tsx">MarkdownSummary</ComponentTitle>
-      <MarkdownSummary markdownContext={{ url }}>
+      <ComponentTitle module="/markdown.tsx">Markdown Summary</ComponentTitle>
+      <Markdown summary markdownContext={{ url }}>
         {`Some _markdown_ with [links](https://deno.land/) and symbol links, like: {@linkcode Router}`}
-      </MarkdownSummary>
+      </Markdown>
 
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
       <ModuleIndex

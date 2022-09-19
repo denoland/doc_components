@@ -13,11 +13,7 @@ import {
 } from "../deps.ts";
 import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
-import {
-  getSummary,
-  type MarkdownContext,
-  MarkdownSummary,
-} from "./markdown.tsx";
+import { Markdown, type MarkdownContext } from "./markdown.tsx";
 import { paramName, Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
@@ -69,7 +65,6 @@ function DocFunctionOverload({
   }
 
   const overloadId = nameToId("function", `${def.name}_${i}`);
-  const summary = getSummary(def.jsDoc?.doc);
 
   return (
     <label
@@ -88,9 +83,9 @@ function DocFunctionOverload({
 
         {!(def.functionDef.hasBody && i === 0) && (
           <div class={tw`w-full`}>
-            <MarkdownSummary markdownContext={markdownContext}>
-              {summary}
-            </MarkdownSummary>
+            <Markdown summary markdownContext={markdownContext}>
+              {def.jsDoc?.doc}
+            </Markdown>
           </div>
         )}
       </div>

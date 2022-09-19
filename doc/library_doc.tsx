@@ -3,10 +3,10 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { tw } from "../deps.ts";
-import { byKindValue, getDocSummary } from "./doc.ts";
+import { byKindValue } from "./doc.ts";
 import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
-import { type MarkdownContext, MarkdownSummary } from "./markdown.tsx";
+import { Markdown, type MarkdownContext } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, isDeprecated, take } from "./utils.ts";
@@ -41,9 +41,9 @@ function Entry(
         </div>
       </td>
       <td class={style("symbolListCellDoc")}>
-        <MarkdownSummary markdownContext={markdownContext}>
-          {getDocSummary(item.jsDoc ?? undefined)}
-        </MarkdownSummary>
+        <Markdown summary markdownContext={markdownContext}>
+          {item.jsDoc?.doc}
+        </Markdown>
       </td>
     </tr>
   );

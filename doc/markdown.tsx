@@ -110,14 +110,13 @@ export function mdToHtml(
 export interface MarkdownContext {
   url: URL;
   namespace?: string;
-  markdownStyle?: StyleKey;
   replacers?: [string, string][];
 }
 
 export function Markdown(
-  { children, id, markdownContext }: {
+  { children, summary, markdownContext }: {
     children: Child<string | undefined>;
-    id?: string;
+    summary?: boolean;
     markdownContext: MarkdownContext;
   },
 ) {
@@ -130,46 +129,16 @@ export function Markdown(
       md = md.replaceAll(pattern, replacement);
     }
   }
+  let mdStyle: StyleKey = "markdown";
+  if (summary) {
+    mdStyle = "markdownSummary";
+    [md] = md.split("\n\n");
+    [md] = md.split("```");
+  }
+
   return (
     <div
-      class={style(markdownContext.markdownStyle ?? "markdown")}
-      id={id}
-      dangerouslySetInnerHTML={{
-        __html: services.markdownToHTML(
-          md,
-          markdownContext.url,
-          markdownContext.namespace,
-        ),
-      }}
-    />
-  );
-}
-
-export function getSummary(doc: string | undefined): string | undefined {
-  if (doc) {
-    const [summary] = doc.split("\n\n");
-    return summary;
-  }
-}
-
-export function MarkdownSummary(
-  { children, markdownContext }: {
-    children: Child<string | undefined>;
-    markdownContext: MarkdownContext;
-  },
-) {
-  let md = take(children);
-  if (!md) {
-    return null;
-  }
-  if (markdownContext.replacers) {
-    for (const [pattern, replacement] of markdownContext.replacers) {
-      md = md.replaceAll(pattern, replacement);
-    }
-  }
-  return (
-    <span
-      class={style(markdownContext.markdownStyle ?? "markdownSummary")}
+      class={style(mdStyle)}
       dangerouslySetInnerHTML={{
         __html: services.markdownToHTML(
           md,
