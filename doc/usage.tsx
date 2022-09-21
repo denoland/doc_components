@@ -71,7 +71,7 @@ export function Usage(
   return (
     <div class={style("markdown")}>
       <pre class={tw`flex items-center justify-between gap-2.5`}>
-        <code class={tw`overflow-scroll`}>
+        <code class={tw`overflow-auto`}>
           <span class="code-keyword">import</span>
           {name
             ? (
