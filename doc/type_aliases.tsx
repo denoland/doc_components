@@ -31,7 +31,7 @@ export function DocBlockTypeAlias(
         id={id}
         location={def.location}
         tags={tags}
-        name={"defintion"}
+        name={"definition"}
         markdownContext={markdownContext}
       >
         :{" "}
