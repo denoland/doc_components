@@ -101,7 +101,7 @@ export function Showcase(
       </ModuleDoc>
 
       <ComponentTitle module="/doc/symbol_doc.ts">SymbolDoc</ComponentTitle>
-      <SymbolDoc url={url}>{symbolDoc.docNodes}</SymbolDoc>
+      <SymbolDoc url={url} name={symbol}>{symbolDoc.docNodes}</SymbolDoc>
 
       <ComponentTitle module="/doc/doc_common.tsx">Tag</ComponentTitle>
       {Object.values(tagVariants).map((tag) => tag())}

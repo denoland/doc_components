@@ -235,7 +235,7 @@ export function take<T>(
         ? value[0]
         : value as T;
     } else {
-      return Array.isArray(value) && Array.isArray(value[0])
+      return Array.isArray(value)
         ? value[0]
         : value as T;
     }
