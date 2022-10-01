@@ -29,8 +29,13 @@ export function parseUsage(
   url: string,
   item?: string,
   isType?: boolean,
+  clearSearch = true,
 ): ParsedUsage {
   const parsed = parseURL(url);
+  const target = new URL(url);
+  if (clearSearch) {
+    target.search = "";
+  }
   const itemParts = item?.split(".");
   // when the imported symbol is a namespace import, we try to guess at an
   // intelligent camelized name for the import based on the package name.  If
@@ -49,8 +54,10 @@ export function parseUsage(
   // we create an import statement which is used to populate the copy paste
   // snippet of code.
   let importStatement = item
-    ? `import { ${isType ? "type " : ""}${importSymbol} } from "${url}";\n`
-    : `import * as ${importSymbol} from "${url}";\n`;
+    ? `import { ${
+      isType ? "type " : ""
+    }${importSymbol} } from "${target.toString()}";\n`
+    : `import * as ${importSymbol} from "${target.toString()}";\n`;
   // if we are using a symbol off a imported namespace, we need to destructure
   // it to a local variable.
   if (usageSymbol) {
