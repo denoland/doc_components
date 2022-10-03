@@ -145,7 +145,7 @@ function Symbol(
       <div class={tw`space-y-3`}>
         {showUsage && (
           <Usage
-            url={markdownContext.url.href}
+            url={markdownContext.url}
             name={name}
             isType={isTypeOnly(docNodes)}
           />

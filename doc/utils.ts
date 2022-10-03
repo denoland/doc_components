@@ -198,7 +198,7 @@ const patterns = {
 
 /** Take a string URL and attempt to pattern match it against a known registry
  * and returned the parsed structure. */
-export function parseURL(url: string): ParsedURL | undefined {
+export function parseURL(url: URL): ParsedURL | undefined {
   for (const [registry, pattern] of Object.entries(patterns)) {
     for (const pat of pattern) {
       const match = pat.exec(url);

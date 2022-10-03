@@ -11,6 +11,7 @@ import {
   twColors,
 } from "./deps.ts";
 import { mdToHtml } from "./doc/markdown.tsx";
+import { comrakStyles } from "./styles.ts";
 
 interface JsxRuntime {
   Fragment: (props: Record<string, unknown>) => unknown;
@@ -58,6 +59,10 @@ export interface Configuration {
   runtime?: JsxRuntime;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
   tw?: TwConfiguration;
+  /** Class to give to markdown blocks */
+  markdownStyle?: string;
+  /** Class to give to markdown summary blocks */
+  markdownSummaryStyle?: string;
 }
 
 export const theme: ThemeConfiguration = {
@@ -140,6 +145,8 @@ const runtimeConfig: Required<
     | "lookupHref"
     | "resolveSourceHref"
     | "markdownToHTML"
+    | "markdownStyle"
+    | "markdownSummaryStyle"
     | "runtime"
   >
 > = {
@@ -167,6 +174,8 @@ const runtimeConfig: Required<
       );
     },
   },
+  markdownStyle: comrakStyles,
+  markdownSummaryStyle: "",
 };
 
 /** Setup the services used by the doc components. */
@@ -216,5 +225,14 @@ export const services = {
   /** Render Markdown to HTML */
   get markdownToHTML(): (markdown: string) => string {
     return runtimeConfig.markdownToHTML;
+  },
+
+  /** Class to give to markdown blocks */
+  get markdownStyle(): string {
+    return runtimeConfig.markdownStyle;
+  },
+  /** Class to give to markdown summary blocks */
+  get markdownSummaryStyle(): string {
+    return runtimeConfig.markdownSummaryStyle;
   },
 };

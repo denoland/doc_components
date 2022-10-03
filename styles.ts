@@ -2,14 +2,14 @@
 
 import { apply, css, type Directive, tw } from "./deps.ts";
 
-const codeStyles = css({
+export const comrakStyles = tw`${css({
+  // code
   ":not(pre) > code":
     apply`font-mono text-sm py-1 px-1.5 rounded text-black bg-gray-100 dark:(text-white bg-gray-800)`,
   pre:
     apply`font-mono text-sm p-2.5 rounded-lg text-black bg-gray-100 dark:(text-white bg-gray-800) overflow-x-auto`,
-});
 
-const markdownStyles = css({
+  // general
   a: apply`underline`,
   h1: apply`text-xl md:text-2xl lg:text-3xl`,
   h2: apply`text-lg md:text-xl lg:text-2xl`,
@@ -24,9 +24,8 @@ const markdownStyles = css({
   td: apply`p-2 border border(solid gray(500 dark:400))`,
   th: apply`font-bold text-center`,
   ul: apply`lg:(list-disc list-inside)`,
-});
 
-const syntaxHighlightingStyles = css({
+  // syntax highlighting
   ".code-comment": apply`text-gray(500 dark:400)`,
   ".code-function": apply`text-green(700 dark:300)`,
   ".code-literal": apply`text-cyan(600 dark:400)`,
@@ -36,7 +35,7 @@ const syntaxHighlightingStyles = css({
   ".code-regexp": apply`text-red(700 dark:300)`,
   ".code-string": apply`text-yellow(500 dark:200)`,
   ".code-type, .code-built_in": apply`text-cyan(600 dark:400) italic`,
-});
+})}`;
 
 const styles = {
   anchor:
@@ -49,8 +48,7 @@ const styles = {
   indent: apply`ml-4`,
   link: apply`text([#056CF0] dark:blue-300) hover:(underline text-blue-500)`,
   main: apply`space-y-7 md:(col-span-3)`,
-  markdown:
-    apply`flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
+  markdown: apply`flex flex-col space-y-4 text-justify`,
   markdownSummary: apply`inline text-gray(600 dark:400) ${
     css({
       "p": apply`inline-block`,

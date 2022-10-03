@@ -117,15 +117,17 @@ export function Markdown(
     }
   }
   let mdStyle: StyleKey = "markdown";
+  let additionalStyle = services.markdownStyle;
   if (summary) {
     mdStyle = "markdownSummary";
+    additionalStyle = services.markdownSummaryStyle;
     [md] = md.split("\n\n");
     [md] = md.split("```");
   }
 
   return (
     <div
-      class={style(mdStyle)}
+      class={style(mdStyle) + " " + additionalStyle}
       dangerouslySetInnerHTML={{
         __html: services.markdownToHTML(
           parseLinks(md, markdownContext.url, markdownContext.namespace),

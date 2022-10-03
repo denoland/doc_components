@@ -181,7 +181,7 @@ export function ModuleDoc(
       <article class={style("main")}>
         <div class={style("moduleDoc")}>
           <div class={tw`space-y-3`}>
-            <Usage url={markdownContext.url.href} />
+            <Usage url={markdownContext.url} />
             {collection.moduleDoc && (
               <JsDocModule markdownContext={markdownContext}>
                 {collection.moduleDoc}
