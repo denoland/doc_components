@@ -290,11 +290,7 @@ export function TypeDef({ children, markdownContext }: {
         </TypeDefIntersection>
       );
     case "keyword": {
-      return (
-        <span class={tw`text-[#056CF0]`}>
-          {def.keyword}
-        </span>
-      );
+      return <span>{def.keyword}</span>;
     }
     case "literal": {
       const { literal: { kind }, repr } = def;
@@ -412,12 +408,8 @@ export function TypeDef({ children, markdownContext }: {
       return (
         <>
           {href
-            ? (
-              <a href={href} class={style("typeLink")}>
-                {typeName}
-              </a>
-            )
-            : <span class={tw`text-[#056CF0]`}>{typeName}</span>}
+            ? <a href={href} class={tw`link`}>{typeName}</a>
+            : <span>{typeName}</span>}
           <TypeArguments markdownContext={markdownContext}>
             {typeParams}
           </TypeArguments>
@@ -602,7 +594,7 @@ export function DocTypeParamsSummary(
       {typeParams.map((typeParam, i) => (
         <>
           <span>
-            <span class={tw`text-[#056CF0]`}>{typeParam.name}</span>
+            <span>{typeParam.name}</span>
             {typeParam.constraint && (
               <span>
                 <span>{" extends "}</span>

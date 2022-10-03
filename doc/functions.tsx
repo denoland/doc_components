@@ -233,7 +233,7 @@ export function DocBlockFunction(
                 [`&:checked ~ *:last-child > :not(#${overloadId}_div)`]:
                   apply`hidden`,
                 [`&:checked ~ div:first-of-type > label[for='${overloadId}']`]:
-                  apply`bg-[#056CF00C] border-[#056CF0] border-2 cursor-default`,
+                  apply`bg-[#056CF00C] border-[#056CF0] border-2 cursor-unset`,
                 [`&:checked ~ div:first-of-type > label[for='${overloadId}'] > div`]:
                   apply`-m-px`,
               })

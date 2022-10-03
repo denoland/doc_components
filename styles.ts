@@ -47,7 +47,6 @@ const styles = {
   docEntryChildren: apply`break-words flex items-center gap-2`,
   docItem: apply`group relative`,
   indent: apply`ml-4`,
-  link: apply`text([#056CF0] dark:blue-300) hover:(underline text-blue-500)`,
   main: apply`space-y-7 md:(col-span-3)`,
   markdown:
     apply`flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
@@ -96,7 +95,6 @@ const styles = {
   symbolListTable: apply`block lg:table`,
   tag:
     apply`inline-block rounded-full font-medium text-sm leading-none font-sans`,
-  typeLink: apply`underline`,
 } as const;
 
 export type StyleKey = keyof typeof styles;

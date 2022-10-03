@@ -31,7 +31,7 @@ function Folder({ children, parent, markdownContext }: {
     <tr class={style("moduleIndexRow")}>
       <td class={style("moduleIndexLinkCell")}>
         <Icons.Dir class={style("moduleIndexLinkCellIcon")} />
-        <a href={href} class={style("link")}>{label}</a>
+        <a href={href} class={tw`link`}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
         <Markdown summary markdownContext={{ ...markdownContext, url }}>
@@ -56,7 +56,7 @@ function Module({ children, parent, markdownContext }: {
     <tr class={style("moduleIndexRow")}>
       <td class={style("moduleIndexLinkCell")}>
         <Icons.Source class={style("moduleIndexLinkCellIcon")} />
-        <a href={href} class={style("link")}>{label}</a>
+        <a href={href} class={tw`link`}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
         <Markdown summary markdownContext={{ ...markdownContext, url }}>

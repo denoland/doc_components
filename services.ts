@@ -116,6 +116,8 @@ export const theme: ThemeConfiguration = {
 };
 
 export const plugins: Record<string, Plugin> = {
+  link:
+    apply`text-[#056CF0] transition duration-75 ease-in-out hover:text-blue-400`,
   "section-x-inset": (parts) =>
     parts[0] === "none"
       ? apply`max-w-none mx-0 px-0`
