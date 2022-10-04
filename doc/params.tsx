@@ -10,9 +10,10 @@ import { type Child, take } from "./utils.ts";
 import { MarkdownContext } from "./markdown.tsx";
 
 function Param(
-  { children, i, markdownContext }: {
+  { children, i, typeParams, markdownContext }: {
     children: Child<ParamDef>;
     i: number;
+    typeParams: string[];
     markdownContext: MarkdownContext;
   },
 ) {
@@ -27,7 +28,10 @@ function Param(
         "?"}
       {type && (
         <span>
-          : <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
+          :{" "}
+          <TypeDef typeParams={typeParams} markdownContext={markdownContext}>
+            {type}
+          </TypeDef>
         </span>
       )}
     </span>
@@ -35,8 +39,9 @@ function Param(
 }
 
 export function Params(
-  { children, markdownContext }: {
+  { children, typeParams, markdownContext }: {
     children: Child<ParamDef[]>;
+    typeParams: string[];
     markdownContext: MarkdownContext;
   },
 ) {
@@ -48,7 +53,9 @@ export function Params(
     const items = [];
     for (let i = 0; i < params.length; i++) {
       items.push(
-        <Param i={i} markdownContext={markdownContext}>{params[i]}</Param>,
+        <Param typeParams={typeParams} i={i} markdownContext={markdownContext}>
+          {params[i]}
+        </Param>,
       );
       if (i < params.length - 1) {
         items.push(<span>{", "}</span>);
@@ -60,7 +67,13 @@ export function Params(
       <div class={style("indent")}>
         {params.map((param, i) => (
           <div>
-            <Param i={i} markdownContext={markdownContext}>{param}</Param>,
+            <Param
+              typeParams={typeParams}
+              i={i}
+              markdownContext={markdownContext}
+            >
+              {param}
+            </Param>,
           </div>
         ))}
       </div>

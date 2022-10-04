@@ -21,14 +21,20 @@ export function DocTitle(
   switch (docNode.kind) {
     case "class":
       subTitle = (
-        <DocSubTitleClass markdownContext={markdownContext}>
+        <DocSubTitleClass
+          typeParams={docNode.classDef.typeParams.map(({ name }) => name)}
+          markdownContext={markdownContext}
+        >
           {docNode}
         </DocSubTitleClass>
       );
       break;
     case "interface":
       subTitle = (
-        <DocSubTitleInterface markdownContext={markdownContext}>
+        <DocSubTitleInterface
+          typeParams={docNode.interfaceDef.typeParams.map(({ name }) => name)}
+          markdownContext={markdownContext}
+        >
           {docNode}
         </DocSubTitleInterface>
       );

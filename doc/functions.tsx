@@ -22,27 +22,34 @@ import { type Child, isDeprecated, take } from "./utils.ts";
 
 export function DocFunctionSummary({
   children,
+  typeParams,
   markdownContext,
 }: {
   children: Child<FunctionDef>;
+  typeParams: string[];
   markdownContext: MarkdownContext;
 }) {
   const def = take(children, true);
 
   return (
     <>
-      <DocTypeParamsSummary markdownContext={markdownContext}>
+      <DocTypeParamsSummary
+        typeParams={typeParams}
+        markdownContext={markdownContext}
+      >
         {def.typeParams}
       </DocTypeParamsSummary>
       (
-      <Params markdownContext={markdownContext}>
+      <Params typeParams={typeParams} markdownContext={markdownContext}>
         {def.params}
       </Params>
       )
       {def.returnType && (
         <span>
           :{" "}
-          <TypeDef markdownContext={markdownContext}>{def.returnType}</TypeDef>
+          <TypeDef typeParams={typeParams} markdownContext={markdownContext}>
+            {def.returnType}
+          </TypeDef>
         </span>
       )}
     </>
@@ -64,6 +71,7 @@ function DocFunctionOverload({
     return <></>;
   }
 
+  const typeParams = def.functionDef.typeParams.map(({ name }) => name);
   const overloadId = nameToId("function", `${def.name}_${i}`);
 
   return (
@@ -75,7 +83,10 @@ function DocFunctionOverload({
         <div class={tw`font-mono`}>
           <span class={tw`font-bold`}>{def.name}</span>
           <span class={tw`font-medium`}>
-            <DocFunctionSummary markdownContext={markdownContext}>
+            <DocFunctionSummary
+              typeParams={typeParams}
+              markdownContext={markdownContext}
+            >
               {def.functionDef}
             </DocFunctionSummary>
           </span>
@@ -101,6 +112,7 @@ function DocFunction(
   },
 ) {
   const def = take(children);
+  const typeParams = def.functionDef.typeParams.map(({ name }) => name);
 
   const overloadId = nameToId("function", `${def.name}_${n}`);
   const tags = [];
@@ -138,7 +150,10 @@ function DocFunction(
       >
         {type && (
           <span>
-            : <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
+            :{" "}
+            <TypeDef typeParams={typeParams} markdownContext={markdownContext}>
+              {type}
+            </TypeDef>
             {
               /*defaultValue && (
               <>
@@ -169,7 +184,11 @@ function DocFunction(
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
       <JsDoc markdownContext={markdownContext}>{def.jsDoc}</JsDoc>
 
-      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+      <TypeParamsDoc
+        typeParams={typeParams}
+        base={def}
+        markdownContext={markdownContext}
+      >
         {def.functionDef.typeParams}
       </TypeParamsDoc>
 
@@ -184,7 +203,10 @@ function DocFunction(
               jsDoc={returnDoc}
               markdownContext={markdownContext}
             >
-              <TypeDef markdownContext={markdownContext}>
+              <TypeDef
+                typeParams={typeParams}
+                markdownContext={markdownContext}
+              >
                 {def.functionDef.returnType}
               </TypeDef>
             </DocEntry>,
@@ -244,7 +266,10 @@ export function DocBlockFunction(
       })}
       <div class={tw`space-y-2`}>
         {defs.map((def, i) => (
-          <DocFunctionOverload i={i} markdownContext={markdownContext}>
+          <DocFunctionOverload
+            i={i}
+            markdownContext={markdownContext}
+          >
             {def}
           </DocFunctionOverload>
         ))}

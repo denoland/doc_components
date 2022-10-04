@@ -17,13 +17,18 @@ export function DocBlockTypeAlias(
 ) {
   const def = take(children);
   const id = nameToId("typeAlias", def.name);
+  const typeParams = def.typeAliasDef.typeParams.map(({ name }) => name);
   const tags = [];
   if (isDeprecated(def)) {
     tags.push(tagVariants.deprecated());
   }
   return (
     <div class={style("docBlockItems")}>
-      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+      <TypeParamsDoc
+        typeParams={typeParams}
+        base={def}
+        markdownContext={markdownContext}
+      >
         {def.typeAliasDef.typeParams}
       </TypeParamsDoc>
 
@@ -35,7 +40,7 @@ export function DocBlockTypeAlias(
         markdownContext={markdownContext}
       >
         :{" "}
-        <TypeDef markdownContext={markdownContext}>
+        <TypeDef typeParams={typeParams} markdownContext={markdownContext}>
           {def.typeAliasDef.tsType}
         </TypeDef>
       </DocEntry>

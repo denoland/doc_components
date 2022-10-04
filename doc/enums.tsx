@@ -34,7 +34,9 @@ export function DocBlockEnum(
         {init && (
           <>
             {" = "}
-            <TypeDef markdownContext={markdownContext}>{init}</TypeDef>
+            <TypeDef typeParams={[]} markdownContext={markdownContext}>
+              {init}
+            </TypeDef>
           </>
         )}
       </DocEntry>
