@@ -18,7 +18,7 @@ import {
   tagVariants,
 } from "./doc_common.tsx";
 import { IndexSignaturesDoc } from "./interfaces.tsx";
-import { type MarkdownContext } from "./markdown.tsx";
+import { type Context } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
@@ -120,11 +120,10 @@ function isClassSetter(
 }
 
 function ClassAccessorDoc(
-  { get, set, typeParams, markdownContext }: {
+  { get, set, context }: {
     get?: ClassGetterDef;
     set?: ClassSetterDef;
-    typeParams: string[];
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const name = (get ?? set)?.name;
@@ -164,13 +163,13 @@ function ClassAccessorDoc(
       tags={tags}
       name={name}
       jsDoc={jsDoc}
-      markdownContext={markdownContext}
+      context={context}
     >
       {tsType && (
         <span>
           :{" "}
           <span class={tw`font-medium`}>
-            <TypeDef typeParams={typeParams} markdownContext={markdownContext}>
+            <TypeDef context={context}>
               {tsType}
             </TypeDef>
           </span>
@@ -181,10 +180,9 @@ function ClassAccessorDoc(
 }
 
 function ClassMethodDoc(
-  { children, typeParams, markdownContext }: {
+  { children, context }: {
     children: Child<ClassMethodDef[]>;
-    typeParams: string[];
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -225,12 +223,9 @@ function ClassMethodDoc(
         location={location}
         name={name}
         jsDoc={jsDoc}
-        markdownContext={markdownContext}
+        context={context}
       >
-        <DocFunctionSummary
-          typeParams={typeParams}
-          markdownContext={markdownContext}
-        >
+        <DocFunctionSummary context={context}>
           {functionDef}
         </DocFunctionSummary>
       </DocEntry>
@@ -241,10 +236,9 @@ function ClassMethodDoc(
 }
 
 function ClassPropertyDoc(
-  { children, typeParams, markdownContext }: {
+  { children, context }: {
     children: Child<ClassPropertyDef>;
-    typeParams: string[];
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const {
@@ -284,12 +278,12 @@ function ClassPropertyDoc(
       tags={tags}
       name={name}
       jsDoc={jsDoc}
-      markdownContext={markdownContext}
+      context={context}
     >
       {tsType && (
         <span>
           :{" "}
-          <TypeDef typeParams={typeParams} markdownContext={markdownContext}>
+          <TypeDef context={context}>
             {tsType}
           </TypeDef>
         </span>
@@ -299,10 +293,9 @@ function ClassPropertyDoc(
 }
 
 function ClassItemsDoc(
-  { children, typeParams, markdownContext }: {
+  { children, context }: {
     children: Child<ClassItemDef[]>;
-    typeParams: string[];
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -322,29 +315,16 @@ function ClassItemsDoc(
       if (next && isClassSetter(next) && def.name === next.name) {
         i++;
         (def.isStatic ? staticProperties : properties).push(
-          <ClassAccessorDoc
-            get={def}
-            set={next}
-            typeParams={typeParams}
-            markdownContext={markdownContext}
-          />,
+          <ClassAccessorDoc get={def} set={next} context={context} />,
         );
       } else {
         (def.isStatic ? staticProperties : properties).push(
-          <ClassAccessorDoc
-            get={def}
-            typeParams={typeParams}
-            markdownContext={markdownContext}
-          />,
+          <ClassAccessorDoc get={def} context={context} />,
         );
       }
     } else if (isClassSetter(def)) {
       (def.isStatic ? staticProperties : properties).push(
-        <ClassAccessorDoc
-          set={def}
-          typeParams={typeParams}
-          markdownContext={markdownContext}
-        />,
+        <ClassAccessorDoc set={def} context={context} />,
       );
     } else if (isClassMethod(def)) {
       const methodList = [def];
@@ -357,20 +337,14 @@ function ClassItemsDoc(
         methodList.push(next);
       }
       (def.isStatic ? staticMethods : methods).push(
-        <ClassMethodDoc
-          typeParams={typeParams}
-          markdownContext={markdownContext}
-        >
+        <ClassMethodDoc context={context}>
           {methodList}
         </ClassMethodDoc>,
       );
     } else {
       assert(isClassProperty(def));
       (def.isStatic ? staticProperties : properties).push(
-        <ClassPropertyDoc
-          typeParams={typeParams}
-          markdownContext={markdownContext}
-        >
+        <ClassPropertyDoc context={context}>
           {def}
         </ClassPropertyDoc>,
       );
@@ -394,11 +368,10 @@ function ClassItemsDoc(
 }
 
 function ConstructorsDoc(
-  { children, name, typeParams, markdownContext }: {
+  { children, name, context }: {
     children: Child<ClassConstructorDef[]>;
     name: string;
-    typeParams: string[];
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -417,9 +390,9 @@ function ConstructorsDoc(
         ]}
         name={name}
         jsDoc={jsDoc}
-        markdownContext={markdownContext}
+        context={context}
       >
-        (<Params typeParams={typeParams} markdownContext={markdownContext}>
+        (<Params context={context}>
           {params}
         </Params>)
       </DocEntry>
@@ -430,11 +403,7 @@ function ConstructorsDoc(
 }
 
 export function DocSubTitleClass(
-  { children, typeParams, markdownContext }: {
-    children: Child<DocNodeClass>;
-    typeParams: string[];
-    markdownContext: MarkdownContext;
-  },
+  { children, context }: { children: Child<DocNodeClass>; context: Context },
 ) {
   const { classDef } = take(children);
 
@@ -445,10 +414,7 @@ export function DocSubTitleClass(
           <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
           {classDef.implements.map((typeDef, i) => (
             <>
-              <TypeDef
-                typeParams={typeParams}
-                markdownContext={markdownContext}
-              >
+              <TypeDef context={context}>
                 {typeDef}
               </TypeDef>
               {i !== (classDef.implements.length - 1) && <span>,{" "}</span>}
@@ -467,10 +433,7 @@ export function DocSubTitleClass(
                 {"<"}
                 {classDef.superTypeParams.map((typeDef, i) => (
                   <>
-                    <TypeDef
-                      typeParams={typeParams}
-                      markdownContext={markdownContext}
-                    >
+                    <TypeDef context={context}>
                       {typeDef}
                     </TypeDef>
                     {i !== (classDef.superTypeParams.length - 1) && (
@@ -489,40 +452,26 @@ export function DocSubTitleClass(
 }
 
 export function DocBlockClass(
-  { children, markdownContext }: {
-    children: Child<DocNodeClass>;
-    markdownContext: MarkdownContext;
-  },
+  { children, context }: { children: Child<DocNodeClass>; context: Context },
 ) {
   const def = take(children);
-  const typeParams = def.classDef.typeParams.map(({ name }) => name);
+  context.typeParams = def.classDef.typeParams.map(({ name }) => name);
   const classItems = getClassItems(def);
   return (
     <div class={style("docBlockItems")}>
-      <ConstructorsDoc
-        typeParams={typeParams}
-        name={def.name}
-        markdownContext={markdownContext}
-      >
+      <ConstructorsDoc name={def.name} context={context}>
         {def.classDef.constructors}
       </ConstructorsDoc>
 
-      <TypeParamsDoc
-        typeParams={typeParams}
-        base={def}
-        markdownContext={markdownContext}
-      >
+      <TypeParamsDoc base={def} context={context}>
         {def.classDef.typeParams}
       </TypeParamsDoc>
 
-      <IndexSignaturesDoc
-        typeParams={typeParams}
-        markdownContext={markdownContext}
-      >
+      <IndexSignaturesDoc context={context}>
         {def.classDef.indexSignatures}
       </IndexSignaturesDoc>
 
-      <ClassItemsDoc typeParams={typeParams} markdownContext={markdownContext}>
+      <ClassItemsDoc context={context}>
         {classItems}
       </ClassItemsDoc>
     </div>

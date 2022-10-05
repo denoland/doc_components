@@ -19,7 +19,7 @@ import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
-import { type MarkdownContext } from "./markdown.tsx";
+import { type Context } from "./markdown.tsx";
 
 function isTypeOnly(
   docNodes: DocNode[],
@@ -30,11 +30,11 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, name, library = false, ...markdownContext }: {
+  { children, name, library = false, ...context }: {
     children: Child<DocNode[]>;
     name: string;
     library?: boolean;
-  } & Pick<MarkdownContext, "url" | "replacers">,
+  } & Pick<Context, "url" | "replacers">,
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
@@ -46,16 +46,12 @@ export function SymbolDoc(
     splitNodes[docNode.kind].push(docNode);
   }
 
-  const showUsage = !(markdownContext.url.href.endsWith(".d.ts") || library);
+  const showUsage = !(context.url.href.endsWith(".d.ts") || library);
 
   return (
     <article class={style("symbolDoc")}>
       {Object.values(splitNodes).map((nodes) => (
-        <Symbol
-          showUsage={showUsage}
-          name={name}
-          markdownContext={markdownContext}
-        >
+        <Symbol showUsage={showUsage} name={name} context={context}>
           {nodes}
         </Symbol>
       ))}
@@ -64,11 +60,11 @@ export function SymbolDoc(
 }
 
 function Symbol(
-  { children, showUsage, name, markdownContext }: {
+  { children, showUsage, name, context }: {
     children: Child<DocNode[]>;
     showUsage: boolean;
     name: string;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const docNodes = take(children, true);
@@ -113,7 +109,7 @@ function Symbol(
   }
 
   const lastSymbolIndex = name.lastIndexOf(".");
-  markdownContext.namespace = lastSymbolIndex !== -1
+  context.namespace = lastSymbolIndex !== -1
     ? name.slice(0, lastSymbolIndex)
     : undefined;
 
@@ -121,7 +117,7 @@ function Symbol(
     <div class={tw`space-y-7`}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
-          <DocTitle name={name} markdownContext={markdownContext}>
+          <DocTitle name={name} context={context}>
             {docNodes[0]}
           </DocTitle>
 
@@ -145,16 +141,15 @@ function Symbol(
       <div class={tw`space-y-3`}>
         {showUsage && (
           <Usage
-            url={markdownContext.url.href}
+            url={context.url.href}
             name={name}
             isType={isTypeOnly(docNodes)}
           />
         )}
-        {!isFunction && <JsDoc markdownContext={markdownContext}>{jsDoc}
-        </JsDoc>}
+        {!isFunction && <JsDoc context={context}>{jsDoc}</JsDoc>}
       </div>
 
-      <DocBlock name={name} markdownContext={markdownContext}>
+      <DocBlock name={name} context={context}>
         {docNodes}
       </DocBlock>
     </div>

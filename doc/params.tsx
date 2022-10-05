@@ -7,14 +7,13 @@ import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, take } from "./utils.ts";
-import { MarkdownContext } from "./markdown.tsx";
+import { Context } from "./markdown.tsx";
 
 function Param(
-  { children, i, typeParams, markdownContext }: {
+  { children, i, context }: {
     children: Child<ParamDef>;
     i: number;
-    typeParams: string[];
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const param = take(children);
@@ -29,7 +28,7 @@ function Param(
       {type && (
         <span>
           :{" "}
-          <TypeDef typeParams={typeParams} markdownContext={markdownContext}>
+          <TypeDef context={context}>
             {type}
           </TypeDef>
         </span>
@@ -39,10 +38,9 @@ function Param(
 }
 
 export function Params(
-  { children, typeParams, markdownContext }: {
+  { children, context }: {
     children: Child<ParamDef[]>;
-    typeParams: string[];
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const params = take(children, true);
@@ -53,7 +51,7 @@ export function Params(
     const items = [];
     for (let i = 0; i < params.length; i++) {
       items.push(
-        <Param typeParams={typeParams} i={i} markdownContext={markdownContext}>
+        <Param i={i} context={context}>
           {params[i]}
         </Param>,
       );
@@ -67,11 +65,7 @@ export function Params(
       <div class={style("indent")}>
         {params.map((param, i) => (
           <div>
-            <Param
-              typeParams={typeParams}
-              i={i}
-              markdownContext={markdownContext}
-            >
+            <Param i={i} context={context}>
               {param}
             </Param>,
           </div>
