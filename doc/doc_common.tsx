@@ -6,7 +6,7 @@ import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
-import { MarkdownContext } from "./markdown.tsx";
+import { Context } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
@@ -29,14 +29,14 @@ export function Anchor({ children: name }: { children: string }) {
 }
 
 export function DocEntry(
-  { children, tags, name, location, id, jsDoc, markdownContext }: {
+  { children, tags, name, location, id, jsDoc, context }: {
     children: unknown;
     tags?: unknown[];
     name?: unknown;
     location: Location;
     id: string;
     jsDoc?: { doc?: string };
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const href = services.resolveSourceHref(location.filename, location.line);
@@ -59,7 +59,7 @@ export function DocEntry(
       </div>
 
       <div class={tw`pl-5`}>
-        <JsDoc markdownContext={markdownContext}>
+        <JsDoc context={context}>
           {jsDoc}
         </JsDoc>
       </div>

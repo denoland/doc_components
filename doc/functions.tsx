@@ -13,7 +13,7 @@ import {
 } from "../deps.ts";
 import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
-import { Markdown, type MarkdownContext } from "./markdown.tsx";
+import { type Context, Markdown } from "./markdown.tsx";
 import { paramName, Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
@@ -22,27 +22,29 @@ import { type Child, isDeprecated, take } from "./utils.ts";
 
 export function DocFunctionSummary({
   children,
-  markdownContext,
+  context,
 }: {
   children: Child<FunctionDef>;
-  markdownContext: MarkdownContext;
+  context: Context;
 }) {
   const def = take(children, true);
 
   return (
     <>
-      <DocTypeParamsSummary markdownContext={markdownContext}>
+      <DocTypeParamsSummary context={context}>
         {def.typeParams}
       </DocTypeParamsSummary>
       (
-      <Params markdownContext={markdownContext}>
+      <Params context={context}>
         {def.params}
       </Params>
       )
       {def.returnType && (
         <span>
           :{" "}
-          <TypeDef markdownContext={markdownContext}>{def.returnType}</TypeDef>
+          <TypeDef context={context}>
+            {def.returnType}
+          </TypeDef>
         </span>
       )}
     </>
@@ -52,11 +54,11 @@ export function DocFunctionSummary({
 function DocFunctionOverload({
   children,
   i,
-  markdownContext,
+  context,
 }: {
   children: Child<DocNodeFunction>;
   i: number;
-  markdownContext: MarkdownContext;
+  context: Context;
 }) {
   const def = take(children, true);
 
@@ -64,6 +66,7 @@ function DocFunctionOverload({
     return <></>;
   }
 
+  context.typeParams = def.functionDef.typeParams.map(({ name }) => name);
   const overloadId = nameToId("function", `${def.name}_${i}`);
 
   return (
@@ -75,7 +78,7 @@ function DocFunctionOverload({
         <div class={tw`font-mono`}>
           <span class={tw`font-bold`}>{def.name}</span>
           <span class={tw`font-medium`}>
-            <DocFunctionSummary markdownContext={markdownContext}>
+            <DocFunctionSummary context={context}>
               {def.functionDef}
             </DocFunctionSummary>
           </span>
@@ -83,7 +86,7 @@ function DocFunctionOverload({
 
         {!(def.functionDef.hasBody && i === 0) && (
           <div class={tw`w-full`}>
-            <Markdown summary markdownContext={markdownContext}>
+            <Markdown summary context={context}>
               {def.jsDoc?.doc}
             </Markdown>
           </div>
@@ -94,13 +97,14 @@ function DocFunctionOverload({
 }
 
 function DocFunction(
-  { children, n, markdownContext }: {
+  { children, n, context }: {
     children: Child<DocNodeFunction>;
     n: number;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const def = take(children);
+  context.typeParams = def.functionDef.typeParams.map(({ name }) => name);
 
   const overloadId = nameToId("function", `${def.name}_${n}`);
   const tags = [];
@@ -134,11 +138,14 @@ function DocFunction(
         name={name}
         tags={tags}
         jsDoc={paramDocs[i]}
-        markdownContext={markdownContext}
+        context={context}
       >
         {type && (
           <span>
-            : <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
+            :{" "}
+            <TypeDef context={context}>
+              {type}
+            </TypeDef>
             {
               /*defaultValue && (
               <>
@@ -146,7 +153,7 @@ function DocFunction(
                 {param.tsType && (
                   <span>
                     :{" "}
-                    <TypeDef markdownContext={markdownContext}>
+                    <TypeDef context={context}>
                       {param.tsType}
                     </TypeDef>
                   </span>
@@ -167,9 +174,9 @@ function DocFunction(
 
   return (
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
-      <JsDoc markdownContext={markdownContext}>{def.jsDoc}</JsDoc>
+      <JsDoc context={context}>{def.jsDoc}</JsDoc>
 
-      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+      <TypeParamsDoc base={def} context={context}>
         {def.functionDef.typeParams}
       </TypeParamsDoc>
 
@@ -182,9 +189,11 @@ function DocFunction(
               id={returnId}
               location={def.location}
               jsDoc={returnDoc}
-              markdownContext={markdownContext}
+              context={context}
             >
-              <TypeDef markdownContext={markdownContext}>
+              <TypeDef
+                context={context}
+              >
                 {def.functionDef.returnType}
               </TypeDef>
             </DocEntry>,
@@ -196,9 +205,9 @@ function DocFunction(
 }
 
 export function DocBlockFunction(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<DocNodeFunction[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -208,9 +217,7 @@ export function DocBlockFunction(
       return <></>;
     }
 
-    return (
-      <DocFunction n={i} markdownContext={markdownContext}>{def}</DocFunction>
-    );
+    return <DocFunction n={i} context={context}>{def}</DocFunction>;
   });
 
   return (
@@ -244,15 +251,13 @@ export function DocBlockFunction(
       })}
       <div class={tw`space-y-2`}>
         {defs.map((def, i) => (
-          <DocFunctionOverload i={i} markdownContext={markdownContext}>
+          <DocFunctionOverload i={i} context={context}>
             {def}
           </DocFunctionOverload>
         ))}
       </div>
 
-      <div>
-        {items}
-      </div>
+      <div>{items}</div>
     </div>
   );
 }

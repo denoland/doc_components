@@ -24,13 +24,13 @@ import { Params } from "./params.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, maybe, take } from "./utils.ts";
-import { MarkdownContext } from "./markdown.tsx";
+import { Context } from "./markdown.tsx";
 import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
 
 function LiteralIndexSignatures(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<LiteralIndexSignatureDef[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const signatures = take(children, true);
@@ -44,10 +44,15 @@ function LiteralIndexSignatures(
         <span>
           readonly{" "}
         </span>,
-      )}[<Params markdownContext={markdownContext}>{params}</Params>]{tsType &&
+      )}[<Params context={context}>
+        {params}
+      </Params>]{tsType &&
         (
           <>
-            : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+            :{" "}
+            <TypeDef context={context}>
+              {tsType}
+            </TypeDef>
           </>
         )};{" "}
     </>
@@ -56,9 +61,9 @@ function LiteralIndexSignatures(
   return <>{items}</>;
 }
 
-function LiteralCallSignatures({ children, markdownContext }: {
+function LiteralCallSignatures({ children, context }: {
   children: Child<LiteralCallSignatureDef[]>;
-  markdownContext: MarkdownContext;
+  context: Context;
 }) {
   const signatures = take(children, true);
   if (!signatures.length) {
@@ -66,13 +71,16 @@ function LiteralCallSignatures({ children, markdownContext }: {
   }
   const items = signatures.map(({ typeParams, params, tsType }) => (
     <>
-      <DocTypeParamsSummary markdownContext={markdownContext}>
+      <DocTypeParamsSummary context={context}>
         {typeParams}
-      </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
+      </DocTypeParamsSummary>(<Params context={context}>
         {params}
       </Params>){tsType && (
         <>
-          : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+          :{" "}
+          <TypeDef context={context}>
+            {tsType}
+          </TypeDef>
         </>
       )};{" "}
     </>
@@ -81,9 +89,9 @@ function LiteralCallSignatures({ children, markdownContext }: {
 }
 
 function LiteralProperties(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<LiteralPropertyDef[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const properties = take(children, true);
@@ -103,7 +111,10 @@ function LiteralProperties(
         {maybe(optional, "?")}
         {tsType && (
           <>
-            : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+            :{" "}
+            <TypeDef context={context}>
+              {tsType}
+            </TypeDef>
           </>
         )}
         {"; "}
@@ -113,16 +124,26 @@ function LiteralProperties(
   return <>{items}</>;
 }
 
-function LiteralMethods({ children, markdownContext }: {
+function LiteralMethods({ children, context }: {
   children: Child<LiteralMethodDef[]>;
-  markdownContext: MarkdownContext;
+  context: Context;
 }) {
   const methods = take(children, true);
   if (!methods.length) {
     return null;
   }
   const items = methods.map(
-    ({ name, kind, optional, computed, returnType, typeParams, params }) => (
+    (
+      {
+        name,
+        kind,
+        optional,
+        computed,
+        returnType,
+        typeParams,
+        params,
+      },
+    ) => (
       <>
         {kind === "getter"
           ? <span>get{" "}</span>
@@ -135,13 +156,16 @@ function LiteralMethods({ children, markdownContext }: {
           ? `[${name}]`
           : name}
         {maybe(optional, "?")}
-        <DocTypeParamsSummary markdownContext={markdownContext}>
+        <DocTypeParamsSummary context={context}>
           {typeParams}
-        </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
+        </DocTypeParamsSummary>(<Params context={context}>
           {params}
         </Params>){returnType && (
           <>
-            : <TypeDef markdownContext={markdownContext}>{returnType}</TypeDef>
+            :{" "}
+            <TypeDef context={context}>
+              {returnType}
+            </TypeDef>
           </>
         )}
         {"; "}
@@ -186,9 +210,9 @@ function MappedReadOnly(
 }
 
 export function TypeArguments(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<TsTypeDef[] | undefined>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const args = take(children, true);
@@ -197,7 +221,11 @@ export function TypeArguments(
   }
   const items = [];
   for (let i = 0; i < args.length; i++) {
-    items.push(<TypeDef markdownContext={markdownContext}>{args[i]}</TypeDef>);
+    items.push(
+      <TypeDef context={context}>
+        {args[i]}
+      </TypeDef>,
+    );
     if (i < args.length - 1) {
       items.push(<>{", "}</>);
     }
@@ -205,16 +233,18 @@ export function TypeArguments(
   return <>&lt;{items}&gt;</>;
 }
 
-export function TypeDef({ children, markdownContext }: {
+export function TypeDef({ children, context }: {
   children: Child<TsTypeDef>;
-  markdownContext: MarkdownContext;
+  context: Context;
 }) {
   const def = take(children);
   switch (def.kind) {
     case "array":
       return (
         <>
-          <TypeDef markdownContext={markdownContext}>{def.array}</TypeDef>[]
+          <TypeDef context={context}>
+            {def.array}
+          </TypeDef>[]
         </>
       );
     case "conditional": {
@@ -223,40 +253,50 @@ export function TypeDef({ children, markdownContext }: {
       } = def;
       return (
         <>
-          <TypeDef markdownContext={markdownContext}>{checkType}</TypeDef>{" "}
+          <TypeDef context={context}>
+            {checkType}
+          </TypeDef>{" "}
           <span>extends</span>{" "}
-          <TypeDef markdownContext={markdownContext}>{extendsType}</TypeDef> ?
-          {" "}
-          <TypeDef markdownContext={markdownContext}>{trueType}</TypeDef> :{" "}
-          <TypeDef markdownContext={markdownContext}>{falseType}</TypeDef>
+          <TypeDef context={context}>
+            {extendsType}
+          </TypeDef>{" "}
+          ?{" "}
+          <TypeDef context={context}>
+            {trueType}
+          </TypeDef>{" "}
+          :{" "}
+          <TypeDef context={context}>
+            {falseType}
+          </TypeDef>
         </>
       );
     }
     case "fnOrConstructor": {
-      const {
-        fnOrConstructor: { constructor, typeParams, params, tsType },
-      } = def;
+      const { fnOrConstructor } = def;
       return (
         <>
-          {maybe(constructor, <span>new{" "}</span>)}
-          <DocTypeParamsSummary markdownContext={markdownContext}>
-            {typeParams}
-          </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
-            {params}
+          {maybe(fnOrConstructor.constructor, <span>new{" "}</span>)}
+          <DocTypeParamsSummary
+            context={context}
+          >
+            {fnOrConstructor.typeParams}
+          </DocTypeParamsSummary>(<Params context={context}>
+            {fnOrConstructor.params}
           </Params>) =&gt;{" "}
-          <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+          <TypeDef context={context}>
+            {fnOrConstructor.tsType}
+          </TypeDef>
         </>
       );
     }
     case "importType": {
-      const { importType: { specifier, qualifier, typeParams } } = def;
+      const { importType } = def;
       return (
         <>
-          <span>import</span>("{specifier}"){qualifier && (
-            <span>.{qualifier}</span>
-          )}
-          <TypeArguments markdownContext={markdownContext}>
-            {typeParams}
+          <span>import</span>("{importType.specifier}"){importType.qualifier &&
+            <span>.{importType.qualifier}</span>}
+          <TypeArguments context={context}>
+            {importType.typeParams}
           </TypeArguments>
         </>
       );
@@ -265,8 +305,9 @@ export function TypeDef({ children, markdownContext }: {
       const { indexedAccess: { objType, indexType } } = def;
       return (
         <>
-          <TypeDef markdownContext={markdownContext}>{objType}
-          </TypeDef>[<TypeDef markdownContext={markdownContext}>
+          <TypeDef context={context}>
+            {objType}
+          </TypeDef>[<TypeDef context={context}>
             {indexType}
           </TypeDef>]
         </>
@@ -277,7 +318,7 @@ export function TypeDef({ children, markdownContext }: {
       return (
         <>
           <span>infer{" "}</span>
-          <TypeParamSummary markdownContext={markdownContext}>
+          <TypeParamSummary context={context}>
             {typeParam}
           </TypeParamSummary>
         </>
@@ -285,7 +326,7 @@ export function TypeDef({ children, markdownContext }: {
     }
     case "intersection":
       return (
-        <TypeDefIntersection markdownContext={markdownContext}>
+        <TypeDefIntersection context={context}>
           {def}
         </TypeDefIntersection>
       );
@@ -313,17 +354,25 @@ export function TypeDef({ children, markdownContext }: {
     }
     case "mapped":
       return (
-        <TypeDefMapped markdownContext={markdownContext}>{def}</TypeDefMapped>
+        <TypeDefMapped context={context}>
+          {def}
+        </TypeDefMapped>
       );
     case "optional": {
       const { optional } = def;
-      return <TypeDef markdownContext={markdownContext}>{optional}</TypeDef>;
+      return (
+        <TypeDef context={context}>
+          {optional}
+        </TypeDef>
+      );
     }
     case "parenthesized": {
       const { parenthesized } = def;
       return (
         <>
-          (<TypeDef markdownContext={markdownContext}>{parenthesized}</TypeDef>)
+          (<TypeDef context={context}>
+            {parenthesized}
+          </TypeDef>)
         </>
       );
     }
@@ -331,7 +380,9 @@ export function TypeDef({ children, markdownContext }: {
       const { rest } = def;
       return (
         <>
-          ...<TypeDef markdownContext={markdownContext}>{rest}</TypeDef>
+          ...<TypeDef context={context}>
+            {rest}
+          </TypeDef>
         </>
       );
     }
@@ -340,7 +391,7 @@ export function TypeDef({ children, markdownContext }: {
     }
     case "tuple": {
       return (
-        <TypeDefTuple markdownContext={markdownContext}>
+        <TypeDefTuple context={context}>
           {def}
         </TypeDefTuple>
       );
@@ -352,16 +403,16 @@ export function TypeDef({ children, markdownContext }: {
       return (
         <>
           {"{ "}
-          <LiteralIndexSignatures markdownContext={markdownContext}>
+          <LiteralIndexSignatures context={context}>
             {indexSignatures}
           </LiteralIndexSignatures>
-          <LiteralCallSignatures markdownContext={markdownContext}>
+          <LiteralCallSignatures context={context}>
             {callSignatures}
           </LiteralCallSignatures>
-          <LiteralProperties markdownContext={markdownContext}>
+          <LiteralProperties context={context}>
             {properties}
           </LiteralProperties>
-          <LiteralMethods markdownContext={markdownContext}>
+          <LiteralMethods context={context}>
             {methods}
           </LiteralMethods>
           {" }"}
@@ -373,7 +424,9 @@ export function TypeDef({ children, markdownContext }: {
       return (
         <>
           <span>{operator}</span>{" "}
-          <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+          <TypeDef context={context}>
+            {tsType}
+          </TypeDef>
         </>
       );
     }
@@ -388,7 +441,9 @@ export function TypeDef({ children, markdownContext }: {
           {type && (
             <>
               {" is "}
-              <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
+              <TypeDef context={context}>
+                {type}
+              </TypeDef>
             </>
           )}
         </>
@@ -399,26 +454,30 @@ export function TypeDef({ children, markdownContext }: {
       return <>{typeQuery}</>;
     }
     case "typeRef": {
-      const { typeRef: { typeName, typeParams } } = def;
-      const href = services.lookupHref(
-        markdownContext.url,
-        markdownContext.namespace,
-        typeName,
-      );
+      const { typeRef } = def;
+
+      let href;
+      if (context.typeParams?.includes(typeRef.typeName)) {
+        const url = new URL(context.url);
+        url.hash = nameToId("type_param", typeRef.typeName);
+        href = url.href;
+      } else {
+        services.lookupHref(context.url, context.namespace, typeRef.typeName);
+      }
       return (
         <>
           {href
-            ? <a href={href} class={tw`link`}>{typeName}</a>
-            : <span>{typeName}</span>}
-          <TypeArguments markdownContext={markdownContext}>
-            {typeParams}
+            ? <a href={href} class={tw`link`}>{typeRef.typeName}</a>
+            : <span>{typeRef.typeName}</span>}
+          <TypeArguments context={context}>
+            {typeRef.typeParams}
           </TypeArguments>
         </>
       );
     }
     case "union":
       return (
-        <TypeDefUnion markdownContext={markdownContext}>
+        <TypeDefUnion context={context}>
           {def}
         </TypeDefUnion>
       );
@@ -432,9 +491,9 @@ export function TypeDef({ children, markdownContext }: {
 }
 
 function TypeDefIntersection(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<TsTypeIntersectionDef>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const { intersection } = take(children);
@@ -443,7 +502,9 @@ function TypeDefIntersection(
     const items = [];
     for (let i = 0; i < intersection.length; i++) {
       items.push(
-        <TypeDef markdownContext={markdownContext}>{intersection[i]}</TypeDef>,
+        <TypeDef context={context}>
+          {intersection[i]}
+        </TypeDef>,
       );
       if (i < lastIndex) {
         items.push(<span>{" & "}</span>);
@@ -454,16 +515,18 @@ function TypeDefIntersection(
   const items = intersection.map((def) => (
     <div>
       <span>{" & "}</span>
-      <TypeDef markdownContext={markdownContext}>{def}</TypeDef>
+      <TypeDef context={context}>
+        {def}
+      </TypeDef>
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
 }
 
 function TypeDefMapped(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<TsTypeMappedDef>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const {
@@ -473,7 +536,7 @@ function TypeDefMapped(
     <>
       <MappedReadOnly>{readonly}</MappedReadOnly>[<TypeParamSummary
         constraintKind="in"
-        markdownContext={markdownContext}
+        context={context}
       >
         {typeParam}
       </TypeParamSummary>
@@ -482,12 +545,17 @@ function TypeDefMapped(
           <span>
             in keyof{" "}
           </span>
-          <TypeDef markdownContext={markdownContext}>{nameType}</TypeDef>
+          <TypeDef context={context}>
+            {nameType}
+          </TypeDef>
         </>
       )}]<MappedOptional>{optional}</MappedOptional>
       {tsType && (
         <>
-          : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+          :{" "}
+          <TypeDef context={context}>
+            {tsType}
+          </TypeDef>
         </>
       )}
     </>
@@ -495,9 +563,9 @@ function TypeDefMapped(
 }
 
 function TypeDefTuple(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<TsTypeTupleDef>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const { tuple } = take(children);
@@ -505,7 +573,9 @@ function TypeDefTuple(
     const items = [];
     for (let i = 0; i < tuple.length; i++) {
       items.push(
-        <TypeDef markdownContext={markdownContext}>{tuple[i]}</TypeDef>,
+        <TypeDef context={context}>
+          {tuple[i]}
+        </TypeDef>,
       );
       if (i < tuple.length - 1) {
         items.push(", ");
@@ -515,16 +585,18 @@ function TypeDefTuple(
   }
   const items = tuple.map((def) => (
     <div>
-      <TypeDef markdownContext={markdownContext}>{def}</TypeDef>,{" "}
+      <TypeDef context={context}>
+        {def}
+      </TypeDef>,{" "}
     </div>
   ));
   return <div class={style("indent")}>[{items}]</div>;
 }
 
 function TypeDefUnion(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<TsTypeUnionDef>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const { union } = take(children);
@@ -533,7 +605,9 @@ function TypeDefUnion(
     const items = [];
     for (let i = 0; i < union.length; i++) {
       items.push(
-        <TypeDef markdownContext={markdownContext}>{union[i]}</TypeDef>,
+        <TypeDef context={context}>
+          {union[i]}
+        </TypeDef>,
       );
       if (i < lastIndex) {
         items.push(<span>{" | "}</span>);
@@ -544,17 +618,19 @@ function TypeDefUnion(
   const items = union.map((def) => (
     <div>
       <span>{" | "}</span>
-      <TypeDef markdownContext={markdownContext}>{def}</TypeDef>
+      <TypeDef context={context}>
+        {def}
+      </TypeDef>
     </div>
   ));
   return <div class={style("indent")}>{items}</div>;
 }
 
 function TypeParamSummary(
-  { children, constraintKind = "extends", markdownContext }: {
+  { children, constraintKind = "extends", context }: {
     children: Child<TsTypeParamDef>;
     constraintKind?: string;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const { name, constraint, default: def } = take(children);
@@ -564,13 +640,17 @@ function TypeParamSummary(
       {constraint && (
         <>
           <span>{` ${constraintKind} `}</span>
-          <TypeDef markdownContext={markdownContext}>{constraint}</TypeDef>
+          <TypeDef context={context}>
+            {constraint}
+          </TypeDef>
         </>
       )}
       {def && (
         <>
           <span>{` = `}</span>
-          <TypeDef markdownContext={markdownContext}>{def}</TypeDef>
+          <TypeDef context={context}>
+            {def}
+          </TypeDef>
         </>
       )}
     </>
@@ -578,9 +658,9 @@ function TypeParamSummary(
 }
 
 export function DocTypeParamsSummary(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<TsTypeParamDef[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const typeParams = take(children, true);
@@ -598,7 +678,7 @@ export function DocTypeParamsSummary(
             {typeParam.constraint && (
               <span>
                 <span>{" extends "}</span>
-                <TypeDef markdownContext={markdownContext}>
+                <TypeDef context={context}>
                   {typeParam.constraint}
                 </TypeDef>
               </span>
@@ -606,7 +686,7 @@ export function DocTypeParamsSummary(
             {typeParam.default && (
               <span>
                 <span>{" = "}</span>
-                <TypeDef markdownContext={markdownContext}>
+                <TypeDef context={context}>
                   {typeParam.default}
                 </TypeDef>
               </span>
@@ -621,12 +701,12 @@ export function DocTypeParamsSummary(
 }
 
 export function TypeParam(
-  { children, id, location, doc, markdownContext }: {
+  { children, id, location, doc, context }: {
     children: Child<TsTypeParamDef>;
     id: string;
     location: Location;
     doc?: JsDocTagNamed;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const def = take(children);
@@ -643,12 +723,12 @@ export function TypeParam(
       name={def.name}
       tags={tags}
       jsDoc={doc}
-      markdownContext={markdownContext}
+      context={context}
     >
       {def.constraint && (
         <span>
           {" extends "}
-          <TypeDef markdownContext={markdownContext}>
+          <TypeDef context={context}>
             {def.constraint}
           </TypeDef>
         </span>
@@ -656,7 +736,7 @@ export function TypeParam(
       {def.default && (
         <span>
           {" = "}
-          <TypeDef markdownContext={markdownContext}>
+          <TypeDef context={context}>
             {def.default}
           </TypeDef>
         </span>
@@ -666,10 +746,10 @@ export function TypeParam(
 }
 
 export function TypeParamsDoc(
-  { children, base, markdownContext }: {
+  { children, base, context }: {
     children: Child<TsTypeParamDef[]>;
     base: DocNode;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -688,7 +768,7 @@ export function TypeParamsDoc(
         id={id}
         location={base.location}
         doc={typeParamDocs.find(({ name }) => name === typeParam.name)}
-        markdownContext={markdownContext}
+        context={context}
       >
         {typeParam}
       </TypeParam>

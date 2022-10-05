@@ -6,7 +6,7 @@ import { tw } from "../deps.ts";
 import { byKindValue } from "./doc.ts";
 import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
-import { Markdown, type MarkdownContext } from "./markdown.tsx";
+import { type Context, Markdown } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, isDeprecated, take } from "./utils.ts";
@@ -16,13 +16,13 @@ import { type SymbolItem } from "./module_index_panel.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 
 function Entry(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<SymbolItem>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const item = take(children);
-  const href = services.resolveHref(markdownContext.url, item.name);
+  const href = services.resolveHref(context.url, item.name);
   const isUnstable = item.jsDoc?.tags?.some((tag) =>
     tag.kind === "tags" && tag.tags.includes("unstable")
   );
@@ -41,7 +41,7 @@ function Entry(
         </div>
       </td>
       <td class={style("symbolListCellDoc")}>
-        <Markdown summary markdownContext={markdownContext}>
+        <Markdown summary context={context}>
           {item.jsDoc?.doc}
         </Markdown>
       </td>
@@ -50,10 +50,10 @@ function Entry(
 }
 
 function Section(
-  { children, title, markdownContext }: {
+  { children, title, context }: {
     children: Child<SymbolItem[]>;
     title: string;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const symbols = take(children, true);
@@ -65,7 +65,7 @@ function Section(
         {symbols.sort((a, b) =>
           byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
         ).map((symbol) => (
-          <Entry markdownContext={markdownContext}>
+          <Entry context={context}>
             {symbol}
           </Entry>
         ))}
@@ -75,11 +75,11 @@ function Section(
 }
 
 export function LibraryDoc(
-  { children, sourceUrl, jsDoc, ...markdownContext }: {
+  { children, sourceUrl, jsDoc, ...context }: {
     children: Child<SymbolItem[]>;
     jsDoc?: string;
     sourceUrl: string;
-  } & Pick<MarkdownContext, "url" | "replacers">,
+  } & Pick<Context, "url" | "replacers">,
 ) {
   const items = take(children, true);
 
@@ -98,18 +98,16 @@ export function LibraryDoc(
       </div>
       <article class={style("main")}>
         <div class={style("moduleDoc")}>
-          {jsDoc && (
-            <JsDoc markdownContext={markdownContext}>{{ doc: jsDoc }}</JsDoc>
-          )}
+          {jsDoc && <JsDoc context={context}>{{ doc: jsDoc }}</JsDoc>}
 
           {Object.entries(categories).sort(([a], [b]) => a.localeCompare(b))
             .map(([category, items]) => (
-              <Section title={category} markdownContext={markdownContext}>
+              <Section title={category} context={context}>
                 {items}
               </Section>
             ))}
           {uncategorized.length !== 0 && (
-            <Section title="Uncategorized" markdownContext={markdownContext}>
+            <Section title="Uncategorized" context={context}>
               {uncategorized}
             </Section>
           )}

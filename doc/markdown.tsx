@@ -94,25 +94,26 @@ export function mdToHtml(markdown: string): string {
   return syntaxHighlight(comrak.markdownToHTML(markdown, MARKDOWN_OPTIONS));
 }
 
-export interface MarkdownContext {
+export interface Context {
   url: URL;
   namespace?: string;
   replacers?: [string, string][];
+  typeParams?: string[];
 }
 
 export function Markdown(
-  { children, summary, markdownContext }: {
+  { children, summary, context }: {
     children: Child<string | undefined>;
     summary?: boolean;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   let md = take(children);
   if (!md) {
     return null;
   }
-  if (markdownContext.replacers) {
-    for (const [pattern, replacement] of markdownContext.replacers) {
+  if (context.replacers) {
+    for (const [pattern, replacement] of context.replacers) {
       md = md.replaceAll(pattern, replacement);
     }
   }
@@ -128,7 +129,7 @@ export function Markdown(
       class={style(mdStyle)}
       dangerouslySetInnerHTML={{
         __html: services.markdownToHTML(
-          parseLinks(md, markdownContext.url, markdownContext.namespace),
+          parseLinks(md, context.url, context.namespace),
         ),
       }}
     />
