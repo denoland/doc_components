@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { DocNode, DocNodeKind, JsDoc, tw } from "../deps.ts";
+import { DocNodeKind, JsDoc } from "../deps.ts";
 import { byKindValue, getIndex } from "./doc.ts";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
@@ -15,9 +15,10 @@ interface DocPageDirItem {
   path: string;
 }
 
-interface SymbolItem {
+export interface SymbolItem {
   name: string;
   kind: DocNodeKind;
+  category?: string;
   jsDoc?: JsDoc | null;
 }
 
@@ -47,11 +48,12 @@ export function splitItems(
 
 function Folder({ children, base, parent }: {
   children: Child<string>;
-  base: string;
+  base: URL;
   parent: string;
 }) {
   const folderName = take(children);
-  const url = `${base}${folderName}`;
+  const url = new URL(base);
+  url.pathname += folderName;
   const href = services.resolveHref(url);
   const label = folderName.slice(parent === "/" ? 1 : parent.length + 1);
   return (
@@ -65,7 +67,7 @@ function Folder({ children, base, parent }: {
 function Module(
   { children, base, parent, current, currentSymbol, isIndex }: {
     children: Child<DocPageModuleItem>;
-    base: string;
+    base: URL;
     parent: string;
     current?: string;
     currentSymbol?: string;
@@ -73,7 +75,8 @@ function Module(
   },
 ) {
   const { path, items } = take(children);
-  const url = `${base}${path}`;
+  const url = new URL(base);
+  url.pathname += path;
   const href = services.resolveHref(url);
   const label = path.slice(parent === "/" ? 1 : parent.length + 1);
   const active = current ? current == path : isIndex;
@@ -132,7 +135,7 @@ function Module(
 export function ModuleIndexPanel(
   { children, path = "/", base, current, currentSymbol }: {
     children: Child<DocPageNavItem[]>;
-    base: string;
+    base: URL;
     path: string;
     current?: string;
     currentSymbol?: string;

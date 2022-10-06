@@ -49,13 +49,10 @@ const styles = {
     apply`break-words flex items-center gap-2 hover:underline`,
   docItem: apply`group relative`,
   indent: apply`ml-4`,
-  link: apply`text([#056CF0] dark:blue-300) hover:(underline text-blue-500)`,
   main: apply`space-y-7 md:(col-span-3)`,
   markdown:
     apply`flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles}`,
-  docItemMarkdown:
-    apply`pl-5 flex flex-col space-y-4 text-justify ${markdownStyles} ${codeStyles} ${syntaxHighlightingStyles} text-gray-600`,
-  markdownSummary: apply`text-gray(600 dark:400) ${
+  markdownSummary: apply`inline text-gray(600 dark:400) ${
     css({
       "p": apply`inline-block`,
       "a": apply`text-blue(700 dark:400) hover:underline`,
@@ -100,7 +97,6 @@ const styles = {
   symbolListTable: apply`block lg:table`,
   tag:
     apply`inline-block rounded-full font-medium text-sm leading-none font-sans`,
-  typeLink: apply`underline`,
 } as const;
 
 export type StyleKey = keyof typeof styles;

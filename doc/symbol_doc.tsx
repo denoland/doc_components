@@ -21,7 +21,7 @@ import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
-import { type MarkdownContext } from "./markdown.tsx";
+import { type Context } from "./markdown.tsx";
 
 function isTypeOnly(
   docNodes: DocNode[],
@@ -32,11 +32,12 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, library = false, property, ...markdownContext  }: {
+  { children, name, library = false, property, ...context  }: {
     children: Child<DocNode[]>;
+    name: string;
     library?: boolean;
     property?: string;
-  } & MarkdownContext,
+  } & Pick<Context, "url" | "replacers">,
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
@@ -78,20 +79,12 @@ export function SymbolDoc(
     }
   }
 
-  const title = markdownContext.namespace
-    ? `${markdownContext.namespace}.${docNodes[0].name}`
-    : docNodes[0].name;
-  const showUsage = !(markdownContext.url.endsWith(".d.ts") || library);
+  const showUsage = !(context.url.href.endsWith(".d.ts") || library);
 
   return (
     <article class={style("symbolDoc")}>
       {Object.values(splitNodes).map((nodes) => (
-        <Symbol
-          showUsage={showUsage}
-          title={title}
-          property={propertyName}
-          markdownContext={markdownContext}
-        >
+        <Symbol showUsage={showUsage} property={propertyName} name={name} context={context}>
           {nodes}
         </Symbol>
       ))}
@@ -100,12 +93,12 @@ export function SymbolDoc(
 }
 
 function Symbol(
-  { children, showUsage, title, property, markdownContext }: {
+  { children, showUsage, property, name, context }: {
     children: Child<DocNode[]>;
     showUsage: boolean;
-    title: string;
     property?: string;
-    markdownContext: MarkdownContext;
+    name: string;
+    context: Context;
   },
 ) {
   const docNodes = take(children, true);
@@ -120,7 +113,9 @@ function Symbol(
       | undefined)?.flatMap(({ tags }) => tags) ?? []
   );
 
-  const permTags = jsDocTags.filter((tag) => tag.startsWith("allow-"));
+  const permTags = jsDocTags.filter((tag, i) =>
+    tag.startsWith("allow-") && jsDocTags.indexOf(tag) === i
+  );
   if (permTags.length !== 0) {
     tags.push(
       <Tag color="cyan" large>
@@ -147,16 +142,21 @@ function Symbol(
     tags.push(tagVariants.deprecatedLg());
   }
 
+  const lastSymbolIndex = name.lastIndexOf(".");
+  context.namespace = lastSymbolIndex !== -1
+    ? name.slice(0, lastSymbolIndex)
+    : undefined;
+
   return (
     <div class={tw`space-y-7`}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
-          <DocTitle property={property} markdownContext={markdownContext}>
+          <DocTitle roperty={property}  name={name} context={context}>
             {docNodes[0]}
           </DocTitle>
 
           {tags.length !== 0 && (
-            <div>
+            <div class={tw`space-x-2`}>
               {tags}
             </div>
           )}
@@ -175,16 +175,17 @@ function Symbol(
       <div class={tw`space-y-3`}>
         {showUsage && (
           <Usage
-            url={markdownContext.url}
-            name={title}
+            url={context.url.href}
+            name={name}
             isType={isTypeOnly(docNodes)}
           />
         )}
-        {!isFunction && <JsDoc markdownContext={markdownContext}>{jsDoc}
-        </JsDoc>}
+        {!isFunction && <JsDoc context={context}>{jsDoc}</JsDoc>}
       </div>
 
-      <DocBlock markdownContext={markdownContext}>{docNodes}</DocBlock>
+      <DocBlock name={name} context={context}>
+        {docNodes}
+      </DocBlock>
     </div>
   );
 }

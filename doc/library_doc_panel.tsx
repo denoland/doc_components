@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { DocNodeKind, JsDoc, JsDocTagDoc, tw } from "../deps.ts";
+import { tw } from "../deps.ts";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
@@ -10,17 +10,34 @@ import * as Icons from "../icons.tsx";
 import { docNodeKindMap } from "./symbol_kind.tsx";
 import { byKindValue } from "./doc.ts";
 import { tagVariants } from "./doc_common.tsx";
+import { SymbolItem } from "./module_index_panel.tsx";
 
-export interface SymbolItem {
-  name: string;
-  kind: DocNodeKind;
-  jsDoc?: JsDoc | null;
+export function categorize(
+  items: SymbolItem[],
+): [categories: Record<string, SymbolItem[]>, uncategorized: SymbolItem[]] {
+  const categories: Record<string, SymbolItem[]> = {};
+  const uncategorized: SymbolItem[] = [];
+
+  for (const item of items) {
+    const category = item.category?.trim();
+    if (category) {
+      if (!(category in categories)) {
+        categories[category] = [];
+      }
+
+      categories[category].push(item);
+    } else {
+      uncategorized.push(item);
+    }
+  }
+
+  return [categories, uncategorized];
 }
 
 function Symbol(
   { children, base, active, currentSymbol, uncategorized }: {
     children: Child<SymbolItem>;
-    base: string;
+    base: URL;
     active: boolean;
     currentSymbol?: string;
     uncategorized?: boolean;
@@ -58,7 +75,7 @@ function Category(
   { children, base, name, currentSymbol }: {
     children: Child<SymbolItem[]>;
     name: string;
-    base: string;
+    base: URL;
     currentSymbol?: string;
   },
 ) {
@@ -95,33 +112,16 @@ function Category(
   );
 }
 
-export function LibraryCategoryPanel(
+export function LibraryDocPanel(
   { children, base, currentSymbol }: {
     children: Child<SymbolItem[]>;
-    base: string;
+    base: URL;
     currentSymbol?: string;
   },
 ) {
   const items = take(children, true);
 
-  const categories: Record<string, SymbolItem[]> = {};
-  const uncategorized: SymbolItem[] = [];
-
-  for (const item of items) {
-    const category = (item.jsDoc?.tags?.find(({ kind }) =>
-      kind === "category"
-    ) as (JsDocTagDoc | undefined))?.doc?.trim();
-
-    if (category) {
-      if (!(category in categories)) {
-        categories[category] = [];
-      }
-
-      categories[category].push(item);
-    } else {
-      uncategorized.push(item);
-    }
-  }
+  const [categories, uncategorized] = categorize(items);
 
   const entries = [];
   for (

@@ -32,14 +32,6 @@ export function byKindValue(a: DocNodeKind, b: DocNodeKind): number {
   return KIND_ORDER.indexOf(a) - KIND_ORDER.indexOf(b);
 }
 
-/** If a doc node has JSDoc, return the first paragraph of the JSDoc doc. */
-export function getDocSummary(docNode: DocNode): string | undefined {
-  if (docNode.jsDoc?.doc) {
-    const [summary] = docNode.jsDoc.doc.split("\n\n");
-    return summary;
-  }
-}
-
 /** Given a set of paths which are expected to be siblings within a folder/dir
  * return what appears to be the "index" module. If none can be identified,
  * `undefined` is returned. */

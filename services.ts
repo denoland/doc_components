@@ -34,7 +34,7 @@ export interface Configuration {
    * ascending to global scopes to resolve the href. If the symbol cannot be
    * found, the function should return `undefined`. */
   lookupHref?: (
-    url: string,
+    url: URL,
     namespace: string | undefined,
     symbol: string,
   ) => string | undefined;
@@ -45,7 +45,7 @@ export interface Configuration {
    *
    * Implementors should return a string which will be used as the `href` value
    * for a link. */
-  resolveHref?: (url: string, symbol?: string, property?: string) => string;
+  resolveHref?: (url: URL, symbol?: string, property?: string) => string;
   /** Called when doc components are trying to generate a link to a source file.
    *
    * Implementors should return a string which which will be used as the `href`
@@ -53,11 +53,7 @@ export interface Configuration {
    * be resolved, `undefined` should be returned. */
   resolveSourceHref?: (url: string, line?: number) => string;
   /** Called when markdown needs to be rendered. */
-  markdownToHTML?: (
-    markdown: string,
-    url: string,
-    namespace?: string,
-  ) => string;
+  markdownToHTML?: (markdown: string) => string;
   /** The JSX runtime that should be used. */
   runtime?: JsxRuntime;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
@@ -120,6 +116,8 @@ export const theme: ThemeConfiguration = {
 };
 
 export const plugins: Record<string, Plugin> = {
+  link:
+    apply`text-[#056CF0] transition duration-75 ease-in-out hover:text-blue-400`,
   "section-x-inset": (parts) =>
     parts[0] === "none"
       ? apply`max-w-none mx-0 px-0`
@@ -204,7 +202,7 @@ export const runtime: JsxRuntime = {
 export const services = {
   /** Return a link to the provided URL and optional symbol. */
   get resolveHref(): (
-    url: string,
+    url: URL,
     symbol?: string,
     property?: string,
   ) => string {
@@ -214,7 +212,7 @@ export const services = {
   /** Attempt to find a link to a specific symbol from the current URL and
    * optionally namespace. */
   get lookupHref(): (
-    url: string,
+    url: URL,
     namespace: string | undefined,
     symbol: string,
   ) => string | undefined {
@@ -226,11 +224,7 @@ export const services = {
   },
 
   /** Render Markdown to HTML */
-  get markdownToHTML(): (
-    markdown: string,
-    url: string,
-    namespace?: string,
-  ) => string {
+  get markdownToHTML(): (markdown: string) => string {
     return runtimeConfig.markdownToHTML;
   },
 };

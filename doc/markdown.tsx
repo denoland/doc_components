@@ -45,11 +45,7 @@ function isLink(link: string): boolean {
   return /^\.{0,2}\//.test(link) || /^[A-Za-z]+:\S/.test(link);
 }
 
-function parseLinks(
-  markdown: string,
-  url: string,
-  namespace?: string,
-): string {
+function parseLinks(markdown: string, url: URL, namespace?: string): string {
   let match;
   while ((match = JSDOC_LINK_RE.exec(markdown))) {
     const [text, modifier, value] = match;
@@ -94,87 +90,48 @@ function parseLinks(
   return markdown;
 }
 
-export function mdToHtml(
-  markdown: string,
-  url: string,
-  namespace?: string,
-): string {
-  return syntaxHighlight(
-    comrak.markdownToHTML(
-      parseLinks(markdown, url, namespace),
-      MARKDOWN_OPTIONS,
-    ),
-  );
+export function mdToHtml(markdown: string): string {
+  return syntaxHighlight(comrak.markdownToHTML(markdown, MARKDOWN_OPTIONS));
 }
 
-export interface MarkdownContext {
-  url: string;
+export interface Context {
+  url: URL;
   namespace?: string;
-  markdownStyle?: StyleKey;
-  replace?: [string, string];
+  replacers?: [string, string][];
+  typeParams?: string[];
 }
 
 export function Markdown(
-  { children, id, markdownContext }: {
+  { children, summary, context }: {
     children: Child<string | undefined>;
-    id?: string;
-    markdownContext: MarkdownContext;
+    summary?: boolean;
+    context: Context;
   },
 ) {
-  const md = take(children);
-  return md
-    ? (
-      <div
-        class={style(markdownContext.markdownStyle ?? "markdown")}
-        id={id}
-        dangerouslySetInnerHTML={{
-          __html: services.markdownToHTML(
-            markdownContext.replace
-              ? md.replaceAll(
-                markdownContext.replace[0],
-                markdownContext.replace[1],
-              )
-              : md,
-            markdownContext.url,
-            markdownContext.namespace,
-          ),
-        }}
-      />
-    )
-    : null;
-}
-
-export function getSummary(doc: string | undefined): string | undefined {
-  if (doc) {
-    const [summary] = doc.split("\n\n");
-    return summary;
+  let md = take(children);
+  if (!md) {
+    return null;
   }
-}
+  if (context.replacers) {
+    for (const [pattern, replacement] of context.replacers) {
+      md = md.replaceAll(pattern, replacement);
+    }
+  }
+  let mdStyle: StyleKey = "markdown";
+  if (summary) {
+    mdStyle = "markdownSummary";
+    [md] = md.split("\n\n");
+    [md] = md.split("```");
+  }
 
-export function MarkdownSummary(
-  { children, markdownContext }: {
-    children: Child<string | undefined>;
-    markdownContext: MarkdownContext;
-  },
-) {
-  const md = take(children);
-  return md
-    ? (
-      <span
-        class={style(markdownContext.markdownStyle ?? "markdownSummary")}
-        dangerouslySetInnerHTML={{
-          __html: services.markdownToHTML(
-            markdownContext.replace
-              ? md.replaceAll(
-                markdownContext.replace[0],
-                markdownContext.replace[1],
-              )
-              : md,
-            markdownContext.url,
-            markdownContext.namespace,
-          ),
-        }}
-      />
-    )
-    : null;
+  return (
+    <div
+      class={style(mdStyle)}
+      dangerouslySetInnerHTML={{
+        __html: services.markdownToHTML(
+          parseLinks(md, context.url, context.namespace),
+        ),
+      }}
+    />
+  );
 }

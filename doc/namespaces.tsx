@@ -3,27 +3,23 @@
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
 import { type DocNodeNamespace } from "../deps.ts";
-import { type MarkdownContext } from "./markdown.tsx";
+import { type Context } from "./markdown.tsx";
 import { DocTypeSections } from "./module_doc.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { asCollection, Child, take } from "./utils.ts";
 
 export function DocBlockNamespace(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<DocNodeNamespace>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
-  const { name, namespaceDef: { elements } } = take(children);
-  const namespace = markdownContext.namespace
-    ? `${markdownContext.namespace}.${name}`
-    : name;
-  const collection = asCollection(elements);
-  const context = { namespace, ...markdownContext };
+  const def = take(children);
+  const collection = asCollection(def.namespaceDef.elements);
   return (
     <div class={style("docBlockItems")}>
-      <DocTypeSections markdownContext={context}>
+      <DocTypeSections context={context}>
         {collection}
       </DocTypeSections>
     </div>

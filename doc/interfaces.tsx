@@ -19,7 +19,7 @@ import {
   Tag,
   tagVariants,
 } from "./doc_common.tsx";
-import { MarkdownContext } from "./markdown.tsx";
+import { Context } from "./markdown.tsx";
 import { Params } from "./params.tsx";
 import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
@@ -31,9 +31,9 @@ type IndexSignatureDef =
   | InterfaceIndexSignatureDef;
 
 function CallSignaturesDoc(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<InterfaceCallSignatureDef[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -53,15 +53,18 @@ function CallSignaturesDoc(
           location={location}
           tags={tags}
           jsDoc={jsDoc}
-          markdownContext={markdownContext}
+          context={context}
         >
-          <DocTypeParamsSummary markdownContext={markdownContext}>
+          <DocTypeParamsSummary context={context}>
             {typeParams}
-          </DocTypeParamsSummary>(<Params markdownContext={markdownContext}>
+          </DocTypeParamsSummary>(<Params context={context}>
             {params}
           </Params>){tsType && (
             <>
-              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+              :{" "}
+              <TypeDef context={context}>
+                {tsType}
+              </TypeDef>
             </>
           )}
         </DocEntry>
@@ -72,9 +75,9 @@ function CallSignaturesDoc(
 }
 
 export function IndexSignaturesDoc(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<IndexSignatureDef[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -89,11 +92,14 @@ export function IndexSignaturesDoc(
         {maybe(
           readonly,
           <span>readonly{" "}</span>,
-        )}[<Params markdownContext={markdownContext}>
+        )}[<Params context={context}>
           {params}
         </Params>]{tsType && (
           <span>
-            : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+            :{" "}
+            <TypeDef context={context}>
+              {tsType}
+            </TypeDef>
           </span>
         )}
       </div>
@@ -104,9 +110,9 @@ export function IndexSignaturesDoc(
 }
 
 function MethodsDoc(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<InterfaceMethodDef[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -152,16 +158,20 @@ function MethodsDoc(
             ? `[${name}]`
             : name}
           jsDoc={jsDoc}
-          markdownContext={markdownContext}
+          context={context}
         >
-          <DocTypeParamsSummary markdownContext={markdownContext}>
+          <DocTypeParamsSummary context={context}>
             {typeParams}
           </DocTypeParamsSummary>
-          (<Params markdownContext={markdownContext}>{params}</Params>)
+          (<Params context={context}>
+            {params}
+          </Params>)
           {returnType && (
             <span>
               :{" "}
-              <TypeDef markdownContext={markdownContext}>{returnType}</TypeDef>
+              <TypeDef context={context}>
+                {returnType}
+              </TypeDef>
             </span>
           )}
         </DocEntry>
@@ -172,9 +182,9 @@ function MethodsDoc(
 }
 
 function PropertiesDoc(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<InterfacePropertyDef[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const defs = take(children, true);
@@ -213,11 +223,14 @@ function PropertiesDoc(
           tags={tags}
           name={maybe(computed, `[${name}]`, name)}
           jsDoc={jsDoc}
-          markdownContext={markdownContext}
+          context={context}
         >
           {tsType && (
             <>
-              : <TypeDef markdownContext={markdownContext}>{tsType}</TypeDef>
+              :{" "}
+              <TypeDef context={context}>
+                {tsType}
+              </TypeDef>
             </>
           )}
         </DocEntry>
@@ -229,9 +242,9 @@ function PropertiesDoc(
 }
 
 export function DocSubTitleInterface(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<DocNodeInterface>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const { interfaceDef } = take(children);
@@ -245,7 +258,9 @@ export function DocSubTitleInterface(
       <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
       {interfaceDef.extends.map((typeDef, i) => (
         <>
-          <TypeDef markdownContext={markdownContext}>{typeDef}</TypeDef>
+          <TypeDef context={context}>
+            {typeDef}
+          </TypeDef>
           {i !== (interfaceDef.extends.length - 1) && <span>,{" "}</span>}
         </>
       ))}
@@ -254,31 +269,32 @@ export function DocSubTitleInterface(
 }
 
 export function DocBlockInterface(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<DocNodeInterface>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const def = take(children);
+  context.typeParams = def.interfaceDef.typeParams.map(({ name }) => name);
   return (
     <div class={style("docBlockItems")}>
-      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+      <TypeParamsDoc base={def} context={context}>
         {def.interfaceDef.typeParams}
       </TypeParamsDoc>
 
-      <IndexSignaturesDoc markdownContext={markdownContext}>
+      <IndexSignaturesDoc context={context}>
         {def.interfaceDef.indexSignatures}
       </IndexSignaturesDoc>
 
-      <CallSignaturesDoc markdownContext={markdownContext}>
+      <CallSignaturesDoc context={context}>
         {def.interfaceDef.callSignatures}
       </CallSignaturesDoc>
 
-      <PropertiesDoc markdownContext={markdownContext}>
+      <PropertiesDoc context={context}>
         {def.interfaceDef.properties}
       </PropertiesDoc>
 
-      <MethodsDoc markdownContext={markdownContext}>
+      <MethodsDoc context={context}>
         {def.interfaceDef.methods}
       </MethodsDoc>
     </div>

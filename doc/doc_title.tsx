@@ -7,28 +7,33 @@ import { DocSubTitleInterface } from "./interfaces.tsx";
 import { runtime } from "../services.ts";
 import { type Child, decamelize, take } from "./utils.ts";
 import { docNodeKindColors } from "./symbol_kind.tsx";
-import { MarkdownContext } from "./markdown.tsx";
+import { Context } from "./markdown.tsx";
 
 export function DocTitle(
-  { children, property, markdownContext }: {
+  { children, property, name, context }: {
     children: Child<DocNode>;
     property?: string;
-    markdownContext: MarkdownContext;
+    name: string;
+    context: Context;
   },
 ) {
   const docNode = take(children, true);
   let subTitle;
   switch (docNode.kind) {
     case "class":
+      context.typeParams = docNode.classDef.typeParams.map(({ name }) => name);
       subTitle = (
-        <DocSubTitleClass markdownContext={markdownContext}>
+        <DocSubTitleClass context={context}>
           {docNode}
         </DocSubTitleClass>
       );
       break;
     case "interface":
+      context.typeParams = docNode.interfaceDef.typeParams.map(({ name }) =>
+        name
+      );
       subTitle = (
-        <DocSubTitleInterface markdownContext={markdownContext}>
+        <DocSubTitleInterface context={context}>
           {docNode}
         </DocSubTitleInterface>
       );
@@ -45,7 +50,7 @@ export function DocTitle(
         >
           {decamelize(property ? "method" : docNode.kind)}
         </span>{" "}
-        <span class={tw`font-bold`}>{property ?? docNode.name}</span>
+        <span class={tw`font-bold`}>{property ?? name}</span>
       </div>
       {subTitle && (
         <div class={tw`text-sm leading-4 space-y-0.5`}>

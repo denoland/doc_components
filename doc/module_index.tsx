@@ -2,7 +2,7 @@
 
 /** @jsx runtime.h */
 /** @jsxFrag runtime.Fragment */
-import { getSummary, MarkdownContext, MarkdownSummary } from "./markdown.tsx";
+import { type Context, Markdown } from "./markdown.tsx";
 import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
@@ -17,51 +17,51 @@ export interface IndexItem {
   doc?: string;
 }
 
-function Folder({ children, parent, markdownContext }: {
+function Folder({ children, parent, context }: {
   children: Child<IndexItem>;
   parent: string;
-  markdownContext: MarkdownContext;
+  context: Context;
 }) {
   const item = take(children);
-  const url = `${markdownContext.url}${item.path}`;
+  const url = new URL(context.url);
+  url.pathname += item.path;
   const href = services.resolveHref(url);
-  const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
   return (
     <tr class={style("moduleIndexRow")}>
       <td class={style("moduleIndexLinkCell")}>
         <Icons.Dir class={style("moduleIndexLinkCellIcon")} />
-        <a href={href} class={style("link")}>{label}</a>
+        <a href={href} class={tw`link`}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary markdownContext={{ ...markdownContext, url }}>
-          {summary}
-        </MarkdownSummary>
+        <Markdown summary context={{ ...context, url }}>
+          {item.doc}
+        </Markdown>
       </td>
     </tr>
   );
 }
 
-function Module({ children, parent, markdownContext }: {
+function Module({ children, parent, context }: {
   children: Child<IndexItem>;
   parent: string;
-  markdownContext: MarkdownContext;
+  context: Context;
 }) {
   const item = take(children);
-  const url = `${markdownContext.url}${item.path}`;
+  const url = new URL(context.url);
+  url.pathname += item.path;
   const href = services.resolveHref(url);
-  const summary = getSummary(item.doc);
   const label = item.path.slice(parent === "/" ? 1 : parent.length + 1);
   return (
     <tr class={style("moduleIndexRow")}>
       <td class={style("moduleIndexLinkCell")}>
         <Icons.Source class={style("moduleIndexLinkCellIcon")} />
-        <a href={href} class={style("link")}>{label}</a>
+        <a href={href} class={tw`link`}>{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
-        <MarkdownSummary markdownContext={{ ...markdownContext, url }}>
-          {summary}
-        </MarkdownSummary>
+        <Markdown summary context={{ ...context, url }}>
+          {item.doc}
+        </Markdown>
       </td>
     </tr>
   );
@@ -75,13 +75,13 @@ export function ModuleIndex(
     path = "/",
     skipMods = false,
     sourceUrl,
-    ...markdownContext
+    ...context
   }: {
     children: Child<IndexItem[]>;
     skipMods?: boolean;
     path?: string;
     sourceUrl: string;
-  } & MarkdownContext,
+  } & Pick<Context, "url" | "replacers">,
 ) {
   const items = take(children, true);
   items.sort((a, b) =>
@@ -95,13 +95,13 @@ export function ModuleIndex(
     }
     if (item.kind === "dir") {
       entries.push(
-        <Folder parent={path} markdownContext={markdownContext}>
+        <Folder parent={path} context={context}>
           {item}
         </Folder>,
       );
     } else if (item.kind === "module" && !skipMods) {
       entries.push(
-        <Module parent={path} markdownContext={markdownContext}>
+        <Module parent={path} context={context}>
           {item}
         </Module>,
       );

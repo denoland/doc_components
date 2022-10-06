@@ -7,7 +7,7 @@ import { runtime, services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
-import { MarkdownContext } from "./markdown.tsx";
+import { Context } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]]|\.)/g;
@@ -30,7 +30,7 @@ export function Anchor({ children: name }: { children: string }) {
 }
 
 export function DocEntry(
-  { children, tags, name, location, id, jsDoc, href, markdownContext }: {
+  { children, tags, name, location, id, jsDoc, href, context }: {
     children: unknown;
     tags?: unknown[];
     name?: unknown;
@@ -38,19 +38,14 @@ export function DocEntry(
     id: string;
     jsDoc?: { doc?: string };
     href?: string;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
-  const sourceHref = services.resolveSourceHref(
-    location.filename,
-    location.line,
-  );
-
-  markdownContext.markdownStyle ??= "docItemMarkdown";
+  const sourceHref = services.resolveSourceHref(location.filename, location.line);
 
   const docEntryChildren = (
     <>
-      {!!tags?.length && <span>{tags}</span>}
+      {!!tags?.length && <span class={tw`space-x-1`}>{tags}</span>}
       <span class={tw`font-mono`}>
         {name && <span class={tw`font-bold`}>{name}</span>}
         <span class={tw`font-medium`}>{children}</span>
@@ -63,6 +58,7 @@ export function DocEntry(
       <Anchor>{id}</Anchor>
 
       <div class={style("docEntry")}>
+        <span class={style("docEntryChildren")}>
         {href
           ? (
             <a class={style("docEntryChildrenHref")} href={href}>
@@ -74,16 +70,21 @@ export function DocEntry(
               {docEntryChildren}
             </span>
           )}
+          <span class={tw`font-mono`}>
+            {name && <span class={tw`font-bold`}>{name}</span>}
+            <span class={tw`font-medium`}>{children}</span>
+          </span>
+        </span>
         {sourceHref && (
-          <a href={sourceHref} target="_blank" class={style("sourceLink")}>
-            [src]
-          </a>
+          <a href={sourceHref} target="_blank" class={style("sourceLink")}>[src]</a>
         )}
       </div>
 
-      <JsDoc markdownContext={markdownContext}>
-        {jsDoc}
-      </JsDoc>
+      <div class={tw`pl-5`}>
+        <JsDoc context={context}>
+          {jsDoc}
+        </JsDoc>
+      </div>
     </div>
   );
 }
@@ -101,7 +102,7 @@ export function SectionTitle({ children }: { children: Child<string> }) {
 }
 
 export function Section(
-  { children, title }: { children: Child<unknown[]>; title?: string },
+  { children, title }: { children: Child<unknown[]>; title: string },
 ) {
   const entries = take(children, true);
   if (entries.length === 0) {
@@ -110,7 +111,7 @@ export function Section(
 
   return (
     <div>
-      {title && <SectionTitle>{title}</SectionTitle>}
+      <SectionTitle>{title}</SectionTitle>
       <div class={tw`mt-2 space-y-7`}>
         {entries}
       </div>

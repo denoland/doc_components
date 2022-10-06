@@ -18,7 +18,7 @@ import {
 import { DocBlockEnum } from "../doc/enums.tsx";
 import { DocBlockFunction } from "../doc/functions.tsx";
 import { DocBlockInterface } from "../doc/interfaces.tsx";
-import { MarkdownSummary } from "../doc/markdown.tsx";
+import { Markdown } from "../doc/markdown.tsx";
 import { ModuleDoc } from "../doc/module_doc.tsx";
 import { ModuleIndex } from "../doc/module_index.tsx";
 import { ModuleIndexPanel } from "../doc/module_index_panel.tsx";
@@ -57,7 +57,7 @@ function ComponentTitle(
 
 export function Showcase(
   { moduleIndex, moduleDoc, symbolDoc, symbol, url }: {
-    url: string;
+    url: URL;
     symbol: string;
     moduleIndex: any;
     moduleDoc: any;
@@ -71,14 +71,14 @@ export function Showcase(
       <h1 class={tw`text-3xl py-3`}>Deno Doc Components</h1>
       <h2 class={tw`text-2xl py-2`}>Component Showcase</h2>
       <hr />
-      <ComponentTitle module="/markdown.tsx">MarkdownSummary</ComponentTitle>
-      <MarkdownSummary markdownContext={{ url }}>
+      <ComponentTitle module="/markdown.tsx">Markdown Summary</ComponentTitle>
+      <Markdown summary context={{ url }}>
         {`Some _markdown_ with [links](https://deno.land/) and symbol links, like: {@linkcode Router}`}
-      </MarkdownSummary>
+      </Markdown>
 
       <ComponentTitle module="/module_index.tsx">ModuleIndex</ComponentTitle>
       <ModuleIndex
-        base="https://deno.land/std@0.154.0"
+        url={new URL("https://deno.land/std@0.154.0")}
         sourceUrl="https://deno.land/std@0.154.0"
       >
         {moduleIndex.items}
@@ -88,7 +88,7 @@ export function Showcase(
         ModuleIndexPanel
       </ComponentTitle>
       <ModuleIndexPanel
-        base="https://deno.land/oak@v11.0.0"
+        base={new URL("https://deno.land/oak@v11.0.0")}
         path="/mod.ts"
         current="/mod.ts"
       >
@@ -96,7 +96,7 @@ export function Showcase(
       </ModuleIndexPanel>
 
       <ComponentTitle module="/module_doc.tsx">ModuleDoc</ComponentTitle>
-      <ModuleDoc url={url} sourceUrl={url}>
+      <ModuleDoc url={url} sourceUrl={url.href}>
         {moduleDoc.docNodes}
       </ModuleDoc>
 
@@ -126,7 +126,7 @@ export function Showcase(
 }
 
 export function ShowcaseDocBlocks(
-  { docNodes, url }: { docNodes: DocNode[]; url: string },
+  { docNodes, url }: { docNodes: DocNode[]; url: URL },
 ) {
   const classNode = docNodes.find(({ kind }) =>
     kind === "class"
@@ -152,23 +152,23 @@ export function ShowcaseDocBlocks(
       <h2 class={tw`text-2xl py-2`}>CodeBlock Component Showcase</h2>
       <hr />
       <ComponentTitle module="/classes.tsx">DocBlockClass</ComponentTitle>
-      <DocBlockClass markdownContext={{ url }}>{classNode}</DocBlockClass>
+      <DocBlockClass context={{ url }}>{classNode}</DocBlockClass>
       <ComponentTitle module="/enum.tsx">DocBlockEnum</ComponentTitle>
-      <DocBlockEnum markdownContext={{ url }}>{enumNode}</DocBlockEnum>
+      <DocBlockEnum context={{ url }}>{enumNode}</DocBlockEnum>
       <ComponentTitle module="/interfaces.tsx">
         DocBlockInterface
       </ComponentTitle>
-      <DocBlockInterface markdownContext={{ url }}>
+      <DocBlockInterface context={{ url }}>
         {interfaceNode}
       </DocBlockInterface>
       <ComponentTitle module="/functions.tsx">DocBlockFn</ComponentTitle>
-      <DocBlockFunction markdownContext={{ url }}>{fnNodes}</DocBlockFunction>
+      <DocBlockFunction context={{ url }}>{fnNodes}</DocBlockFunction>
       <ComponentTitle module="/type_alias.tsx">DocNodeTypeAlias</ComponentTitle>
-      <DocBlockTypeAlias markdownContext={{ url }}>
+      <DocBlockTypeAlias context={{ url }}>
         {typeAliasNode}
       </DocBlockTypeAlias>
       <ComponentTitle module="/namespace.tsx">DocBlockNamespace</ComponentTitle>
-      <DocBlockNamespace markdownContext={{ url }}>
+      <DocBlockNamespace context={{ url }}>
         {namespaceNode}
       </DocBlockNamespace>
     </div>
