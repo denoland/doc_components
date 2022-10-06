@@ -41,7 +41,10 @@ export function DocEntry(
     context: Context;
   },
 ) {
-  const sourceHref = services.resolveSourceHref(location.filename, location.line);
+  const sourceHref = services.resolveSourceHref(
+    location.filename,
+    location.line,
+  );
 
   const docEntryChildren = (
     <>
@@ -59,24 +62,26 @@ export function DocEntry(
 
       <div class={style("docEntry")}>
         <span class={style("docEntryChildren")}>
-        {href
-          ? (
-            <a class={style("docEntryChildrenHref")} href={href}>
-              {docEntryChildren}
-            </a>
-          )
-          : (
-            <span class={style("docEntryChildren")}>
-              {docEntryChildren}
-            </span>
-          )}
+          {href
+            ? (
+              <a class={style("docEntryChildrenHref")} href={href}>
+                {docEntryChildren}
+              </a>
+            )
+            : (
+              <span class={style("docEntryChildren")}>
+                {docEntryChildren}
+              </span>
+            )}
           <span class={tw`font-mono`}>
             {name && <span class={tw`font-bold`}>{name}</span>}
             <span class={tw`font-medium`}>{children}</span>
           </span>
         </span>
         {sourceHref && (
-          <a href={sourceHref} target="_blank" class={style("sourceLink")}>[src]</a>
+          <a href={sourceHref} target="_blank" class={style("sourceLink")}>
+            [src]
+          </a>
         )}
       </div>
 

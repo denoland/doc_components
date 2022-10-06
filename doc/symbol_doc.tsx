@@ -32,7 +32,7 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, name, library = false, property, ...context  }: {
+  { children, name, library = false, property, ...context }: {
     children: Child<DocNode[]>;
     name: string;
     library?: boolean;
@@ -84,7 +84,12 @@ export function SymbolDoc(
   return (
     <article class={style("symbolDoc")}>
       {Object.values(splitNodes).map((nodes) => (
-        <Symbol showUsage={showUsage} property={propertyName} name={name} context={context}>
+        <Symbol
+          showUsage={showUsage}
+          property={propertyName}
+          name={name}
+          context={context}
+        >
           {nodes}
         </Symbol>
       ))}
@@ -151,7 +156,7 @@ function Symbol(
     <div class={tw`space-y-7`}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
-          <DocTitle roperty={property}  name={name} context={context}>
+          <DocTitle roperty={property} name={name} context={context}>
             {docNodes[0]}
           </DocTitle>
 
