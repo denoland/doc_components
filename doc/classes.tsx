@@ -230,7 +230,7 @@ function ClassMethodDoc(
         name={name}
         jsDoc={jsDoc}
         href={services.resolveHref(
-          markdownContext.url,
+          context.url,
           className,
           isStatic ? name : `prototype.${name}`,
         )}

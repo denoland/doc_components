@@ -46,36 +46,21 @@ export function DocEntry(
     location.line,
   );
 
-  const docEntryChildren = (
-    <>
-      {!!tags?.length && <span class={tw`space-x-1`}>{tags}</span>}
-      <span class={tw`font-mono`}>
-        {name && <span class={tw`font-bold`}>{name}</span>}
-        <span class={tw`font-medium`}>{children}</span>
-      </span>
-    </>
-  );
-
   return (
     <div class={style("docItem")} id={id}>
       <Anchor>{id}</Anchor>
 
       <div class={style("docEntry")}>
         <span class={style("docEntryChildren")}>
-          {href
-            ? (
-              <a class={style("docEntryChildrenHref")} href={href}>
-                {docEntryChildren}
-              </a>
-            )
-            : (
-              <span class={style("docEntryChildren")}>
-                {docEntryChildren}
-              </span>
-            )}
-          <span class={tw`font-mono`}>
-            {name && <span class={tw`font-bold`}>{name}</span>}
-            <span class={tw`font-medium`}>{children}</span>
+          <span class={style("docEntryChildren")}>
+            {!!tags?.length && <span class={tw`space-x-1`}>{tags}</span>}
+
+            <span class={tw`font-mono`}>
+              {name && href
+                ? <a class={tw`font-bold link`} href={href}>{name}</a>
+                : <span class={tw`font-bold`}>{name}</span>}
+              <span class={tw`font-medium`}>{children}</span>
+            </span>
           </span>
         </span>
         {sourceHref && (

@@ -78,6 +78,7 @@ export function SymbolDoc(
       propertyName = `${classNode.name}.${property}`;
     }
   }
+  console.log(propertyName);
 
   const showUsage = !(context.url.href.endsWith(".d.ts") || library);
 
@@ -156,7 +157,7 @@ function Symbol(
     <div class={tw`space-y-7`}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
-          <DocTitle roperty={property} name={name} context={context}>
+          <DocTitle property={property} name={name} context={context}>
             {docNodes[0]}
           </DocTitle>
 
