@@ -25,7 +25,7 @@ export function DocBlockVariable(
 
   return (
     <div class={style("docBlockItems")}>
-      <Section>
+      <Section title="type">
         {[
           <DocEntry id={id} location={def.location} context={context}>
             <TypeDef context={context}>

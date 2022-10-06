@@ -80,7 +80,7 @@ export function SectionTitle({ children }: { children: Child<string> }) {
 }
 
 export function Section(
-  { children, title }: { children: Child<unknown[]>; title?: string },
+  { children, title }: { children: Child<unknown[]>; title: string },
 ) {
   const entries = take(children, true);
   if (entries.length === 0) {
@@ -89,7 +89,7 @@ export function Section(
 
   return (
     <div>
-      {title && <SectionTitle>{title}</SectionTitle>}
+      <SectionTitle>{title}</SectionTitle>
       <div class={tw`mt-2 space-y-7`}>
         {entries}
       </div>
