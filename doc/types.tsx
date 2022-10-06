@@ -462,7 +462,7 @@ export function TypeDef({ children, context }: {
         url.hash = nameToId("type_param", typeRef.typeName);
         href = url.href;
       } else {
-        services.lookupHref(context.url, context.namespace, typeRef.typeName);
+        href = services.lookupHref(context.url, context.namespace, typeRef.typeName);
       }
       return (
         <>
