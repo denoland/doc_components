@@ -419,6 +419,10 @@ export function DocSubTitleClass(
 ) {
   const { classDef } = take(children);
 
+  const extendsHref = classDef.extends
+    ? services.lookupHref(context.url, context.namespace, classDef.extends)
+    : undefined;
+
   return (
     <>
       {classDef.implements.length !== 0 && (
@@ -438,7 +442,9 @@ export function DocSubTitleClass(
       {classDef.extends && (
         <div>
           <span class={tw`text-[#9CA0AA] italic`}>{" extends "}</span>
-          <span>{classDef.extends}</span>
+          {extendsHref
+            ? <a href={extendsHref} class={tw`link`}>{classDef.extends}</a>
+            : <span>{classDef.extends}</span>}
           <span>
             {classDef.superTypeParams.length !== 0 && (
               <span>
