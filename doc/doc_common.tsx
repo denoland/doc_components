@@ -54,7 +54,12 @@ export function DocEntry(
           </span>
         </span>
         {href && (
-          <a href={href} aria-label="Jump to src" target="_blank" class={style("sourceLink")}>
+          <a
+            href={href}
+            aria-label="Jump to src"
+            target="_blank"
+            class={style("sourceLink")}
+          >
             <Icons.LinkLine class="w-5 h-5" />
           </a>
         )}
@@ -115,8 +120,9 @@ export function Tag(
   const [bg, text] = tagColors[color];
   return (
     <div
-      class={tw`bg-${bg} text-${text} ${large ? "py-2 px-3" : "py-1 px-2"} ${style("tag")
-        }`}
+      class={tw`bg-${bg} text-${text} ${large ? "py-2 px-3" : "py-1 px-2"} ${
+        style("tag")
+      }`}
     >
       {children}
     </div>
