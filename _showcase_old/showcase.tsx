@@ -2,7 +2,6 @@
 
 // deno-lint-ignore-file no-explicit-any
 
-/** @jsx runtime.h */
 import { apply, css, tw } from "./deps.ts";
 import { tagVariants } from "../doc/doc_common.tsx";
 import { DocBlockClass } from "../doc/classes.tsx";
@@ -22,7 +21,6 @@ import { Markdown } from "../doc/markdown.tsx";
 import { ModuleDoc } from "../doc/module_doc.tsx";
 import { ModuleIndex } from "../doc/module_index.tsx";
 import { ModuleIndexPanel } from "../doc/module_index_panel.tsx";
-import { runtime } from "../services.ts";
 import { SymbolDoc } from "../doc/symbol_doc.tsx";
 import { DocBlockTypeAlias } from "../doc/type_aliases.tsx";
 import { Usage } from "../doc/usage.tsx";

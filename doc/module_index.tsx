@@ -1,9 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import { type Context, Markdown } from "./markdown.tsx";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "../icons.tsx";

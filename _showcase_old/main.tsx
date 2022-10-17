@@ -1,6 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
 import { type DocNode } from "../deps.ts";
 import {
   classNode,
@@ -10,13 +9,11 @@ import {
   namespaceNode,
   typeAliasNode,
 } from "./fixtures.ts";
-import { plugins, runtime, setup, theme } from "../services.ts";
+import { plugins, setup, theme } from "../services.ts";
 import {
   Application,
   colors,
-  Fragment,
   getStyleTag,
-  h,
   HttpError,
   renderSSR,
   Router,
@@ -48,7 +45,6 @@ await setup({
     }
     return `/${url.href}`;
   },
-  runtime: { Fragment, h },
   tw: { sheet, theme, plugins, darkMode: "class" },
 });
 

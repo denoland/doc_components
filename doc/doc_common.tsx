@@ -1,8 +1,12 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-import { type Accessibility, type Location, tw } from "../deps.ts";
-import { runtime, services } from "../services.ts";
+import {
+  type Accessibility,
+  type ComponentChildren,
+  type Location,
+  tw,
+} from "../deps.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
@@ -30,7 +34,7 @@ export function Anchor({ children: name }: { children: string }) {
 
 export function DocEntry(
   { children, tags, name, location, id, jsDoc, context }: {
-    children: unknown;
+    children: ComponentChildren;
     tags?: unknown[];
     name?: unknown;
     location: Location;
@@ -105,7 +109,7 @@ export const tagColors = {
 
 export function Tag(
   { children, color, large }: {
-    children: unknown;
+    children: ComponentChildren;
     color: keyof typeof tagColors;
     large?: boolean;
   },

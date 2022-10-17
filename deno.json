@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  },
+  "importMap": "./_showcase/import_map.json",
+  "tasks": {
+    "fmt": "deno fmt --ignore=./_showcase/data",
+    "showcase": "cd _showcase && deno task start",
+    "test": "deno test"
+  }
+}

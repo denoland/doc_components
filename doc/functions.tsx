@@ -1,7 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import {
   apply,
   css,
@@ -15,7 +13,6 @@ import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { type Context, Markdown } from "./markdown.tsx";
 import { paramName, Params } from "./params.tsx";
-import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { DocTypeParamsSummary, TypeDef, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";

@@ -1,8 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
 import { comrak, htmlEntities, lowlight, toHtml } from "../deps.ts";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style, type StyleKey } from "../styles.ts";
 import { assert, type Child, take } from "./utils.ts";
 
