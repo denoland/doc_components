@@ -60,7 +60,9 @@ export function DocEntry(
             target="_blank"
             class={style("sourceLink")}
           >
-            <Icons.LinkLine class="w-5 h-5" />
+            <div class={tw`hover:bg-gray-100 px-1 py-1 rounded-md`}>
+              <Icons.LinkLine class="w-5 h-5" />
+            </div>
           </a>
         )}
       </div>
