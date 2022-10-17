@@ -54,7 +54,16 @@ export function DocEntry(
           </span>
         </span>
         {href && (
-          <a href={href} target="_blank" class={style("sourceLink")}>[src]</a>
+          <a
+            href={href}
+            aria-label="Jump to src"
+            target="_blank"
+            class={style("sourceLink")}
+          >
+            <div class={tw`hover:bg-gray-100 px-1 py-1 rounded-md`}>
+              <Icons.LinkLine class="w-5 h-5" />
+            </div>
+          </a>
         )}
       </div>
 
