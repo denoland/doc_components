@@ -74,7 +74,7 @@ export function Usage(
     importStatement,
     usageSymbol,
     localVar,
-  } = parseUsage(url, name, isType);
+  } = parseUsage(url, name, isType, true);
   return (
     <div class={style("markdown")}>
       <pre class={tw`flex items-center justify-between gap-2.5`}>
