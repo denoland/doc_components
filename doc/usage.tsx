@@ -15,6 +15,8 @@ interface ParsedUsage {
   /** The undecorated code of the generated import statement to import and use
    * the item. */
   importStatement: string;
+  /** The final specifier that should be used to import from. */
+  importSpecifier: string;
   /** The local variable that the `usageSymbol` should be destructured out of.
    */
   localVar?: string;
@@ -56,14 +58,20 @@ export function parseUsage(
   let importStatement = item
     ? `import { ${
       isType ? "type " : ""
-    }${importSymbol} } from "${target.toString()}";\n`
-    : `import * as ${importSymbol} from "${target.toString()}";\n`;
+    }${importSymbol} } from "${target.href}";\n`
+    : `import * as ${importSymbol} from "${target.href}";\n`;
   // if we are using a symbol off a imported namespace, we need to destructure
   // it to a local variable.
   if (usageSymbol) {
     importStatement += `\nconst { ${usageSymbol} } = ${localVar};\n`;
   }
-  return { importSymbol, usageSymbol, localVar, importStatement };
+  return {
+    importSymbol,
+    usageSymbol,
+    localVar,
+    importStatement,
+    importSpecifier: target.href,
+  };
 }
 
 export function Usage(
@@ -72,6 +80,7 @@ export function Usage(
   const {
     importSymbol,
     importStatement,
+    importSpecifier,
     usageSymbol,
     localVar,
   } = parseUsage(url, name, isType, true);
@@ -95,7 +104,7 @@ export function Usage(
               </span>
             )}
           <span class="code-keyword">from</span>{" "}
-          <span class="code-string">"{url}"</span>;{maybe(
+          <span class="code-string">"{importSpecifier}"</span>;{maybe(
             usageSymbol,
             <div>
               <br />
