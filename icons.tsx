@@ -340,15 +340,15 @@ export function LinkLine(props: { class?: string }) {
     >
       <path
         d="M2.08337 9.33335L4.25005 7.16667L2.08337 5"
-        stroke="#232323"
-        stroke-width="1.4"
+        stroke="currentColor"
+        stroke-width="1.2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
       <path
         d="M11.2658 7.06348H6.9325"
-        stroke="#232323"
-        stroke-width="1.4"
+        stroke="currentColor"
+        stroke-width="1.2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
