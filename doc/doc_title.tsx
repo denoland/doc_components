@@ -1,10 +1,8 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
 import { DocSubTitleClass } from "./classes.tsx";
 import { type DocNode, tw } from "../deps.ts";
 import { DocSubTitleInterface } from "./interfaces.tsx";
-import { runtime } from "../services.ts";
 import { type Child, decamelize, take } from "./utils.ts";
 import { docNodeKindColors } from "./symbol_kind.tsx";
 import { Context } from "./markdown.tsx";

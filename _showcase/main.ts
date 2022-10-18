@@ -4,15 +4,12 @@
 /// <reference lib="dom.asynciterable" />
 /// <reference lib="deno.ns" />
 
-/** TODO(@kitsonk) This is TEMPORARY until we merge this branch in and then we
- * should move to `main.ts` */
-
 import { start } from "$fresh/server.ts";
 import manifest from "./fresh.gen.ts";
-import { setup } from "@doc_components/services.ts";
 
 import twindPlugin from "$fresh/plugins/twind.ts";
 import twindConfig from "./twind.config.ts";
+import { setup } from "@doc_components/services.ts";
 
 await setup({});
 await start(manifest, { plugins: [twindPlugin(twindConfig)] });

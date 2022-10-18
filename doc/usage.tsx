@@ -1,7 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { camelize, maybe, parseURL } from "./utils.ts";
 import * as Icons from "../icons.tsx";
@@ -84,6 +82,9 @@ export function Usage(
     usageSymbol,
     localVar,
   } = parseUsage(url, name, isType, true);
+  const onClick =
+    // deno-lint-ignore no-explicit-any
+    `navigator?.clipboard?.writeText('${importStatement.trim()}');` as any;
   return (
     <div class={style("markdown")}>
       <pre class={tw`flex items-center justify-between gap-2.5`}>
@@ -115,7 +116,7 @@ export function Usage(
         </code>
         <button
           class={style("copyButton")}
-          onClick={`navigator?.clipboard?.writeText('${importStatement.trim()}');`}
+          onClick={onClick}
         >
           <Icons.Copy />
         </button>

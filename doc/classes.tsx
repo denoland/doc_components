@@ -1,7 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import {
   type ClassConstructorDef,
   type ClassMethodDef,
@@ -20,7 +18,7 @@ import {
 import { IndexSignaturesDoc } from "./interfaces.tsx";
 import { type Context } from "./markdown.tsx";
 import { Params } from "./params.tsx";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef, TypeParamsDoc } from "./types.tsx";
 import { assert, type Child, isDeprecated, take } from "./utils.ts";

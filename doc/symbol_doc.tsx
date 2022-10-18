@@ -1,7 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import {
   type DocNode,
   type DocNodeInterface,
@@ -14,7 +12,7 @@ import { DocBlock } from "./doc_block.tsx";
 import { Tag, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import * as Icons from "../icons.tsx";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";

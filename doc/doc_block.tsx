@@ -1,6 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
 import { DocBlockClass } from "./classes.tsx";
 import { type DocNode, type DocNodeFunction } from "../deps.ts";
 import { DocBlockEnum } from "./enums.tsx";
@@ -8,7 +7,6 @@ import { DocBlockFunction } from "./functions.tsx";
 import { DocBlockInterface } from "./interfaces.tsx";
 import { type Context } from "./markdown.tsx";
 import { DocBlockNamespace } from "./namespaces.tsx";
-import { runtime } from "../services.ts";
 import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
 import { DocBlockVariable } from "./variables.tsx";
