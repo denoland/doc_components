@@ -28,7 +28,7 @@ export function Showcase(
 ) {
   return (
     <div
-      class={tw`h-screen bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 p-4`}
+      class={tw`bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 p-4`}
     >
       <h1 class="text-3xl py-3">Deno Doc Components</h1>
       <h2 class="text-2xl py-2 border-b-1">Component Showcase</h2>
@@ -73,7 +73,7 @@ export function Showcase(
         {modulePage.docNodes}
       </ModuleDoc>
 
-      <ComponentTitle module="/doc/symbol_doc.ts">SymbolDoc</ComponentTitle>
+      <ComponentTitle module="/doc/symbol_doc.tsx">SymbolDoc</ComponentTitle>
       <SymbolDoc url={url} name={symbolPage.name}>
         {symbolPage.docNodes}
       </SymbolDoc>

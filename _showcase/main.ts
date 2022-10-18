@@ -9,5 +9,7 @@ import manifest from "./fresh.gen.ts";
 
 import twindPlugin from "$fresh/plugins/twind.ts";
 import twindConfig from "./twind.config.ts";
+import { setup } from "@doc_components/services.ts";
 
+await setup({});
 await start(manifest, { plugins: [twindPlugin(twindConfig)] });
