@@ -1,29 +1,28 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
 import { type DocNodeTypeAlias } from "../deps.ts";
 import { DocEntry, nameToId, tagVariants } from "./doc_common.tsx";
-import { type MarkdownContext } from "./markdown.tsx";
-import { runtime } from "../services.ts";
+import { type Context } from "./markdown.tsx";
 import { style } from "../styles.ts";
 import { TypeDef, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";
 
 export function DocBlockTypeAlias(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<DocNodeTypeAlias>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const def = take(children);
   const id = nameToId("typeAlias", def.name);
+  context.typeParams = def.typeAliasDef.typeParams.map(({ name }) => name);
   const tags = [];
   if (isDeprecated(def)) {
     tags.push(tagVariants.deprecated());
   }
   return (
     <div class={style("docBlockItems")}>
-      <TypeParamsDoc base={def} markdownContext={markdownContext}>
+      <TypeParamsDoc base={def} context={context}>
         {def.typeAliasDef.typeParams}
       </TypeParamsDoc>
 
@@ -32,10 +31,10 @@ export function DocBlockTypeAlias(
         location={def.location}
         tags={tags}
         name={"definition"}
-        markdownContext={markdownContext}
+        context={context}
       >
         :{" "}
-        <TypeDef markdownContext={markdownContext}>
+        <TypeDef context={context}>
           {def.typeAliasDef.tsType}
         </TypeDef>
       </DocEntry>

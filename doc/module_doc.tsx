@@ -1,13 +1,11 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
-import { type DocNode, tw } from "../deps.ts";
+import { type ComponentChildren, type DocNode, tw } from "../deps.ts";
 import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
 import { JsDocModule } from "./jsdoc.tsx";
-import { Markdown, type MarkdownContext } from "./markdown.tsx";
-import { runtime, services } from "../services.ts";
+import { type Context, Markdown } from "./markdown.tsx";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import * as SymbolKind from "./symbol_kind.tsx";
@@ -24,17 +22,15 @@ import {
 } from "./utils.ts";
 
 function Entry<Node extends DocNode>(
-  { children, icon, markdownContext }: {
+  { children, icon, context }: {
     children: Child<[label: string, node: Node]>;
     icon: ComponentChildren;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const [label, node] = take(children, true);
-  const name = markdownContext.namespace
-    ? `${markdownContext.namespace}.${label}`
-    : label;
-  const href = services.resolveHref(markdownContext.url, name);
+  const name = context.namespace ? `${context.namespace}.${label}` : label;
+  const href = services.resolveHref(context.url, name);
 
   return (
     <tr class={style("symbolListRow")}>
@@ -47,7 +43,7 @@ function Entry<Node extends DocNode>(
         </div>
       </td>
       <td class={style("symbolListCellDoc")}>
-        <Markdown summary markdownContext={markdownContext}>
+        <Markdown summary context={context}>
           {node.jsDoc?.doc}
         </Markdown>
       </td>
@@ -56,11 +52,11 @@ function Entry<Node extends DocNode>(
 }
 
 function Section<Node extends DocNode>(
-  { children, title, icon, markdownContext }: {
+  { children, title, icon, context }: {
     children: Child<DocNodeTupleArray<Node>>;
     title: string;
     icon: ComponentChildren;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const tuples = take(children, true, true);
@@ -71,7 +67,7 @@ function Section<Node extends DocNode>(
     }
     displayed.add(label);
     return (
-      <Entry markdownContext={markdownContext} icon={icon}>
+      <Entry context={context} icon={icon}>
         {[label, node]}
       </Entry>
     );
@@ -85,9 +81,9 @@ function Section<Node extends DocNode>(
 }
 
 export function DocTypeSections(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<DocNodeCollection>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const collection = take(children);
@@ -97,7 +93,7 @@ export function DocTypeSections(
         <Section
           title="Namespaces"
           icon={<SymbolKind.Namespace />}
-          markdownContext={markdownContext}
+          context={context}
         >
           {collection.namespace}
         </Section>
@@ -106,7 +102,7 @@ export function DocTypeSections(
         <Section
           title="Classes"
           icon={<SymbolKind.Class />}
-          markdownContext={markdownContext}
+          context={context}
         >
           {collection.class}
         </Section>
@@ -115,7 +111,7 @@ export function DocTypeSections(
         <Section
           title="Enums"
           icon={<SymbolKind.Enum />}
-          markdownContext={markdownContext}
+          context={context}
         >
           {collection.enum}
         </Section>
@@ -124,7 +120,7 @@ export function DocTypeSections(
         <Section
           title="Variables"
           icon={<SymbolKind.Variable />}
-          markdownContext={markdownContext}
+          context={context}
         >
           {collection.variable}
         </Section>
@@ -133,7 +129,7 @@ export function DocTypeSections(
         <Section
           title="Functions"
           icon={<SymbolKind.Function />}
-          markdownContext={markdownContext}
+          context={context}
         >
           {collection.function}
         </Section>
@@ -142,7 +138,7 @@ export function DocTypeSections(
         <Section
           title="Interfaces"
           icon={<SymbolKind.Interface />}
-          markdownContext={markdownContext}
+          context={context}
         >
           {collection.interface}
         </Section>
@@ -151,7 +147,7 @@ export function DocTypeSections(
         <Section
           title="Type Aliases"
           icon={<SymbolKind.TypeAlias />}
-          markdownContext={markdownContext}
+          context={context}
         >
           {collection.typeAlias}
         </Section>
@@ -161,10 +157,10 @@ export function DocTypeSections(
 }
 
 export function ModuleDoc(
-  { children, sourceUrl, ...markdownContext }: {
+  { children, sourceUrl, ...context }: {
     children: Child<DocNode[]>;
     sourceUrl: string;
-  } & Pick<MarkdownContext, "url" | "replacers">,
+  } & Pick<Context, "url" | "replacers">,
 ) {
   const collection = asCollection(take(children, true));
   return (
@@ -181,14 +177,14 @@ export function ModuleDoc(
       <article class={style("main")}>
         <div class={style("moduleDoc")}>
           <div class={tw`space-y-3`}>
-            <Usage url={markdownContext.url} />
+            <Usage url={context.url} />
             {collection.moduleDoc && (
-              <JsDocModule markdownContext={markdownContext}>
+              <JsDocModule context={context}>
                 {collection.moduleDoc}
               </JsDocModule>
             )}
           </div>
-          <DocTypeSections markdownContext={markdownContext}>
+          <DocTypeSections context={context}>
             {collection}
           </DocTypeSections>
         </div>

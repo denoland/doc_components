@@ -1,8 +1,5 @@
 // Copyright 2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
-import { runtime, services } from "./services.ts";
 import { tw } from "./deps.ts";
 import * as Icons from "./icons.tsx";
 

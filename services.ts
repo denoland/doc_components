@@ -13,16 +13,6 @@ import {
 import { mdToHtml } from "./doc/markdown.tsx";
 import { comrakStyles } from "./styles.ts";
 
-interface JsxRuntime {
-  Fragment: (props: Record<string, unknown>) => unknown;
-  h: (
-    type: string,
-    props: Record<string, unknown>,
-    // deno-lint-ignore no-explicit-any
-    ...children: any[]
-  ) => unknown;
-}
-
 export interface Configuration {
   /** Called when the doc components are trying to resolve a symbol.  The
    * current url is provided as a string, an optional namespace and the symbol
@@ -55,8 +45,6 @@ export interface Configuration {
   resolveSourceHref?: (url: string, line?: number) => string;
   /** Called when markdown needs to be rendered. */
   markdownToHTML?: (markdown: string) => string;
-  /** The JSX runtime that should be used. */
-  runtime?: JsxRuntime;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
   tw?: TwConfiguration;
   /** Class to give to markdown blocks */
@@ -121,6 +109,8 @@ export const theme: ThemeConfiguration = {
 };
 
 export const plugins: Record<string, Plugin> = {
+  link:
+    apply`text-[#056CF0] transition duration-75 ease-in-out hover:text-blue-400`,
   "section-x-inset": (parts) =>
     parts[0] === "none"
       ? apply`max-w-none mx-0 px-0`
@@ -147,7 +137,6 @@ const runtimeConfig: Required<
     | "markdownToHTML"
     | "markdownStyle"
     | "markdownSummaryStyle"
-    | "runtime"
   >
 > = {
   resolveHref(current, symbol) {
@@ -162,29 +151,14 @@ const runtimeConfig: Required<
     return line ? `${url}#L${line}` : url;
   },
   markdownToHTML: mdToHtml,
-  runtime: {
-    Fragment() {
-      throw new TypeError(
-        "The JSX runtime.Fragment is unset and must be set via setup().",
-      );
-    },
-    h() {
-      throw new TypeError(
-        "The JSX runtime.h is unset and must be set via setup().",
-      );
-    },
-  },
   markdownStyle: comrakStyles,
   markdownSummaryStyle: "",
 };
 
 /** Setup the services used by the doc components. */
 export async function setup(config: Configuration) {
-  const { runtime, tw, ...other } = config;
+  const { tw, ...other } = config;
   Object.assign(runtimeConfig, other);
-  if (runtime) {
-    Object.assign(runtimeConfig.runtime, runtime);
-  }
   if (tw) {
     twSetup(tw);
   }
@@ -192,15 +166,6 @@ export async function setup(config: Configuration) {
     await comrak.init();
   }
 }
-
-export const runtime: JsxRuntime = {
-  get Fragment() {
-    return runtimeConfig.runtime.Fragment;
-  },
-  get h() {
-    return runtimeConfig.runtime.h;
-  },
-};
 
 export const services = {
   /** Return a link to the provided URL and optional symbol. */

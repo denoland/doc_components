@@ -1,11 +1,8 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import { type DocNodeEnum } from "../deps.ts";
 import { DocEntry, nameToId, Section } from "./doc_common.tsx";
-import { MarkdownContext } from "./markdown.tsx";
-import { runtime } from "../services.ts";
+import { Context } from "./markdown.tsx";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, take } from "./utils.ts";
@@ -15,9 +12,9 @@ function byName(a: { name: string }, b: { name: string }): number {
 }
 
 export function DocBlockEnum(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<DocNodeEnum>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const { name: enumName, enumDef: { members }, location } = take(children);
@@ -29,12 +26,14 @@ export function DocBlockEnum(
         location={location}
         name={name}
         jsDoc={jsDoc}
-        markdownContext={markdownContext}
+        context={context}
       >
         {init && (
           <>
             {" = "}
-            <TypeDef markdownContext={markdownContext}>{init}</TypeDef>
+            <TypeDef context={context}>
+              {init}
+            </TypeDef>
           </>
         )}
       </DocEntry>

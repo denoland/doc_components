@@ -1,8 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
 import { comrak, htmlEntities, lowlight, toHtml } from "../deps.ts";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style, type StyleKey } from "../styles.ts";
 import { assert, type Child, take } from "./utils.ts";
 
@@ -94,25 +93,26 @@ export function mdToHtml(markdown: string): string {
   return syntaxHighlight(comrak.markdownToHTML(markdown, MARKDOWN_OPTIONS));
 }
 
-export interface MarkdownContext {
+export interface Context {
   url: URL;
   namespace?: string;
   replacers?: [string, string][];
+  typeParams?: string[];
 }
 
 export function Markdown(
-  { children, summary, markdownContext }: {
+  { children, summary, context }: {
     children: Child<string | undefined>;
     summary?: boolean;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   let md = take(children);
   if (!md) {
     return null;
   }
-  if (markdownContext.replacers) {
-    for (const [pattern, replacement] of markdownContext.replacers) {
+  if (context.replacers) {
+    for (const [pattern, replacement] of context.replacers) {
       md = md.replaceAll(pattern, replacement);
     }
   }
@@ -130,7 +130,7 @@ export function Markdown(
       class={style(mdStyle) + " " + additionalStyle}
       dangerouslySetInnerHTML={{
         __html: services.markdownToHTML(
-          parseLinks(md, markdownContext.url, markdownContext.namespace),
+          parseLinks(md, context.url, context.namespace),
         ),
       }}
     />

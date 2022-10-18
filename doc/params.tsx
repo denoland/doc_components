@@ -1,19 +1,16 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import { type ParamDef, tw } from "../deps.ts";
-import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, take } from "./utils.ts";
-import { MarkdownContext } from "./markdown.tsx";
+import { Context } from "./markdown.tsx";
 
 function Param(
-  { children, i, markdownContext }: {
+  { children, i, context }: {
     children: Child<ParamDef>;
     i: number;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const param = take(children);
@@ -27,7 +24,10 @@ function Param(
         "?"}
       {type && (
         <span>
-          : <TypeDef markdownContext={markdownContext}>{type}</TypeDef>
+          :{" "}
+          <TypeDef context={context}>
+            {type}
+          </TypeDef>
         </span>
       )}
     </span>
@@ -35,9 +35,9 @@ function Param(
 }
 
 export function Params(
-  { children, markdownContext }: {
+  { children, context }: {
     children: Child<ParamDef[]>;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const params = take(children, true);
@@ -48,7 +48,9 @@ export function Params(
     const items = [];
     for (let i = 0; i < params.length; i++) {
       items.push(
-        <Param i={i} markdownContext={markdownContext}>{params[i]}</Param>,
+        <Param i={i} context={context}>
+          {params[i]}
+        </Param>,
       );
       if (i < params.length - 1) {
         items.push(<span>{", "}</span>);
@@ -60,7 +62,9 @@ export function Params(
       <div class={style("indent")}>
         {params.map((param, i) => (
           <div>
-            <Param i={i} markdownContext={markdownContext}>{param}</Param>,
+            <Param i={i} context={context}>
+              {param}
+            </Param>,
           </div>
         ))}
       </div>

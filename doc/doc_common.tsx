@@ -1,12 +1,16 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-import { type Accessibility, type Location, tw } from "../deps.ts";
-import { runtime, services } from "../services.ts";
+import {
+  type Accessibility,
+  type ComponentChildren,
+  type Location,
+  tw,
+} from "../deps.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
-import { MarkdownContext } from "./markdown.tsx";
+import { Context } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
@@ -29,14 +33,14 @@ export function Anchor({ children: name }: { children: string }) {
 }
 
 export function DocEntry(
-  { children, tags, name, location, id, jsDoc, markdownContext }: {
-    children: unknown;
+  { children, tags, name, location, id, jsDoc, context }: {
+    children: ComponentChildren;
     tags?: unknown[];
     name?: unknown;
     location: Location;
     id: string;
     jsDoc?: { doc?: string };
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const href = services.resolveSourceHref(location.filename, location.line);
@@ -54,12 +58,21 @@ export function DocEntry(
           </span>
         </span>
         {href && (
-          <a href={href} target="_blank" class={style("sourceLink")}>[src]</a>
+          <a
+            href={href}
+            aria-label="Jump to src"
+            target="_blank"
+            class={style("sourceLink")}
+          >
+            <div class={tw`hover:bg-gray-100 px-1 py-1 rounded-md`}>
+              <Icons.LinkLine class="w-5 h-5" />
+            </div>
+          </a>
         )}
       </div>
 
       <div class={tw`pl-5`}>
-        <JsDoc markdownContext={markdownContext}>
+        <JsDoc context={context}>
           {jsDoc}
         </JsDoc>
       </div>
@@ -80,7 +93,7 @@ export function SectionTitle({ children }: { children: Child<string> }) {
 }
 
 export function Section(
-  { children, title }: { children: Child<unknown[]>; title?: string },
+  { children, title }: { children: Child<unknown[]>; title: string },
 ) {
   const entries = take(children, true);
   if (entries.length === 0) {
@@ -89,7 +102,7 @@ export function Section(
 
   return (
     <div>
-      {title && <SectionTitle>{title}</SectionTitle>}
+      <SectionTitle>{title}</SectionTitle>
       <div class={tw`mt-2 space-y-7`}>
         {entries}
       </div>
@@ -105,7 +118,7 @@ export const tagColors = {
 
 export function Tag(
   { children, color, large }: {
-    children: unknown;
+    children: ComponentChildren;
     color: keyof typeof tagColors;
     large?: boolean;
   },
@@ -127,11 +140,11 @@ export const tagVariants = {
   deprecated: () => <Tag color="gray">deprecated</Tag>,
   abstractLg: () => <Tag color="cyan" large>Abstract</Tag>,
   abstract: () => <Tag color="cyan">abstract</Tag>,
-  readonly: () => <Tag color="purple">readonly</Tag>,
-  writeonly: () => <Tag color="purple">readonly</Tag>,
-  optional: () => <Tag color="cyan">optional</Tag>,
   unstableLg: () => <Tag color="gray" large>Unstable</Tag>,
   unstable: () => <Tag color="gray">unstable</Tag>,
+  readonly: () => <Tag color="purple">readonly</Tag>,
+  writeonly: () => <Tag color="purple">writeonly</Tag>,
+  optional: () => <Tag color="cyan">optional</Tag>,
 } as const;
 
 export function getAccessibilityTag(accessibility?: Accessibility) {

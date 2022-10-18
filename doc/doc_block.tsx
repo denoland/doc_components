@@ -1,23 +1,21 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
 import { DocBlockClass } from "./classes.tsx";
 import { type DocNode, type DocNodeFunction } from "../deps.ts";
 import { DocBlockEnum } from "./enums.tsx";
 import { DocBlockFunction } from "./functions.tsx";
 import { DocBlockInterface } from "./interfaces.tsx";
-import { type MarkdownContext } from "./markdown.tsx";
+import { type Context } from "./markdown.tsx";
 import { DocBlockNamespace } from "./namespaces.tsx";
-import { runtime } from "../services.ts";
 import { DocBlockTypeAlias } from "./type_aliases.tsx";
 import { type Child, take } from "./utils.ts";
 import { DocBlockVariable } from "./variables.tsx";
 
 export function DocBlock(
-  { children, name, markdownContext }: {
+  { children, name, context }: {
     children: Child<DocNode[]>;
     name: string;
-    markdownContext: MarkdownContext;
+    context: Context;
   },
 ) {
   const docNodes = take(children, true);
@@ -26,44 +24,42 @@ export function DocBlock(
     switch (docNode.kind) {
       case "class":
         elements.push(
-          <DocBlockClass markdownContext={markdownContext}>
+          <DocBlockClass context={context}>
             {docNode}
           </DocBlockClass>,
         );
         break;
       case "enum":
         elements.push(
-          <DocBlockEnum markdownContext={markdownContext}>
+          <DocBlockEnum context={context}>
             {docNode}
           </DocBlockEnum>,
         );
         break;
       case "interface":
         elements.push(
-          <DocBlockInterface markdownContext={markdownContext}>
+          <DocBlockInterface context={context}>
             {docNode}
           </DocBlockInterface>,
         );
         break;
       case "namespace":
         elements.push(
-          <DocBlockNamespace
-            markdownContext={{ ...markdownContext, namespace: name }}
-          >
+          <DocBlockNamespace context={{ ...context, namespace: name }}>
             {docNode}
           </DocBlockNamespace>,
         );
         break;
       case "typeAlias":
         elements.push(
-          <DocBlockTypeAlias markdownContext={markdownContext}>
+          <DocBlockTypeAlias context={context}>
             {docNode}
           </DocBlockTypeAlias>,
         );
         break;
       case "variable":
         elements.push(
-          <DocBlockVariable markdownContext={markdownContext}>
+          <DocBlockVariable context={context}>
             {docNode}
           </DocBlockVariable>,
         );
@@ -75,7 +71,7 @@ export function DocBlock(
   ) as DocNodeFunction[];
   if (fnNodes.length) {
     elements.push(
-      <DocBlockFunction markdownContext={markdownContext}>
+      <DocBlockFunction context={context}>
         {fnNodes}
       </DocBlockFunction>,
     );

@@ -1,12 +1,28 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { camelize, maybe, parseURL } from "./utils.ts";
 import * as Icons from "../icons.tsx";
 import { tw } from "../deps.ts";
 import { Markdown } from "./markdown.tsx";
+
+interface ParsedUsage {
+  /** The symbol that the item should be imported as. If `usageSymbol` and
+   * `localVar` is defined, then the item is a named import, otherwise it is
+   * a namespace import. */
+  importSymbol: string;
+  /** The undecorated code of the generated import statement to import and use
+   * the item. */
+  importStatement: string;
+  /** The final specifier that should be used to import from. */
+  importSpecifier: string;
+  /** The local variable that the `usageSymbol` should be destructured out of.
+   */
+  localVar?: string;
+  /** The symbol that should be destructured from the `localVar` which will be
+   * bound to the item's value. */
+  usageSymbol?: string;
+}
 
 /** Given the URL and optional item and is type flag, provide back a parsed
  * version of the usage of an item for rendering. */
@@ -41,8 +57,8 @@ export function parseUsage(
   let importStatement = item
     ? `import { ${
       isType ? "type " : ""
-    }${importSymbol} } from "${target.toString()}";\n`
-    : `import * as ${importSymbol} from "${target.toString()}";\n`;
+    }${importSymbol} } from "${target.href}";\n`
+    : `import * as ${importSymbol} from "${target.href}";\n`;
   // if we are using a symbol off a imported namespace, we need to destructure
   // it to a local variable.
   if (usageSymbol) {
@@ -54,7 +70,11 @@ export function parseUsage(
 export function Usage(
   { url, name, isType }: { url: URL; name?: string; isType?: boolean },
 ) {
-  const importStatement = parseUsage(url, name, isType);
+  const importStatement = parseUsage(url, name, isType, true);
+  const onClick =
+    // deno-lint-ignore no-explicit-any
+    `navigator?.clipboard?.writeText('${importStatement.trim()}');` as any;
+
   return (
     <div class={tw`w-full relative`}>
       <Markdown markdownContext={{ url }}>
@@ -63,7 +83,7 @@ export function Usage(
 
       <button
         class={style("copyButton") + " " + tw`absolute right-4`}
-        onClick={`navigator?.clipboard?.writeText('${importStatement}');`}
+        onClick={onClick}
       >
         <Icons.Copy />
       </button>
