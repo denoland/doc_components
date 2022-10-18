@@ -85,17 +85,17 @@ export function Showcase(
 
       <ComponentTitle module="/doc/usage.tsx">Usage</ComponentTitle>
       <div class="space-y-4">
-        <Usage url="https://deno.land/x/example@v1.0.0/mod.ts" />
+        <Usage url={new URL("https://deno.land/x/example@v1.0.0/mod.ts")} />
         <Usage
-          url="https://deno.land/x/example@v1.0.0/mod.ts"
+          url={new URL("https://deno.land/x/example@v1.0.0/mod.ts")}
           name="MyClass"
         />
         <Usage
-          url="https://deno.land/x/example@v1.0.0/mod.ts"
-          name="namespace.MyClass"
+          url={new URL("https://deno.land/x/example@v1.0.0/mod.ts")}
+          name="myNamespace.MyClass"
         />
         <Usage
-          url="https://deno.land/x/example@v1.0.0/mod.ts"
+          url={new URL("https://deno.land/x/example@v1.0.0/mod.ts")}
           name="Interface"
           isType
         />

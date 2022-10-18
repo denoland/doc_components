@@ -1,7 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import { style } from "../styles.ts";
-import { camelize, maybe, parseURL } from "./utils.ts";
+import { camelize, parseURL } from "./utils.ts";
 import * as Icons from "../icons.tsx";
 import { tw } from "../deps.ts";
 import { Markdown } from "./markdown.tsx";
@@ -70,23 +70,22 @@ export function parseUsage(
 export function Usage(
   { url, name, isType }: { url: URL; name?: string; isType?: boolean },
 ) {
-  const importStatement = parseUsage(url, name, isType, true);
+  const importStatement = parseUsage(url, name, isType, true).trim();
   const onClick =
     // deno-lint-ignore no-explicit-any
-    `navigator?.clipboard?.writeText('${importStatement.trim()}');` as any;
+    `navigator?.clipboard?.writeText('${importStatement}');` as any;
 
   return (
     <div class={tw`w-full relative`}>
-      <Markdown markdownContext={{ url }}>
-        {`\`\`\`typescript\n${importStatement}\`\`\``}
+      <Markdown context={{ url }}>
+        {`\`\`\`typescript\n${importStatement}\n\`\`\``}
       </Markdown>
 
-      <button
-        class={style("copyButton") + " " + tw`absolute right-4`}
-        onClick={onClick}
-      >
-        <Icons.Copy />
-      </button>
+      <div class={tw`absolute top-0 right-4 flex items-center h-full`}>
+        <button class={style("copyButton")} onClick={onClick}>
+          <Icons.Copy />
+        </button>
+      </div>
     </div>
   );
 }

@@ -92,6 +92,7 @@ export const theme: ThemeConfiguration = {
   },
   extend: {
     colors: {
+      primary: "#FFFFFFE5",
       secondary: "#E5E7EB",
       "default-highlight": "#333333C0",
       ultralight: "#F8F7F6",
