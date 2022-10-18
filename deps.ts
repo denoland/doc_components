@@ -54,6 +54,7 @@ export { lowlight } from "https://esm.sh/lowlight@2.7.0?pin=v87";
 export {
   apply,
   type Configuration,
+  type CSSRules,
   type Directive,
   type Plugin,
   setup,

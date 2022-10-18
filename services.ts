@@ -5,6 +5,8 @@ import {
   comrak,
   type Configuration as TwConfiguration,
   css,
+  type CSSRules,
+  type Directive,
   type Plugin,
   setup as twSetup,
   type ThemeConfiguration,
@@ -48,9 +50,9 @@ export interface Configuration {
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
   tw?: TwConfiguration;
   /** Class to give to markdown blocks */
-  markdownStyle?: string;
+  markdownStyle?: string | Directive<CSSRules>;
   /** Class to give to markdown summary blocks */
-  markdownSummaryStyle?: string;
+  markdownSummaryStyle?: string | Directive<CSSRules>;
 }
 
 export const theme: ThemeConfiguration = {
@@ -194,11 +196,11 @@ export const services = {
   },
 
   /** Class to give to markdown blocks */
-  get markdownStyle(): string {
+  get markdownStyle(): string | Directive<CSSRules> {
     return runtimeConfig.markdownStyle;
   },
   /** Class to give to markdown summary blocks */
-  get markdownSummaryStyle(): string {
+  get markdownSummaryStyle(): string | Directive<CSSRules> {
     return runtimeConfig.markdownSummaryStyle;
   },
 };
