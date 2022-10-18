@@ -140,11 +140,11 @@ export const tagVariants = {
   deprecated: () => <Tag color="gray">deprecated</Tag>,
   abstractLg: () => <Tag color="cyan" large>Abstract</Tag>,
   abstract: () => <Tag color="cyan">abstract</Tag>,
-  readonly: () => <Tag color="purple">readonly</Tag>,
-  writeonly: () => <Tag color="purple">readonly</Tag>,
-  optional: () => <Tag color="cyan">optional</Tag>,
   unstableLg: () => <Tag color="gray" large>Unstable</Tag>,
   unstable: () => <Tag color="gray">unstable</Tag>,
+  readonly: () => <Tag color="purple">readonly</Tag>,
+  writeonly: () => <Tag color="purple">writeonly</Tag>,
+  optional: () => <Tag color="cyan">optional</Tag>,
 } as const;
 
 export function getAccessibilityTag(accessibility?: Accessibility) {

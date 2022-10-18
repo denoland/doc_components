@@ -79,7 +79,9 @@ export function Showcase(
       </SymbolDoc>
 
       <ComponentTitle module="/doc/doc_common.tsx">Tags</ComponentTitle>
-      {Object.values(tagVariants).map((tag) => tag())}
+      <div class="space-x-1">
+        {Object.values(tagVariants).map((tag) => tag())}
+      </div>
 
       <ComponentTitle module="/doc/usage.tsx">Usage</ComponentTitle>
       <div class="space-y-4">
