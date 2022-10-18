@@ -5,7 +5,7 @@
   },
   "importMap": "./_showcase/import_map.json",
   "tasks": {
-    "fmt": "deno fmt --ignore=./_showcase/data",
+    "check": "deno check _showcase/main.ts",
     "showcase": "cd _showcase && deno task start",
     "test": "deno test"
   }

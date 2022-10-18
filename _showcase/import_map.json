@@ -9,6 +9,7 @@
     "twind": "https://esm.sh/twind@0.16.17",
     "twind/": "https://esm.sh/twind@0.16.17/",
     "apiland/types": "https://deno.land/x/apiland@1.0.0/types.d.ts",
+    "deno_doc/types": "https://deno.land/x/deno_doc@0.46.0/lib/types.d.ts",
     "@doc_components/": "../"
   }
 }

@@ -27,10 +27,13 @@ jobs:
           deno-version: 1.x
 
       - name: 💄  format
-        run: deno fmt --ignore=./_showcase/data
+        run: deno fmt
 
       - name: 💄  lint
         run: deno lint
 
       - name: 🧪  test
         run: deno task test
+
+      - name: 🔎 check
+        run: deno task check
