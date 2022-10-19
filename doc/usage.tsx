@@ -57,8 +57,8 @@ export function parseUsage(
   let importStatement = item
     ? `import { ${
       isType ? "type " : ""
-    }${importSymbol} } from "${target.href}";\n`
-    : `import * as ${importSymbol} from "${target.href}";\n`;
+    }${importSymbol} } from "${target.href}";`
+    : `import * as ${importSymbol} from "${target.href}";`;
   // if we are using a symbol off a imported namespace, we need to destructure
   // it to a local variable.
   if (usageSymbol) {
@@ -70,7 +70,7 @@ export function parseUsage(
 export function Usage(
   { url, name, isType }: { url: URL; name?: string; isType?: boolean },
 ) {
-  const importStatement = parseUsage(url, name, isType, true).trim();
+  const importStatement = parseUsage(url, name, isType, true);
   const onClick =
     // deno-lint-ignore no-explicit-any
     `navigator?.clipboard?.writeText('${importStatement}');` as any;
