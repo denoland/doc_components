@@ -5,12 +5,15 @@ import {
   comrak,
   type Configuration as TwConfiguration,
   css,
+  type CSSRules,
+  type Directive,
   type Plugin,
   setup as twSetup,
   type ThemeConfiguration,
   twColors,
 } from "./deps.ts";
 import { mdToHtml } from "./doc/markdown.tsx";
+import { comrakStyles } from "./styles.ts";
 
 export interface Configuration {
   /** Called when the doc components are trying to resolve a symbol.  The
@@ -46,6 +49,10 @@ export interface Configuration {
   markdownToHTML?: (markdown: string) => string;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
   tw?: TwConfiguration;
+  /** Class to give to markdown blocks */
+  markdownStyle?: string | Directive<CSSRules>;
+  /** Class to give to markdown summary blocks */
+  markdownSummaryStyle?: string | Directive<CSSRules>;
 }
 
 export const theme: ThemeConfiguration = {
@@ -87,6 +94,7 @@ export const theme: ThemeConfiguration = {
   },
   extend: {
     colors: {
+      primary: "#FFFFFFE5",
       secondary: "#E5E7EB",
       "default-highlight": "#333333C0",
       ultralight: "#F8F7F6",
@@ -130,6 +138,8 @@ const runtimeConfig: Required<
     | "lookupHref"
     | "resolveSourceHref"
     | "markdownToHTML"
+    | "markdownStyle"
+    | "markdownSummaryStyle"
   >
 > = {
   resolveHref(current, symbol) {
@@ -144,6 +154,8 @@ const runtimeConfig: Required<
     return line ? `${url}#L${line}` : url;
   },
   markdownToHTML: mdToHtml,
+  markdownStyle: comrakStyles,
+  markdownSummaryStyle: "",
 };
 
 /** Setup the services used by the doc components. */
@@ -181,5 +193,14 @@ export const services = {
   /** Render Markdown to HTML */
   get markdownToHTML(): (markdown: string) => string {
     return runtimeConfig.markdownToHTML;
+  },
+
+  /** Class to give to markdown blocks */
+  get markdownStyle(): string | Directive<CSSRules> {
+    return runtimeConfig.markdownStyle;
+  },
+  /** Class to give to markdown summary blocks */
+  get markdownSummaryStyle(): string | Directive<CSSRules> {
+    return runtimeConfig.markdownSummaryStyle;
   },
 };

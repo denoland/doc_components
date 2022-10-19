@@ -1,9 +1,10 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import { style } from "../styles.ts";
-import { camelize, maybe, parseURL } from "./utils.ts";
+import { camelize, parseURL } from "./utils.ts";
 import * as Icons from "../icons.tsx";
 import { tw } from "../deps.ts";
+import { Markdown } from "./markdown.tsx";
 
 interface ParsedUsage {
   /** The symbol that the item should be imported as. If `usageSymbol` and
@@ -26,11 +27,11 @@ interface ParsedUsage {
 /** Given the URL and optional item and is type flag, provide back a parsed
  * version of the usage of an item for rendering. */
 export function parseUsage(
-  url: string,
+  url: URL,
   item?: string,
   isType?: boolean,
   clearSearch = true,
-): ParsedUsage {
+): string {
   const parsed = parseURL(url);
   const target = new URL(url);
   if (clearSearch) {
@@ -56,71 +57,35 @@ export function parseUsage(
   let importStatement = item
     ? `import { ${
       isType ? "type " : ""
-    }${importSymbol} } from "${target.href}";\n`
-    : `import * as ${importSymbol} from "${target.href}";\n`;
+    }${importSymbol} } from "${target.href}";`
+    : `import * as ${importSymbol} from "${target.href}";`;
   // if we are using a symbol off a imported namespace, we need to destructure
   // it to a local variable.
   if (usageSymbol) {
-    importStatement += `\nconst { ${usageSymbol} } = ${localVar};\n`;
+    importStatement += `\nconst { ${usageSymbol} } = ${localVar};`;
   }
-  return {
-    importSymbol,
-    usageSymbol,
-    localVar,
-    importStatement,
-    importSpecifier: target.href,
-  };
+  return importStatement;
 }
 
 export function Usage(
-  { url, name, isType }: { url: string; name?: string; isType?: boolean },
+  { url, name, isType }: { url: URL; name?: string; isType?: boolean },
 ) {
-  const {
-    importSymbol,
-    importStatement,
-    importSpecifier,
-    usageSymbol,
-    localVar,
-  } = parseUsage(url, name, isType, true);
+  const importStatement = parseUsage(url, name, isType, true);
   const onClick =
     // deno-lint-ignore no-explicit-any
-    `navigator?.clipboard?.writeText('${importStatement.trim()}');` as any;
+    `navigator?.clipboard?.writeText('${importStatement}');` as any;
+
   return (
-    <div class={style("markdown")}>
-      <pre class={tw`flex items-center justify-between gap-2.5`}>
-        <code class={tw`overflow-auto`}>
-          <span class="code-keyword">import</span>
-          {name
-            ? (
-              <span>
-                {" "}&#123;{" "}
-                {isType && <span class="code-keyword">type{" "}</span>}
-                {importSymbol} &#125;{" "}
-              </span>
-            )
-            : (
-              <span>
-                {" "}* <span class="code-keyword">as</span> {importSymbol}
-                {" "}
-              </span>
-            )}
-          <span class="code-keyword">from</span>{" "}
-          <span class="code-string">"{importSpecifier}"</span>;{maybe(
-            usageSymbol,
-            <div>
-              <br />
-              <span class="code-keyword">const</span> &#123; {usageSymbol}{" "}
-              &#125; = {localVar};
-            </div>,
-          )}
-        </code>
-        <button
-          class={style("copyButton")}
-          onClick={onClick}
-        >
+    <div class={tw`w-full relative`}>
+      <Markdown context={{ url }}>
+        {`\`\`\`typescript\n${importStatement}\n\`\`\``}
+      </Markdown>
+
+      <div class={tw`absolute top-0 right-4 flex items-center h-full`}>
+        <button class={style("copyButton")} onClick={onClick}>
           <Icons.Copy />
         </button>
-      </pre>
+      </div>
     </div>
   );
 }

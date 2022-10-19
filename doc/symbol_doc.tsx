@@ -139,7 +139,7 @@ function Symbol(
       <div class={tw`space-y-3`}>
         {showUsage && (
           <Usage
-            url={context.url.href}
+            url={context.url}
             name={name}
             isType={isTypeOnly(docNodes)}
           />

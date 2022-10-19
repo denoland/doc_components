@@ -177,7 +177,7 @@ export function ModuleDoc(
       <article class={style("main")}>
         <div class={style("moduleDoc")}>
           <div class={tw`space-y-3`}>
-            <Usage url={context.url.href} />
+            <Usage url={context.url} />
             {collection.moduleDoc && (
               <JsDocModule context={context}>
                 {collection.moduleDoc}
