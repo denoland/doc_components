@@ -17,7 +17,7 @@ export default function DocBlocks({ data }: PageProps<Data>) {
   return (
     <>
       <Head>
-        <title>doc_components Showcase</title>
+        <title>doc_components Showcase | DocBlocks</title>
       </Head>
       <ShowcaseDocBlocks url={new URL("https://deno.land/x/oak@v11.1.0/")}>
         {data}
