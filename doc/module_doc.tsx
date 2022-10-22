@@ -162,7 +162,12 @@ export function ModuleDoc(
     sourceUrl: string;
   } & Pick<Context, "url" | "replacers">,
 ) {
-  const collection = asCollection(take(children, true));
+  const docNodes = take(children, true);
+  const isEmpty = docNodes.length === 0;
+  const hasExports = docNodes.some(({ declarationKind, kind }) =>
+    kind !== "moduleDoc" && declarationKind === "export"
+  );
+  const collection = asCollection(docNodes);
   return (
     <div>
       <div class={style("moduleDocHeader")}>
@@ -176,17 +181,31 @@ export function ModuleDoc(
       </div>
       <article class={style("main")}>
         <div class={style("moduleDoc")}>
-          <div class={tw`space-y-3`}>
-            <Usage url={context.url} />
+          <div class="space-y-3">
+            {isEmpty || hasExports ? <Usage url={context.url} /> : undefined}
             {collection.moduleDoc && (
               <JsDocModule context={context}>
                 {collection.moduleDoc}
               </JsDocModule>
             )}
           </div>
-          <DocTypeSections context={context}>
-            {collection}
-          </DocTypeSections>
+          {isEmpty
+            ? (
+              <div class="mx-8 p-4 border border-yellow-700 bg-yellow-50 text-yellow-700 rounded-lg text-center italic">
+                The documentation for this module is currently unavailable.
+              </div>
+            )
+            : hasExports
+            ? (
+              <DocTypeSections context={context}>
+                {collection}
+              </DocTypeSections>
+            )
+            : (
+              <div class="mx-8 p-4 border border-blue-700 bg-blue-50 text-blue-700 rounded-lg text-center italic">
+                This module does not provide any exports.
+              </div>
+            )}
         </div>
       </article>
     </div>
