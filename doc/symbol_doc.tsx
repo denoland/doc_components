@@ -51,34 +51,30 @@ export function SymbolDoc(
 
   let propertyName: string | undefined;
   if (property && ("class" in splitNodes)) {
-    const parts = property.split(".");
+    const isPrototype = property.startsWith("prototype.");
+    const propName = isPrototype ? property.slice(10) : property;
 
     const classNode = (splitNodes["class"] as DocNodeClass[])[0];
     const functionNodes: DocNodeFunction[] = classNode.classDef.methods.filter((
       def,
-    ) => {
-      if (parts[0] === "prototype") {
-        return def.name === parts[1] && !def.isStatic;
-      } else {
-        return def.name === parts[0] && def.isStatic;
-      }
-    }).map((def) => {
-      return {
-        declarationKind: classNode.declarationKind,
-        functionDef: def.functionDef,
-        jsDoc: def.jsDoc,
-        kind: "function",
-        location: def.location,
-        name: def.name,
-      };
-    });
+    ) => def.name === propName && (isPrototype === !def.isStatic)).map(
+      (def) => {
+        return {
+          declarationKind: classNode.declarationKind,
+          functionDef: def.functionDef,
+          jsDoc: def.jsDoc,
+          kind: "function",
+          location: def.location,
+          name: def.name,
+        };
+      },
+    );
 
     if (functionNodes.length !== 0) {
       splitNodes = { function: functionNodes };
       propertyName = `${classNode.name}.${property}`;
     }
   }
-  console.log(propertyName);
 
   const showUsage = !(context.url.href.endsWith(".d.ts") || library);
 
