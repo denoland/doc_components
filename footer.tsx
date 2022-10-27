@@ -6,7 +6,7 @@ import * as Icons from "./icons.tsx";
 export function Footer() {
   return (
     <div
-      class={tw`border-t border-secondary bg-[#F9F9F9] text-sm flex justify-center`}
+      class={tw`border-t border-grayDefault bg-ultralight text-sm flex justify-center`}
     >
       <div class={tw`section-x-inset-xl py-7 lg:py-18 w-full`}>
         <nav
@@ -82,7 +82,7 @@ export function Footer() {
                 Copyright © 2022 Deno Land Inc.{" "}
                 <span class={tw`whitespace-nowrap`}>All rights reserved.</span>
               </span>
-              <a class={tw`block text-[#7B61FF]`} href="https://deno.com/jobs">
+              <a class={tw`block text-symbol`} href="https://deno.com/jobs">
                 We are hiring, join
                 us<Icons.LongArrowRight class="inline ml-1.5" />
               </a>
@@ -90,13 +90,13 @@ export function Footer() {
 
             <div class={tw`flex gap-3 text-[#6C6E78]`}>
               <a href="https://github.com/denoland">
-                <Icons.GitHub class="hover:text-default-highlight" />
+                <Icons.GitHub class="text-gray-500 hover:text-black" />
               </a>
               <a href="https://discord.gg/deno">
-                <Icons.Discord class="hover:text-default-highlight" />
+                <Icons.Discord class="text-gray-500 hover:text-black" />
               </a>
               <a href="https://twitter.com/deno_land">
-                <Icons.Twitter class="hover:text-default-highlight" />
+                <Icons.Twitter class="text-gray-500 hover:text-black" />
               </a>
             </div>
           </div>
