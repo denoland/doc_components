@@ -40,7 +40,7 @@ export const comrakStyles = css({
 const styles = {
   anchor:
     apply`float-left leading-none hidden group-hover:block text-gray-600 -ml-[18px] pr-[4px]`,
-  copyButton: apply`rounded border border-[#D2D2DC] p-1.5 hover:bg-secondary`,
+  copyButton: apply`rounded border border-[#D2D2DC] p-1.5 hover:bg-border`,
   docBlockItems: apply`space-y-7`,
   docEntry: apply`flex justify-between`,
   docEntryChildren: apply`break-words flex items-center gap-2`,

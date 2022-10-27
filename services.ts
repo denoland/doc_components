@@ -94,11 +94,11 @@ export const theme: ThemeConfiguration = {
   },
   extend: {
     colors: {
-      primary: "#FFFFFFE5",
-      secondary: "#E5E7EB",
-      "default-highlight": "#333333C0",
-      ultralight: "#F8F7F6",
+      primary: "#056CF0",
+      symbol: "#7B61FF",
       border: "#DDDDDD",
+      grayDefault: "#F3F3F3",
+      ultralight: "#F8F7F6",
     },
     spacing: {
       4.5: "1.125rem",
@@ -113,7 +113,7 @@ export const theme: ThemeConfiguration = {
 
 export const plugins: Record<string, Plugin> = {
   link:
-    apply`text-[#056CF0] transition duration-75 ease-in-out hover:text-blue-400`,
+    apply`text-primary transition duration-75 ease-in-out hover:text-blue-400`,
   "section-x-inset": (parts) =>
     parts[0] === "none"
       ? apply`max-w-none mx-0 px-0`
