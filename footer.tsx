@@ -13,8 +13,8 @@ export function Footer() {
           class={tw`flex flex-col gap-7 w-full leading-tight lg:(flex-row gap-0 items-start justify-between)`}
         >
           <a href="https://deno.land" class={tw`flex items-center gap-2`}>
-            <Icons.Logo />
-            <Icons.Deno class="lg:hidden" />
+            <Icons.Logo class="h-8 flex-none" />
+            <Icons.Deno class="h-4 flex-none lg:hidden" />
           </a>
 
           <div
