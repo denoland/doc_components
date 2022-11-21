@@ -17,7 +17,7 @@ import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
-import { type Context } from "./markdown.tsx";
+import { type Context, Markdown } from "./markdown.tsx";
 
 function isTypeOnly(
   docNodes: DocNode[],
@@ -102,7 +102,8 @@ function Symbol(
   if (isAbstract(docNodes[0])) {
     tags.push(tagVariants.abstractLg());
   }
-  if (isDeprecated(docNodes[0])) {
+  const deprecated = isDeprecated(docNodes[0]);
+  if (deprecated) {
     tags.push(tagVariants.deprecatedLg());
   }
 
@@ -112,7 +113,7 @@ function Symbol(
     : undefined;
 
   return (
-    <div class={tw`space-y-7`}>
+    <div class={tw`space-y-8`}>
       <div class={style("symbolDocHeader")}>
         <div class={tw`space-y-2`}>
           <DocTitle name={name} context={context}>
@@ -135,6 +136,21 @@ function Symbol(
           <Icons.Source />
         </a>
       </div>
+
+      {deprecated?.doc && (
+        <div>
+          <div class={tw`py-1 text-danger flex gap-1 items-center`}>
+            <Icons.TrashCan class="h-4 w-auto" />
+            <span class={tw`font-bold leading-6`}>
+              Deprecated
+            </span>
+          </div>
+
+          <div class={tw`p-2.5 border-l-4 border-[#F00C084C]`}>
+            <Markdown context={context}>{deprecated.doc}</Markdown>
+          </div>
+        </div>
+      )}
 
       <div class={tw`space-y-3`}>
         {showUsage && (

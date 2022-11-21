@@ -99,6 +99,7 @@ export const theme: ThemeConfiguration = {
       border: "#DDDDDD",
       grayDefault: "#F3F3F3",
       ultralight: "#F8F7F6",
+      danger: "#F00C08",
     },
     spacing: {
       4.5: "1.125rem",

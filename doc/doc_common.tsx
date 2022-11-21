@@ -136,7 +136,12 @@ export function Tag(
 }
 
 export const tagVariants = {
-  deprecatedLg: () => <Tag color="gray" large>Deprecated</Tag>,
+  deprecatedLg: () => (
+    <Tag color="gray" large>
+      <Icons.ExclamationMark />
+      <span>Deprecated</span>
+    </Tag>
+  ),
   deprecated: () => <Tag color="gray">deprecated</Tag>,
   abstractLg: () => <Tag color="cyan" large>Abstract</Tag>,
   abstract: () => <Tag color="cyan">abstract</Tag>,

@@ -12,6 +12,7 @@ import {
   type DocNodeTypeAlias,
   type DocNodeVariable,
   type JsDoc,
+  type JsDocTagDoc,
 } from "../deps.ts";
 
 /** Some JSX libraries (notably nano-jsx) have strange handling of the
@@ -121,9 +122,13 @@ export function isAbstract(node: DocNode) {
   return false;
 }
 
-export function isDeprecated(node?: { jsDoc?: JsDoc }) {
+export function isDeprecated(
+  node?: { jsDoc?: JsDoc },
+): JsDocTagDoc | undefined {
   if (node && node.jsDoc && node.jsDoc.tags) {
-    return node.jsDoc.tags.some(({ kind }) => kind === "deprecated");
+    return node.jsDoc.tags.find(({ kind }) => kind === "deprecated") as
+      | JsDocTagDoc
+      | undefined;
   }
 }
 
