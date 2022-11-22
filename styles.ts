@@ -76,7 +76,7 @@ const styles = {
     apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:(text-gray-500  bg-gray-50) children:last-child:(truncate flex-shrink-1)`,
   moduleIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
   moduleIndexPanelSymbol:
-    apply`flex items-center justify-between gap-1 py-1.5 pl-7 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50) children:first-child:(flex items-center gap-2 min-w-0 children:last-child:truncate)`,
+    apply`flex items-center justify-between gap-1 py-1.5 pl-2.5 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50) children:first-child:(flex items-center gap-2 min-w-0 children:last-child:truncate)`,
   section: apply`text-sm leading-6 font-semibold text-gray-400 py-1`,
   symbolDoc: apply`space-y-12 md:(col-span-3)`,
   symbolDocHeader: apply`flex justify-between items-start`,
@@ -89,6 +89,8 @@ const styles = {
   symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-[#9CA0AA]`,
   symbolListRow: apply`block lg:table-row`,
   symbolListTable: apply`block lg:table`,
+  symbolKindDisplay:
+    apply`w-11 flex-none flex children:(not-first-child:-ml-[7px])`,
   tag:
     apply`inline-flex items-center gap-0.5 children:flex-none rounded-full font-medium text-sm leading-none font-sans`,
 } as const;

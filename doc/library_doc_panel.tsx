@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { tw } from "../deps.ts";
+import { type DocNodeKind, type JsDoc, tw } from "../deps.ts";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
@@ -10,20 +10,61 @@ import { byKindValue } from "./doc.ts";
 import { tagVariants } from "./doc_common.tsx";
 import { SymbolItem } from "./module_index_panel.tsx";
 
+export interface ProcessedSymbol {
+  name: string;
+  kinds: DocNodeKind[];
+  unstable: boolean;
+  category?: string;
+  jsDoc?: JsDoc | null;
+}
+
 export function categorize(
   items: SymbolItem[],
-): [categories: Record<string, SymbolItem[]>, uncategorized: SymbolItem[]] {
-  const categories: Record<string, SymbolItem[]> = {};
-  const uncategorized: SymbolItem[] = [];
+): [
+  categories: Record<string, ProcessedSymbol[]>,
+  uncategorized: ProcessedSymbol[],
+] {
+  const symbols: ProcessedSymbol[] = [];
+  for (
+    const symbolItem of items.filter((symbol) =>
+      symbol.kind !== "import" && symbol.kind !== "moduleDoc"
+    ).sort((a, b) =>
+      byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
+    )
+  ) {
+    const existing = symbols.find((symbol) => symbol.name === symbolItem.name);
+    const isUnstable = symbolItem.jsDoc?.tags?.some((tag) =>
+      tag.kind === "tags" && tag.tags.includes("unstable")
+    ) ?? false;
+    if (!existing) {
+      symbols.push({
+        name: symbolItem.name,
+        kinds: [symbolItem.kind],
+        unstable: isUnstable,
+        category: symbolItem.category?.trim(),
+        jsDoc: symbolItem.jsDoc,
+      });
+    } else {
+      existing.kinds.push(symbolItem.kind);
+      if (!existing.unstable && isUnstable) {
+        existing.unstable = true;
+      }
+      if (!existing.jsDoc && symbolItem.jsDoc) {
+        existing.jsDoc = symbolItem.jsDoc;
+      }
+    }
+  }
 
-  for (const item of items) {
-    const category = item.category?.trim();
-    if (category) {
-      if (!(category in categories)) {
-        categories[category] = [];
+  const categories: Record<string, ProcessedSymbol[]> = {};
+  const uncategorized: ProcessedSymbol[] = [];
+
+  for (const item of symbols) {
+    if (item.category) {
+      if (!(item.category in categories)) {
+        categories[item.category] = [];
       }
 
-      categories[category].push(item);
+      categories[item.category].push(item);
     } else {
       uncategorized.push(item);
     }
@@ -34,7 +75,7 @@ export function categorize(
 
 function Symbol(
   { children, base, active, currentSymbol, uncategorized }: {
-    children: Child<SymbolItem>;
+    children: Child<ProcessedSymbol>;
     base: URL;
     active: boolean;
     currentSymbol?: string;
@@ -43,11 +84,6 @@ function Symbol(
 ) {
   const symbol = take(children);
 
-  const isUnstable = symbol.jsDoc?.tags?.some((tag) =>
-    tag.kind === "tags" && tag.tags.includes("unstable")
-  );
-
-  const Icon = docNodeKindMap[symbol.kind];
   return (
     <a
       class={`${style("moduleIndexPanelSymbol")} ${
@@ -61,17 +97,19 @@ function Symbol(
       title={symbol.name}
     >
       <span>
-        <Icon />
+        <div class={tw`${style("symbolKindDisplay")} justify-end`}>
+          {symbol.kinds.map((kind) => docNodeKindMap[kind]())}
+        </div>
         <span>{symbol.name}</span>
       </span>
-      {isUnstable && tagVariants.unstable()}
+      {symbol.unstable && tagVariants.unstable()}
     </a>
   );
 }
 
 function Category(
   { children, base, name, currentSymbol }: {
-    children: Child<SymbolItem[]>;
+    children: Child<ProcessedSymbol[]>;
     name: string;
     base: URL;
     currentSymbol?: string;
@@ -97,10 +135,8 @@ function Category(
         </span>
       </summary>
 
-      {items.filter((symbol) =>
-        symbol.kind !== "import" && symbol.kind !== "moduleDoc"
-      ).sort((a, b) =>
-        byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
+      {items.sort((a, b) =>
+        byKindValue(a.kinds[0], b.kinds[0]) || a.name.localeCompare(b.name)
       ).map((symbol) => (
         <Symbol base={base} active={active} currentSymbol={currentSymbol}>
           {symbol}
@@ -141,13 +177,7 @@ export function LibraryDocPanel(
   const uncategorizedActive = !!uncategorized.find(({ name }) =>
     name === currentSymbol
   );
-  for (
-    const symbol of uncategorized.filter((symbol) =>
-      symbol.kind !== "import" && symbol.kind !== "moduleDoc"
-    ).sort((a, b) =>
-      byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
-    )
-  ) {
+  for (const symbol of uncategorized) {
     entries.push(
       <Symbol
         base={base}
