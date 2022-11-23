@@ -7,7 +7,6 @@ import {
   type InterfaceIndexSignatureDef,
   type InterfaceMethodDef,
   type InterfacePropertyDef,
-  tw,
 } from "../deps.ts";
 import {
   Anchor,
@@ -252,7 +251,7 @@ export function DocSubTitleInterface(
 
   return (
     <div>
-      <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
+      <span class="text-[#9CA0AA] italic">{" implements "}</span>
       {interfaceDef.extends.map((typeDef, i) => (
         <>
           <TypeDef context={context}>

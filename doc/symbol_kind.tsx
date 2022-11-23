@@ -1,6 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { tw } from "../deps.ts";
 import { style } from "../styles.ts";
 
 export const docNodeKindColors = {
@@ -30,7 +29,7 @@ export const docNodeKindMap = {
 export function Namespace() {
   const [text, bg] = docNodeKindColors["namespace"];
   return (
-    <div class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
+    <div class={`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}>
       N
     </div>
   );
@@ -40,7 +39,7 @@ export function Class() {
   const [text, bg] = docNodeKindColors["class"];
   return (
     <div
-      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      class={`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
       title="Class"
     >
       c
@@ -52,7 +51,7 @@ export function Enum() {
   const [text, bg] = docNodeKindColors["enum"];
   return (
     <div
-      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      class={`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
       title="Enum"
     >
       E
@@ -64,7 +63,7 @@ export function Variable() {
   const [text, bg] = docNodeKindColors["variable"];
   return (
     <div
-      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      class={`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
       title="Variable"
     >
       v
@@ -76,7 +75,7 @@ export function Function() {
   const [text, bg] = docNodeKindColors["function"];
   return (
     <div
-      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      class={`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
       title="Function"
     >
       f
@@ -88,7 +87,7 @@ export function Interface() {
   const [text, bg] = docNodeKindColors["interface"];
   return (
     <div
-      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      class={`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
       title="Interface"
     >
       I
@@ -100,7 +99,7 @@ export function TypeAlias() {
   const [text, bg] = docNodeKindColors["typeAlias"];
   return (
     <div
-      class={tw`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
+      class={`bg-[${bg}] text-[${text}] ${style("symbolKind")}`}
       title="Type Alias"
     >
       T
