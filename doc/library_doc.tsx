@@ -1,7 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import { tw } from "../deps.ts";
-import { byKindValue } from "./doc.ts";
 import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
 import { type Context, Markdown } from "./markdown.tsx";
@@ -9,32 +8,31 @@ import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, isDeprecated, take } from "./utils.ts";
 import { docNodeKindMap } from "./symbol_kind.tsx";
-import { categorize } from "./library_doc_panel.tsx";
+import { categorize, type ProcessedSymbol } from "./library_doc_panel.tsx";
 import { type SymbolItem } from "./module_index_panel.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 
 function Entry(
   { children, context }: {
-    children: Child<SymbolItem>;
+    children: Child<ProcessedSymbol>;
     context: Context;
   },
 ) {
   const item = take(children);
   const href = services.resolveHref(context.url, item.name);
-  const isUnstable = item.jsDoc?.tags?.some((tag) =>
-    tag.kind === "tags" && tag.tags.includes("unstable")
-  );
 
   return (
     <tr class={style("symbolListRow")}>
       <td class={style("symbolListCellSymbol")}>
         <div>
-          {docNodeKindMap[item.kind]()}
+          <div class={tw`${style("symbolKindDisplay")} justify-center`}>
+            {item.kinds.map((kind) => docNodeKindMap[kind]())}
+          </div>
           <a href={href}>{item.name}</a>
           <span class={tw`space-x-1`}>
             {isDeprecated({ jsDoc: item.jsDoc ?? undefined }) &&
               tagVariants.deprecated()}
-            {isUnstable && tagVariants.unstable()}
+            {item.unstable && tagVariants.unstable()}
           </span>
         </div>
       </td>
@@ -49,7 +47,7 @@ function Entry(
 
 function Section(
   { children, title, context }: {
-    children: Child<SymbolItem[]>;
+    children: Child<ProcessedSymbol[]>;
     title: string;
     context: Context;
   },
@@ -60,9 +58,7 @@ function Section(
     <div>
       <SectionTitle>{title}</SectionTitle>
       <table class={style("symbolListTable")}>
-        {symbols.sort((a, b) =>
-          byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
-        ).map((symbol) => (
+        {symbols.map((symbol) => (
           <Entry context={context}>
             {symbol}
           </Entry>
