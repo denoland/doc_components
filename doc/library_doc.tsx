@@ -1,6 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { tw } from "../deps.ts";
 import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
 import { type Context, Markdown } from "./markdown.tsx";
@@ -25,11 +24,11 @@ function Entry(
     <tr class={style("symbolListRow")}>
       <td class={style("symbolListCellSymbol")}>
         <div>
-          <div class={tw`${style("symbolKindDisplay")} justify-center`}>
+          <div class={`${style("symbolKindDisplay")} justify-center`}>
             {item.kinds.map((kind) => docNodeKindMap[kind]())}
           </div>
           <a href={href}>{item.name}</a>
-          <span class={tw`space-x-1`}>
+          <span class="space-x-1">
             {isDeprecated({ jsDoc: item.jsDoc ?? undefined }) &&
               tagVariants.deprecated()}
             {item.unstable && tagVariants.unstable()}
@@ -85,7 +84,7 @@ export function LibraryDoc(
         <div />
         <a
           href={services.resolveSourceHref(sourceUrl)}
-          class={tw`icon-button`}
+          class="icon-button"
         >
           <Icons.Source />
         </a>

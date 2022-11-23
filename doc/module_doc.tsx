@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { type ComponentChildren, type DocNode, tw } from "../deps.ts";
+import { type ComponentChildren, type DocNode } from "../deps.ts";
 import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
 import { JsDocModule } from "./jsdoc.tsx";
@@ -174,7 +174,7 @@ export function ModuleDoc(
         <div>{/* TODO: add module name */}</div>
         <a
           href={services.resolveSourceHref(sourceUrl)}
-          class={tw`icon-button`}
+          class="icon-button"
         >
           <Icons.Source />
         </a>

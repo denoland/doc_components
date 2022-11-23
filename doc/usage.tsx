@@ -3,7 +3,6 @@
 import { style } from "../styles.ts";
 import { camelize, parseURL } from "./utils.ts";
 import * as Icons from "../icons.tsx";
-import { tw } from "../deps.ts";
 import { Markdown } from "./markdown.tsx";
 
 interface ParsedUsage {
@@ -76,12 +75,12 @@ export function Usage(
     `navigator?.clipboard?.writeText('${importStatement}');` as any;
 
   return (
-    <div class={tw`w-full relative`}>
+    <div class="w-full relative">
       <Markdown context={{ url }}>
         {`\`\`\`typescript\n${importStatement}\n\`\`\``}
       </Markdown>
 
-      <div class={tw`absolute top-0 right-4 flex items-center h-full`}>
+      <div class="absolute top-0 right-4 flex items-center h-full">
         <button class={style("copyButton")} onClick={onClick}>
           <Icons.Copy />
         </button>

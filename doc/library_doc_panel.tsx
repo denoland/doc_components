@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { type DocNodeKind, type JsDoc, tw } from "../deps.ts";
+import { type DocNodeKind, type JsDoc } from "../deps.ts";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
@@ -87,7 +87,7 @@ function Symbol(
   return (
     <a
       class={`${style("moduleIndexPanelSymbol")} ${
-        uncategorized ? tw`pl-3` : ""
+        uncategorized ? "pl-3" : ""
       } ${
         (active && currentSymbol === symbol.name)
           ? style("moduleIndexPanelActive")
@@ -97,7 +97,7 @@ function Symbol(
       title={symbol.name}
     >
       <span>
-        <div class={tw`${style("symbolKindDisplay")} justify-end`}>
+        <div class={`${style("symbolKindDisplay")} justify-end`}>
           {symbol.kinds.map((kind) => docNodeKindMap[kind]())}
         </div>
         <span>{symbol.name}</span>

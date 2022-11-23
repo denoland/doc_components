@@ -1,11 +1,9 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { tw } from "./deps.ts";
-
 export function Dir(props: { class?: string }) {
   return (
     <svg
-      class={tw`${props.class ?? ""}`}
+      class={props.class}
       width="14"
       height="12"
       viewBox="0 0 14 12"
@@ -23,7 +21,7 @@ export function Dir(props: { class?: string }) {
 export function Source(props: { class?: string }) {
   return (
     <svg
-      class={tw(props.class ?? "")}
+      class={props.class}
       width="14"
       height="14"
       viewBox="0 0 14 14"
@@ -110,7 +108,7 @@ export function Copy() {
 export function LongArrowRight(props: { class?: string }) {
   return (
     <svg
-      class={tw(props.class ?? "")}
+      class={props.class}
       xmlns="http://www.w3.org/2000/svg"
       width="14"
       height="14"
@@ -140,7 +138,7 @@ export function LongArrowRight(props: { class?: string }) {
 export function GitHub(props: { class?: string }) {
   return (
     <svg
-      class={tw`h-6 w-6 ${props.class ?? ""}`}
+      class={`h-6 w-6 ${props.class ?? ""}`}
       fill="currentColor"
       viewBox="0 0 24 24"
     >
@@ -156,7 +154,7 @@ export function GitHub(props: { class?: string }) {
 export function Discord(props: { class?: string }) {
   return (
     <svg
-      class={tw`h-6 w-6 ${props.class ?? ""}`}
+      class={`h-6 w-6 ${props.class ?? ""}`}
       fill="currentColor"
       viewBox="0 0 24 24"
     >
@@ -168,7 +166,7 @@ export function Discord(props: { class?: string }) {
 export function Twitter(props: { class?: string }) {
   return (
     <svg
-      class={tw`h-6 w-6 ${props.class ?? ""}`}
+      class={`h-6 w-6 ${props.class ?? ""}`}
       fill="currentColor"
       viewBox="0 0 24 24"
     >
@@ -211,7 +209,7 @@ export function Plus() {
 export function Minus(props: { class?: string }) {
   return (
     <svg
-      class={tw(props.class ?? "")}
+      class={props.class}
       width="14"
       height="14"
       viewBox="0 0 14 14"
@@ -234,7 +232,7 @@ export function Minus(props: { class?: string }) {
 export function TrashCan(props: { class?: string }) {
   return (
     <svg
-      class={tw(props.class ?? "")}
+      class={props.class}
       width="14"
       height="14"
       viewBox="0 0 14 14"
@@ -254,7 +252,7 @@ export function TrashCan(props: { class?: string }) {
 export function ExclamationMark(props: { class?: string }) {
   return (
     <svg
-      class={tw(props.class ?? "")}
+      class={props.class}
       width="14"
       height="14"
       viewBox="0 0 14 14"
@@ -365,7 +363,7 @@ export function Deno(props: { class?: string }) { // Size not normalized
 export function Link(props: { class?: string }) {
   return (
     <svg
-      class={tw(props.class ?? "")}
+      class={props.class}
       width="14"
       height="14"
       viewBox="0 0 14 14"
@@ -392,7 +390,7 @@ export function Link(props: { class?: string }) {
 export function LinkLine(props: { class?: string }) {
   return (
     <svg
-      class={tw(props.class ?? "")}
+      class={props.class}
       width="14"
       height="14"
       viewBox="0 0 14 14"

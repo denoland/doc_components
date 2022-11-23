@@ -5,7 +5,6 @@ import {
   type ClassMethodDef,
   type ClassPropertyDef,
   type DocNodeClass,
-  tw,
 } from "../deps.ts";
 import {
   DocEntry,
@@ -166,7 +165,7 @@ function ClassAccessorDoc(
       {tsType && (
         <span>
           :{" "}
-          <span class={tw`font-medium`}>
+          <span class="font-medium">
             <TypeDef context={context}>
               {tsType}
             </TypeDef>
@@ -413,7 +412,7 @@ export function DocSubTitleClass(
     <>
       {classDef.implements.length !== 0 && (
         <div>
-          <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
+          <span class="text-[#9CA0AA] italic">{" implements "}</span>
           {classDef.implements.map((typeDef, i) => (
             <>
               <TypeDef context={context}>
@@ -427,9 +426,9 @@ export function DocSubTitleClass(
 
       {classDef.extends && (
         <div>
-          <span class={tw`text-[#9CA0AA] italic`}>{" extends "}</span>
+          <span class="text-[#9CA0AA] italic">{" extends "}</span>
           {extendsHref
-            ? <a href={extendsHref} class={tw`link`}>{classDef.extends}</a>
+            ? <a href={extendsHref} class="link">{classDef.extends}</a>
             : <span>{classDef.extends}</span>}
           <span>
             {classDef.superTypeParams.length !== 0 && (
