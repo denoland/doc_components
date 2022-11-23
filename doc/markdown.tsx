@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { comrak, htmlEntities, lowlight, toHtml } from "../deps.ts";
+import { comrak, htmlEntities, lowlight, toHtml, tw } from "../deps.ts";
 import { services } from "../services.ts";
 import { comrakStyles, style, type StyleKey } from "../styles.ts";
 import { assert, type Child, take } from "./utils.ts";
@@ -127,7 +127,7 @@ export function Markdown(
 
   return (
     <div
-      class={style(mdStyle) + " " + `${additionalStyle}`}
+      class={style(mdStyle) + " " + tw`${additionalStyle}`}
       dangerouslySetInnerHTML={{
         __html: services.markdownToHTML(
           parseLinks(md, context.url, context.namespace),
