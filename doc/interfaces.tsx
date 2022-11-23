@@ -7,6 +7,7 @@ import {
   type InterfaceIndexSignatureDef,
   type InterfaceMethodDef,
   type InterfacePropertyDef,
+  type JsDocTagValued,
 } from "../deps.ts";
 import {
   Anchor,
@@ -212,6 +213,11 @@ function PropertiesDoc(
         tags.push(tagVariants.deprecated());
       }
 
+      const defaultValue =
+        (jsDoc?.tags?.find(({ kind }) => kind === "default") as
+          | JsDocTagValued
+          | undefined)?.value;
+
       return (
         <DocEntry
           id={id}
@@ -228,6 +234,12 @@ function PropertiesDoc(
                 {tsType}
               </TypeDef>
             </>
+          )}
+          {defaultValue && (
+            <span>
+              <span class="font-normal">{" = "}</span>
+              {defaultValue}
+            </span>
           )}
         </DocEntry>
       );

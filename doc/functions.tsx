@@ -7,6 +7,7 @@ import {
   type FunctionDef,
   type JsDocTagParam,
   type JsDocTagReturn,
+  type JsDocTagValued,
   tw,
 } from "../deps.ts";
 import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
@@ -120,7 +121,11 @@ function DocFunction(
     const name = paramName(param, i);
     const id = nameToId("function", `${def.name}_${n}_parameters_${name}`);
 
-    const defaultValue = param.kind === "assign" ? param.right : undefined;
+    const defaultValue = ((def.jsDoc?.tags?.find(({ kind }) =>
+      kind === "default"
+    ) as JsDocTagValued | undefined)?.value) ??
+      (param.kind === "assign" ? param.right : undefined);
+
     const type = param.kind === "assign" ? param.left.tsType : param.tsType;
 
     const tags = [];
@@ -143,21 +148,12 @@ function DocFunction(
             <TypeDef context={context}>
               {type}
             </TypeDef>
-            {
-              /*defaultValue && (
-              <>
-                <span> = {defaultValue}</span>
-                {param.tsType && (
-                  <span>
-                    :{" "}
-                    <TypeDef context={context}>
-                      {param.tsType}
-                    </TypeDef>
-                  </span>
-                )}
-              </>
-            )*/
-            }
+          </span>
+        )}
+        {defaultValue && (
+          <span>
+            <span class="font-normal">{" = "}</span>
+            {defaultValue}
           </span>
         )}
       </DocEntry>
