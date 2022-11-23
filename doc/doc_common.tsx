@@ -4,7 +4,6 @@ import {
   type Accessibility,
   type ComponentChildren,
   type Location,
-  tw,
 } from "../deps.ts";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
@@ -51,10 +50,10 @@ export function DocEntry(
 
       <div class={style("docEntry")}>
         <span class={style("docEntryChildren")}>
-          {!!tags?.length && <span class={tw`space-x-1`}>{tags}</span>}
-          <span class={tw`font-mono`}>
-            {name && <span class={tw`font-bold`}>{name}</span>}
-            <span class={tw`font-medium`}>{children}</span>
+          {!!tags?.length && <span class="space-x-1">{tags}</span>}
+          <span class="font-mono">
+            {name && <span class="font-bold">{name}</span>}
+            <span class="font-medium">{children}</span>
           </span>
         </span>
         {href && (
@@ -64,14 +63,14 @@ export function DocEntry(
             target="_blank"
             class={style("sourceLink")}
           >
-            <div class={tw`hover:bg-gray-100 px-1 py-1 rounded-md`}>
+            <div class="hover:bg-gray-100 px-1 py-1 rounded-md">
               <Icons.LinkLine class="w-5 h-5" />
             </div>
           </a>
         )}
       </div>
 
-      <div class={tw`pl-5`}>
+      <div class="pl-5">
         <JsDoc context={context}>
           {jsDoc}
         </JsDoc>
@@ -103,7 +102,7 @@ export function Section(
   return (
     <div>
       <SectionTitle>{title}</SectionTitle>
-      <div class={tw`mt-2 space-y-7`}>
+      <div class="mt-2 space-y-7">
         {entries}
       </div>
     </div>
@@ -126,7 +125,7 @@ export function Tag(
   const [bg, text] = tagColors[color];
   return (
     <div
-      class={tw`bg-${bg} text-${text} ${large ? "py-2 px-3" : "py-1 px-2"} ${
+      class={`bg-${bg} text-${text} ${large ? "py-2 px-3" : "py-1 px-2"} ${
         style("tag")
       }`}
     >

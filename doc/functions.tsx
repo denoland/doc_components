@@ -70,12 +70,12 @@ function DocFunctionOverload({
   return (
     <label
       htmlFor={overloadId}
-      class={tw`block p-4 rounded-lg border border-[#DDDDDD] hover:bg-ultralight cursor-pointer`}
+      class="block p-4 rounded-lg border border-[#DDDDDD] hover:bg-ultralight cursor-pointer"
     >
       <div>
-        <div class={tw`font-mono`}>
-          <span class={tw`font-bold`}>{def.name}</span>
-          <span class={tw`font-medium`}>
+        <div class="font-mono">
+          <span class="font-bold">{def.name}</span>
+          <span class="font-medium">
             <DocFunctionSummary context={context}>
               {def.functionDef}
             </DocFunctionSummary>
@@ -83,7 +83,7 @@ function DocFunctionOverload({
         </div>
 
         {!(def.functionDef.hasBody && i === 0) && (
-          <div class={tw`w-full`}>
+          <div class="w-full">
             <Markdown summary context={context}>
               {def.jsDoc?.doc}
             </Markdown>
@@ -242,7 +242,7 @@ export function DocBlockFunction(
           />
         );
       })}
-      <div class={tw`space-y-2`}>
+      <div class="space-y-2">
         {defs.map((def, i) => (
           <DocFunctionOverload i={i} context={context}>
             {def}

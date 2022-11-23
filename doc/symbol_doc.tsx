@@ -5,7 +5,6 @@ import {
   type DocNodeInterface,
   type DocNodeTypeAlias,
   type JsDocTagTags,
-  tw,
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
@@ -83,10 +82,10 @@ function Symbol(
   if (permTags.length !== 0) {
     tags.push(
       <Tag color="cyan" large>
-        <span class={tw`space-x-2`}>
+        <span class="space-x-2">
           {permTags.map((tag, i) => (
             <>
-              {i !== 0 && <div class={tw`inline border-l-2 border-gray-300`} />}
+              {i !== 0 && <div class="inline border-l-2 border-gray-300" />}
               <span>{tag}</span>
             </>
           ))}
@@ -113,15 +112,15 @@ function Symbol(
     : undefined;
 
   return (
-    <div class={tw`space-y-8`}>
+    <div class="space-y-8">
       <div class={style("symbolDocHeader")}>
-        <div class={tw`space-y-2`}>
+        <div class="space-y-2">
           <DocTitle name={name} context={context}>
             {docNodes[0]}
           </DocTitle>
 
           {tags.length !== 0 && (
-            <div class={tw`space-x-2`}>
+            <div class="space-x-2">
               {tags}
             </div>
           )}
@@ -131,7 +130,7 @@ function Symbol(
             docNodes[0].location.filename,
             docNodes[0].location.line,
           )}
-          class={tw`icon-button`}
+          class="icon-button"
         >
           <Icons.Source />
         </a>
@@ -139,20 +138,20 @@ function Symbol(
 
       {deprecated?.doc && (
         <div>
-          <div class={tw`py-1 text-danger flex gap-1 items-center`}>
+          <div class="py-1 text-danger flex gap-1 items-center">
             <Icons.TrashCan class="h-4 w-auto" />
-            <span class={tw`font-bold leading-6`}>
+            <span class="font-bold leading-6">
               Deprecated
             </span>
           </div>
 
-          <div class={tw`p-2.5 border-l-4 border-[#F00C084C]`}>
+          <div class="p-2.5 border-l-4 border-[#F00C084C]">
             <Markdown context={context}>{deprecated.doc}</Markdown>
           </div>
         </div>
       )}
 
-      <div class={tw`space-y-3`}>
+      <div class="space-y-3">
         {showUsage && (
           <Usage
             url={context.url}
