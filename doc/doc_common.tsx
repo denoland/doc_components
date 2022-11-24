@@ -158,7 +158,7 @@ function Example(
   const id = `example_${n}`;
 
   return (
-    <div>
+    <div class="group">
       <Anchor>{id}</Anchor>
       <details class={style("details")} id={id}>
         <summary class="flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:children:first-child:text-gray-500">
