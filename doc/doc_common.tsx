@@ -129,11 +129,14 @@ export function Examples(
   examples.push(examples[0]);
 
   return (
-    <Section title="Examples">
-      {examples.map((example, i) => (
-        <Example context={context} n={i}>{example.doc!}</Example>
-      ))}
-    </Section>
+    <div>
+      <SectionTitle>Examples</SectionTitle>
+      <div class="mt-2 space-y-3">
+        {examples.map((example, i) => (
+          <Example context={context} n={i}>{example.doc!}</Example>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -145,6 +148,10 @@ function Example(
   },
 ) {
   const md = take(children);
+  let [summary, ...rest] = md.split("\n\n");
+  let body = rest.join("\n\n");
+  [summary] = summary.split("```");
+  summary ||= `Example ${n + 1}`;
 
   return (
     <details class={style("details")}>
@@ -153,17 +160,13 @@ function Example(
           tabindex={0}
           onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
         />
-        <Markdown
-          context={context}
-          summaryFallback={`Example ${n + 1}`}
-          summary
-        >
-          {md}
+        <Markdown context={context} summary>
+          {summary}
         </Markdown>
       </summary>
 
       <Markdown context={context}>
-        {md}
+        {body}
       </Markdown>
     </details>
   );
