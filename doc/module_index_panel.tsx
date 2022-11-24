@@ -87,7 +87,7 @@ function Module(
       byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
     )
   ) {
-    if (symbolItem.name in symbols) {
+    if (Object.hasOwn(symbols, symbolItem.name)) {
       symbols[symbolItem.name].push(symbolItem.kind);
     } else {
       symbols[symbolItem.name] = [symbolItem.kind];
