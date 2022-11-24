@@ -150,8 +150,10 @@ function Example(
   const md = take(children);
   let [summary, ...rest] = md.split("\n\n");
   let body = rest.join("\n\n");
-  [summary] = summary.split("```");
-  summary ||= `Example ${n + 1}`;
+  [summary, ...rest] = summary.split("```");
+  if (body === "") {
+    body = "```" + rest.join("```");
+  }
 
   return (
     <details class={style("details")}>
@@ -161,7 +163,7 @@ function Example(
           onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
         />
         <Markdown context={context} summary>
-          {summary}
+          {summary || `Example ${n + 1}`}
         </Markdown>
       </summary>
 
