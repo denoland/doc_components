@@ -155,22 +155,27 @@ function Example(
     body = "```" + rest.join("```");
   }
 
-  return (
-    <details class={style("details")}>
-      <summary class="flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:children:first-child:text-gray-500">
-        <Icons.TriangleRight
-          tabindex={0}
-          onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
-        />
-        <Markdown context={context} summary>
-          {summary || `Example ${n + 1}`}
-        </Markdown>
-      </summary>
+  const id = `example_${n}`;
 
-      <Markdown context={context}>
-        {body}
-      </Markdown>
-    </details>
+  return (
+    <div>
+      <Anchor>{id}</Anchor>
+      <details class={style("details")} id={id}>
+        <summary class="flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:children:first-child:text-gray-500">
+          <Icons.TriangleRight
+            tabindex={0}
+            onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
+          />
+          <Markdown context={context} summary>
+            {summary || `Example ${n + 1}`}
+          </Markdown>
+        </summary>
+
+        <Markdown context={context}>
+          {body}
+        </Markdown>
+      </details>
+    </div>
   );
 }
 
