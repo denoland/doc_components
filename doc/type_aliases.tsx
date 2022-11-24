@@ -1,7 +1,7 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
 import { type DocNodeTypeAlias } from "../deps.ts";
-import { DocEntry, nameToId, tagVariants } from "./doc_common.tsx";
+import { DocEntry, Examples, nameToId, tagVariants } from "./doc_common.tsx";
 import { type Context } from "./markdown.tsx";
 import { style } from "../styles.ts";
 import { TypeDef, TypeParamsDoc } from "./types.tsx";
@@ -22,6 +22,8 @@ export function DocBlockTypeAlias(
   }
   return (
     <div class={style("docBlockItems")}>
+      <Examples context={context}>{def.jsDoc}</Examples>
+
       <TypeParamsDoc base={def} context={context}>
         {def.typeAliasDef.typeParams}
       </TypeParamsDoc>

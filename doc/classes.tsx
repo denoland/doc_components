@@ -8,6 +8,7 @@ import {
 } from "../deps.ts";
 import {
   DocEntry,
+  Examples,
   getAccessibilityTag,
   nameToId,
   Section,
@@ -462,6 +463,8 @@ export function DocBlockClass(
   const classItems = getClassItems(def);
   return (
     <div class={style("docBlockItems")}>
+      <Examples context={context}>{def.jsDoc}</Examples>
+
       <ConstructorsDoc name={def.name} context={context}>
         {def.classDef.constructors}
       </ConstructorsDoc>

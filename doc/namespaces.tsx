@@ -5,6 +5,7 @@ import { type Context } from "./markdown.tsx";
 import { DocTypeSections } from "./module_doc.tsx";
 import { style } from "../styles.ts";
 import { asCollection, Child, take } from "./utils.ts";
+import { Examples } from "./doc_common.tsx";
 
 export function DocBlockNamespace(
   { children, context }: {
@@ -16,6 +17,8 @@ export function DocBlockNamespace(
   const collection = asCollection(def.namespaceDef.elements);
   return (
     <div class={style("docBlockItems")}>
+      <Examples context={context}>{def.jsDoc}</Examples>
+
       <DocTypeSections context={context}>
         {collection}
       </DocTypeSections>

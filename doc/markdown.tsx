@@ -101,9 +101,10 @@ export interface Context {
 }
 
 export function Markdown(
-  { children, summary, context }: {
+  { children, summary, summaryFallback, context }: {
     children: Child<string | undefined>;
     summary?: boolean;
+    summaryFallback?: string;
     context: Context;
   },
 ) {
@@ -123,6 +124,7 @@ export function Markdown(
     additionalStyle = services.markdownSummaryStyle;
     [md] = md.split("\n\n");
     [md] = md.split("```");
+    md ||= summaryFallback;
   }
 
   return (

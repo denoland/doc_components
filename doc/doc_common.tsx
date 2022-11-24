@@ -3,13 +3,15 @@
 import {
   type Accessibility,
   type ComponentChildren,
+  type JsDoc as JsDocType,
+  type JsDocTagDoc,
   type Location,
 } from "../deps.ts";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
-import { Context } from "./markdown.tsx";
+import { type Context, Markdown } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
@@ -106,6 +108,64 @@ export function Section(
         {entries}
       </div>
     </div>
+  );
+}
+
+export function Examples(
+  { children, context }: {
+    children: Child<JsDocType | undefined>;
+    context: Context;
+  },
+) {
+  const jsdoc = take(children);
+  const examples =
+    (jsdoc?.tags?.filter((tag) => tag.kind === "example" && tag.doc) ??
+      []) as JsDocTagDoc[];
+
+  if (examples.length === 0) {
+    return null;
+  }
+
+  examples.push(examples[0]);
+
+  return (
+    <Section title="Examples">
+      {examples.map((example, i) => (
+        <Example context={context} n={i}>{example.doc!}</Example>
+      ))}
+    </Section>
+  );
+}
+
+function Example(
+  { children, n, context }: {
+    children: Child<string>;
+    n: number;
+    context: Context;
+  },
+) {
+  const md = take(children);
+
+  return (
+    <details class={style("details")}>
+      <summary class="flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:children:first-child:text-gray-500">
+        <Icons.TriangleRight
+          tabindex={0}
+          onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
+        />
+        <Markdown
+          context={context}
+          summaryFallback={`Example ${n + 1}`}
+          summary
+        >
+          {md}
+        </Markdown>
+      </summary>
+
+      <Markdown context={context}>
+        {md}
+      </Markdown>
+    </details>
   );
 }
 

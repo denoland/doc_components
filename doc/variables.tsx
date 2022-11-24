@@ -5,7 +5,7 @@ import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, take } from "./utils.ts";
 import { Context } from "./markdown.tsx";
-import { DocEntry, nameToId, Section } from "./doc_common.tsx";
+import { DocEntry, Examples, nameToId, Section } from "./doc_common.tsx";
 
 export function DocBlockVariable(
   { children, context }: {
@@ -22,6 +22,8 @@ export function DocBlockVariable(
 
   return (
     <div class={style("docBlockItems")}>
+      <Examples context={context}>{def.jsDoc}</Examples>
+
       <Section title="type">
         {[
           <DocEntry id={id} location={def.location} context={context}>

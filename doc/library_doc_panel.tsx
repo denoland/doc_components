@@ -118,10 +118,7 @@ function Category(
   const items = take(children, true);
   const active = !!items.find(({ name }) => name === currentSymbol);
   return (
-    <details
-      open={active}
-      class={style("moduleIndexPanelDetails")}
-    >
+    <details open={active} class={style("details")}>
       <summary
         class={style("moduleIndexPanelEntry")}
         title={name}
