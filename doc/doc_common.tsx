@@ -126,8 +126,6 @@ export function Examples(
     return null;
   }
 
-  examples.push(examples[0]);
-
   return (
     <div>
       <SectionTitle>Examples</SectionTitle>
