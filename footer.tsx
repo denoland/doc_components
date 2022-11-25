@@ -4,21 +4,15 @@ import * as Icons from "./icons.tsx";
 
 export function Footer() {
   return (
-    <div
-      class="border-t border-grayDefault bg-ultralight text-sm flex justify-center"
-    >
+    <div class="border-t border-grayDefault bg-ultralight text-sm flex justify-center">
       <div class="section-x-inset-xl py-7 lg:py-18 w-full">
-        <nav
-          class="flex flex-col gap-7 w-full leading-tight lg:(flex-row gap-0 items-start justify-between)"
-        >
+        <nav class="flex flex-col gap-7 w-full leading-tight lg:(flex-row gap-0 items-start justify-between)">
           <a href="https://deno.land" class="flex items-center gap-2">
             <Icons.Logo class="h-8 flex-none" />
             <Icons.Deno class="h-4 flex-none lg:hidden" />
           </a>
 
-          <div
-            class="flex flex-col gap-0 divide-incl-y lg:(flex-row gap-16 divide-incl-y-0)"
-          >
+          <div class="flex flex-col gap-0 divide-incl-y lg:(flex-row gap-16 divide-incl-y-0)">
             <FooterSection
               title="Why Deno?"
               entries={{
@@ -127,9 +121,7 @@ function FooterSection(
           <Icons.Minus class="hidden" />
         </div>
       </label>
-      <div
-        class="hidden text-[#6C6E78] flex-col flex-wrap pl-1 pb-2 mb-3 gap-2.5 lg:(flex p-0 mt-4 mb-0)"
-      >
+      <div class="hidden text-[#6C6E78] flex-col flex-wrap pl-1 pb-2 mb-3 gap-2.5 lg:(flex p-0 mt-4 mb-0)">
         {Object.entries(entries).map(([name, link]) => (
           <a href={link} class="whitespace-nowrap block hover:underline">
             {name}

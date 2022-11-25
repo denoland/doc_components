@@ -12,6 +12,7 @@ import {
 import {
   Anchor,
   DocEntry,
+  Examples,
   nameToId,
   Section,
   Tag,
@@ -286,6 +287,8 @@ export function DocBlockInterface(
   context.typeParams = def.interfaceDef.typeParams.map(({ name }) => name);
   return (
     <div class={style("docBlockItems")}>
+      <Examples context={context}>{def.jsDoc}</Examples>
+
       <TypeParamsDoc base={def} context={context}>
         {def.interfaceDef.typeParams}
       </TypeParamsDoc>

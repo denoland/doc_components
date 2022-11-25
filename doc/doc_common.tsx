@@ -3,13 +3,15 @@
 import {
   type Accessibility,
   type ComponentChildren,
+  type JsDoc as JsDocType,
+  type JsDocTagDoc,
   type Location,
 } from "../deps.ts";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
-import { Context } from "./markdown.tsx";
+import { type Context, Markdown } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
@@ -105,6 +107,72 @@ export function Section(
       <div class="mt-2 space-y-7">
         {entries}
       </div>
+    </div>
+  );
+}
+
+export function Examples(
+  { children, context }: {
+    children: Child<JsDocType | undefined>;
+    context: Context;
+  },
+) {
+  const jsdoc = take(children);
+  const examples =
+    (jsdoc?.tags?.filter((tag) => tag.kind === "example" && tag.doc) ??
+      []) as JsDocTagDoc[];
+
+  if (examples.length === 0) {
+    return null;
+  }
+
+  return (
+    <div>
+      <SectionTitle>Examples</SectionTitle>
+      <div class="mt-2 space-y-3">
+        {examples.map((example, i) => (
+          <Example context={context} n={i}>{example.doc!}</Example>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Example(
+  { children, n, context }: {
+    children: Child<string>;
+    n: number;
+    context: Context;
+  },
+) {
+  const md = take(children);
+  let [summary, ...rest] = md.split("\n\n");
+  let body = rest.join("\n\n");
+  [summary, ...rest] = summary.split("```");
+  if (body === "") {
+    body = "```" + rest.join("```");
+  }
+
+  const id = `example_${n}`;
+
+  return (
+    <div class="group">
+      <Anchor>{id}</Anchor>
+      <details class={style("details")} id={id}>
+        <summary class="flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:children:first-child:text-gray-500">
+          <Icons.TriangleRight
+            tabindex={0}
+            onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
+          />
+          <Markdown context={context} summary>
+            {summary || `Example ${n + 1}`}
+          </Markdown>
+        </summary>
+
+        <Markdown context={context}>
+          {body}
+        </Markdown>
+      </details>
     </div>
   );
 }

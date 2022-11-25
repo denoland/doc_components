@@ -95,10 +95,7 @@ function Module(
   }
 
   return (
-    <details
-      open={!!(active && currentSymbol)}
-      class={style("moduleIndexPanelDetails")}
-    >
+    <details open={!!(active && currentSymbol)} class={style("details")}>
       <summary
         class={style("moduleIndexPanelEntry") +
           ((active && !currentSymbol)

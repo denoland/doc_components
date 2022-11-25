@@ -10,7 +10,13 @@ import {
   type JsDocTagValued,
   tw,
 } from "../deps.ts";
-import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
+import {
+  DocEntry,
+  Examples,
+  nameToId,
+  Section,
+  tagVariants,
+} from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { type Context, Markdown } from "./markdown.tsx";
 import { paramName, Params } from "./params.tsx";
@@ -168,6 +174,8 @@ function DocFunction(
   return (
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
       <JsDoc context={context}>{def.jsDoc}</JsDoc>
+
+      <Examples context={context}>{def.jsDoc}</Examples>
 
       <TypeParamsDoc base={def} context={context}>
         {def.functionDef.typeParams}

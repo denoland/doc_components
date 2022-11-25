@@ -40,6 +40,11 @@ const styles = {
   anchor:
     apply`float-left leading-none hidden group-hover:block text-gray-600 -ml-[18px] pr-[4px]`,
   copyButton: apply`rounded border border-[#D2D2DC] p-1.5 hover:bg-border`,
+  details: css({
+    "& > summary": apply`list-none`,
+    "& > summary::-webkit-details-marker": apply`hidden`,
+    "&[open] svg": apply`rotate-90`,
+  }),
   docBlockItems: apply`space-y-7`,
   docEntry: apply`flex justify-between`,
   docEntryChildren: apply`break-words flex items-center gap-2`,
@@ -67,11 +72,6 @@ const styles = {
     apply`block lg:(table-cell pl-0 pt-2.5 mt-0) pl-11 pr-[1.375rem] pb-2.5 -mt-2 text-[#9CA0AA]`,
   moduleIndexPanel: apply`lg:w-72 flex-shrink-0`,
   moduleIndexPanelActive: apply`bg-gray-100 font-bold`,
-  moduleIndexPanelDetails: css({
-    "& > summary": apply`list-none`,
-    "& > summary::-webkit-details-marker": apply`hidden`,
-    "&[open] svg": apply`rotate-90`,
-  }),
   moduleIndexPanelEntry:
     apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:(text-gray-500  bg-gray-50) children:last-child:(truncate flex-shrink-1)`,
   moduleIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
