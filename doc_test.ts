@@ -3,7 +3,7 @@
 import { assertEquals } from "./deps_test.ts";
 import { type DocNode } from "./deps.ts";
 import { byKind } from "./doc/doc.ts";
-import { splitMarkdownTitle } from "./doc/utils.ts";
+import { processProperty, splitMarkdownTitle } from "./doc/utils.ts";
 
 Deno.test({
   name: "doc - sort by kind",
@@ -114,4 +114,30 @@ Deno.test("splitMarkdownTitle - tight", () => {
 // comment
 \`\`\``,
   );
+});
+
+Deno.test("processProperty - prototype", () => {
+  const [property, isPrototype] = processProperty("prototype.foo");
+  assertEquals(property, "foo");
+  assertEquals(isPrototype, true);
+});
+
+Deno.test("processProperty - static", () => {
+  const [property, isPrototype] = processProperty("foo");
+  assertEquals(property, "foo");
+  assertEquals(isPrototype, false);
+});
+
+Deno.test("processProperty - prototype compute", () => {
+  const [property, isPrototype] = processProperty(
+    "prototype.[Symbol.iterator]",
+  );
+  assertEquals(property, "[Symbol.iterator]");
+  assertEquals(isPrototype, true);
+});
+
+Deno.test("processProperty - static compute", () => {
+  const [property, isPrototype] = processProperty("[Symbol.iterator]");
+  assertEquals(property, "[Symbol.iterator]");
+  assertEquals(isPrototype, false);
 });

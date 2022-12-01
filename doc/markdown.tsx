@@ -122,7 +122,6 @@ export function Markdown(
     mdStyle = "markdownSummary";
     additionalStyle = services.markdownSummaryStyle;
     [md] = splitMarkdownTitle(md);
-    console.log(JSON.stringify(md));
   }
 
   return (
