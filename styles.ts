@@ -18,7 +18,7 @@ export const comrakStyles = css({
   h6: apply`md:font-italic lg:font-semibold`,
   hr: apply`m-2 border-gray-500`,
   ol: apply`list-decimal lg:list-inside`,
-  p: apply`my-1`,
+  p: apply`my-1 text-left`,
   table: apply`table-auto`,
   td: apply`p-2 border border(solid gray-500)`,
   th: apply`font-bold text-center`,

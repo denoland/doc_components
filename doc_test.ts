@@ -3,6 +3,7 @@
 import { assertEquals } from "./deps_test.ts";
 import { type DocNode } from "./deps.ts";
 import { byKind } from "./doc/doc.ts";
+import { splitMarkdownTitle } from "./doc/utils.ts";
 
 Deno.test({
   name: "doc - sort by kind",
@@ -49,4 +50,68 @@ Deno.test({
       "function",
     ]);
   },
+});
+
+Deno.test("splitMarkdownTitle - simple", () => {
+  const markdown = `some text
+
+\`\`\`
+// comment
+\`\`\`
+  `;
+  const [summary, body] = splitMarkdownTitle(markdown);
+  assertEquals(summary, "some text");
+  assertEquals(
+    body,
+    `\`\`\`
+// comment
+\`\`\``,
+  );
+});
+
+Deno.test("splitMarkdownTitle - markdown only", () => {
+  const markdown = `\`\`\`
+// comment
+\`\`\`
+  `;
+  const [summary, body] = splitMarkdownTitle(markdown);
+  assertEquals(summary, "");
+  assertEquals(
+    body,
+    `\`\`\`
+// comment
+\`\`\``,
+  );
+});
+
+Deno.test("splitMarkdownTitle - summary only", () => {
+  const markdown = "some text";
+  const [summary, body] = splitMarkdownTitle(markdown);
+  assertEquals(summary, "some text");
+  assertEquals(body, "");
+});
+
+Deno.test("splitMarkdownTitle - paragraphs only", () => {
+  const markdown = `some text
+
+hello world`;
+  const [summary, body] = splitMarkdownTitle(markdown);
+  assertEquals(summary, "some text");
+  assertEquals(body, "hello world");
+});
+
+Deno.test("splitMarkdownTitle - tight", () => {
+  const markdown = `some text
+\`\`\`
+// comment
+\`\`\`
+  `;
+  const [summary, body] = splitMarkdownTitle(markdown);
+  assertEquals(summary, "some text");
+  assertEquals(
+    body,
+    `\`\`\`
+// comment
+\`\`\``,
+  );
 });
