@@ -248,3 +248,26 @@ export function take<T>(
     return Array.isArray(value) ? value[0] : value;
   }
 }
+
+/**
+ * Splits a markdown file by its first line or first codeblock, depending which
+ * is first.
+ *
+ * @param markdown
+ */
+export function splitMarkdownTitle(
+  markdown: string,
+): [summary: string, body: string] {
+  let newlineIndex = markdown.indexOf("\n\n");
+  let codeblockIndex = markdown.indexOf("```");
+  if (newlineIndex == -1) {
+    newlineIndex = Infinity;
+  }
+  if (codeblockIndex == -1) {
+    codeblockIndex = Infinity;
+  }
+  const splitIndex = Math.min(newlineIndex, codeblockIndex);
+  const summary = markdown.slice(0, splitIndex).trim();
+  const body = markdown.slice(splitIndex).trim();
+  return [summary, body];
+}

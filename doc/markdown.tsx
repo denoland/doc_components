@@ -3,7 +3,7 @@
 import { comrak, htmlEntities, lowlight, toHtml, tw } from "../deps.ts";
 import { services } from "../services.ts";
 import { comrakStyles, style, type StyleKey } from "../styles.ts";
-import { assert, type Child, take } from "./utils.ts";
+import { assert, type Child, splitMarkdownTitle, take } from "./utils.ts";
 
 const CODE_BLOCK_RE =
   /<pre><code\sclass="language-([^"]+)">([^<]+)<\/code><\/pre>/m;
@@ -121,8 +121,8 @@ export function Markdown(
   if (summary) {
     mdStyle = "markdownSummary";
     additionalStyle = services.markdownSummaryStyle;
-    [md] = md.split("\n\n");
-    [md] = md.split("```");
+    [md] = splitMarkdownTitle(md);
+    console.log(JSON.stringify(md));
   }
 
   return (
