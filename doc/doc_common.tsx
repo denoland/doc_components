@@ -9,7 +9,7 @@ import {
 } from "../deps.ts";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
-import { type Child, take } from "./utils.ts";
+import { type Child, splitMarkdownTitle, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
 import { type Context, Markdown } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
@@ -146,12 +146,7 @@ function Example(
   },
 ) {
   const md = take(children);
-  let [summary, ...rest] = md.split("\n\n");
-  let body = rest.join("\n\n");
-  [summary, ...rest] = summary.split("```");
-  if (body === "") {
-    body = "```" + rest.join("```");
-  }
+  const [summary, body] = splitMarkdownTitle(md);
 
   const id = `example_${n}`;
 
