@@ -12,6 +12,7 @@ import {
   type DocNodeTypeAlias,
   type DocNodeVariable,
   type JsDoc,
+  type JsDocTagDoc,
 } from "../deps.ts";
 
 /** Some JSX libraries (notably nano-jsx) have strange handling of the
@@ -121,9 +122,13 @@ export function isAbstract(node: DocNode) {
   return false;
 }
 
-export function isDeprecated(node?: { jsDoc?: JsDoc }) {
+export function isDeprecated(
+  node?: { jsDoc?: JsDoc },
+): JsDocTagDoc | undefined {
   if (node && node.jsDoc && node.jsDoc.tags) {
-    return node.jsDoc.tags.some(({ kind }) => kind === "deprecated");
+    return node.jsDoc.tags.find(({ kind }) => kind === "deprecated") as
+      | JsDocTagDoc
+      | undefined;
   }
 }
 
@@ -198,7 +203,7 @@ const patterns = {
 
 /** Take a string URL and attempt to pattern match it against a known registry
  * and returned the parsed structure. */
-export function parseURL(url: string): ParsedURL | undefined {
+export function parseURL(url: URL): ParsedURL | undefined {
   for (const [registry, pattern] of Object.entries(patterns)) {
     for (const pat of pattern) {
       const match = pat.exec(url);

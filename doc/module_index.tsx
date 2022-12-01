@@ -1,13 +1,10 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import { type Context, Markdown } from "./markdown.tsx";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "../icons.tsx";
-import { tw } from "../deps.ts";
 
 export interface IndexItem {
   kind: "dir" | "module" | "file";
@@ -31,7 +28,7 @@ function Folder({ children, parent, context }: {
     <tr class={style("moduleIndexRow")}>
       <td class={style("moduleIndexLinkCell")}>
         <Icons.Dir class={style("moduleIndexLinkCellIcon")} />
-        <a href={href} class={tw`link`}>{label}</a>
+        <a href={href} class="link">{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
         <Markdown summary context={{ ...context, url }}>
@@ -56,7 +53,7 @@ function Module({ children, parent, context }: {
     <tr class={style("moduleIndexRow")}>
       <td class={style("moduleIndexLinkCell")}>
         <Icons.Source class={style("moduleIndexLinkCellIcon")} />
-        <a href={href} class={tw`link`}>{label}</a>
+        <a href={href} class="link">{label}</a>
       </td>
       <td class={style("moduleIndexDocCell")}>
         <Markdown summary context={{ ...context, url }}>
@@ -120,7 +117,7 @@ export function ModuleIndex(
         </div>
         <a
           href={services.resolveSourceHref(sourceUrl)}
-          class={tw`icon-button`}
+          class="icon-button"
         >
           <Icons.Source />
         </a>

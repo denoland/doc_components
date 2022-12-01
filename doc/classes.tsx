@@ -1,16 +1,14 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import {
   type ClassConstructorDef,
   type ClassMethodDef,
   type ClassPropertyDef,
   type DocNodeClass,
-  tw,
 } from "../deps.ts";
 import {
   DocEntry,
+  Examples,
   getAccessibilityTag,
   nameToId,
   Section,
@@ -20,7 +18,7 @@ import {
 import { IndexSignaturesDoc } from "./interfaces.tsx";
 import { type Context } from "./markdown.tsx";
 import { Params } from "./params.tsx";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { TypeDef, TypeParamsDoc } from "./types.tsx";
 import { assert, type Child, isDeprecated, take } from "./utils.ts";
@@ -168,7 +166,7 @@ function ClassAccessorDoc(
       {tsType && (
         <span>
           :{" "}
-          <span class={tw`font-medium`}>
+          <span class="font-medium">
             <TypeDef context={context}>
               {tsType}
             </TypeDef>
@@ -427,7 +425,7 @@ export function DocSubTitleClass(
     <>
       {classDef.implements.length !== 0 && (
         <div>
-          <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
+          <span class="text-[#9CA0AA] italic">{" implements "}</span>
           {classDef.implements.map((typeDef, i) => (
             <>
               <TypeDef context={context}>
@@ -441,9 +439,9 @@ export function DocSubTitleClass(
 
       {classDef.extends && (
         <div>
-          <span class={tw`text-[#9CA0AA] italic`}>{" extends "}</span>
+          <span class="text-[#9CA0AA] italic">{" extends "}</span>
           {extendsHref
-            ? <a href={extendsHref} class={tw`link`}>{classDef.extends}</a>
+            ? <a href={extendsHref} class="link">{classDef.extends}</a>
             : <span>{classDef.extends}</span>}
           <span>
             {classDef.superTypeParams.length !== 0 && (
@@ -477,6 +475,8 @@ export function DocBlockClass(
   const classItems = getClassItems(def);
   return (
     <div class={style("docBlockItems")}>
+      <Examples context={context}>{def.jsDoc}</Examples>
+
       <ConstructorsDoc name={def.name} context={context}>
         {def.classDef.constructors}
       </ConstructorsDoc>

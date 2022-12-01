@@ -1,7 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import {
   type DocNode,
   type DocNodeClass,
@@ -9,19 +7,18 @@ import {
   type DocNodeInterface,
   type DocNodeTypeAlias,
   type JsDocTagTags,
-  tw,
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
 import { Tag, tagVariants } from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import * as Icons from "../icons.tsx";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
-import { type Context } from "./markdown.tsx";
+import { type Context, Markdown } from "./markdown.tsx";
 
 function isTypeOnly(
   docNodes: DocNode[],
@@ -121,10 +118,10 @@ function Symbol(
   if (permTags.length !== 0) {
     tags.push(
       <Tag color="cyan" large>
-        <span class={tw`space-x-2`}>
+        <span class="space-x-2">
           {permTags.map((tag, i) => (
             <>
-              {i !== 0 && <div class={tw`inline border-l-2 border-gray-300`} />}
+              {i !== 0 && <div class="inline border-l-2 border-gray-300" />}
               <span>{tag}</span>
             </>
           ))}
@@ -140,7 +137,8 @@ function Symbol(
   if (isAbstract(docNodes[0])) {
     tags.push(tagVariants.abstractLg());
   }
-  if (isDeprecated(docNodes[0])) {
+  const deprecated = isDeprecated(docNodes[0]);
+  if (deprecated) {
     tags.push(tagVariants.deprecatedLg());
   }
 
@@ -150,15 +148,15 @@ function Symbol(
     : undefined;
 
   return (
-    <div class={tw`space-y-7`}>
+    <div class="space-y-8">
       <div class={style("symbolDocHeader")}>
-        <div class={tw`space-y-2`}>
+        <div class="space-y-2">
           <DocTitle property={property} name={name} context={context}>
             {docNodes[0]}
           </DocTitle>
 
           {tags.length !== 0 && (
-            <div class={tw`space-x-2`}>
+            <div class="space-x-2">
               {tags}
             </div>
           )}
@@ -168,16 +166,31 @@ function Symbol(
             docNodes[0].location.filename,
             docNodes[0].location.line,
           )}
-          class={tw`icon-button`}
+          class="icon-button"
         >
           <Icons.Source />
         </a>
       </div>
 
-      <div class={tw`space-y-3`}>
+      {deprecated?.doc && (
+        <div>
+          <div class="py-1 text-danger flex gap-1 items-center">
+            <Icons.TrashCan class="h-4 w-auto" />
+            <span class="font-bold leading-6">
+              Deprecated
+            </span>
+          </div>
+
+          <div class="p-2.5 border-l-4 border-[#F00C084C]">
+            <Markdown context={context}>{deprecated.doc}</Markdown>
+          </div>
+        </div>
+      )}
+
+      <div class="space-y-3">
         {showUsage && (
           <Usage
-            url={context.url.href}
+            url={context.url}
             name={name}
             isType={isTypeOnly(docNodes)}
           />

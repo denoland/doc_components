@@ -1,13 +1,17 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
-import { type Accessibility, type Location, tw } from "../deps.ts";
-import { runtime, services } from "../services.ts";
+import {
+  type Accessibility,
+  type ComponentChildren,
+  type JsDoc as JsDocType,
+  type JsDocTagDoc,
+  type Location,
+} from "../deps.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import { JsDoc } from "./jsdoc.tsx";
-import { Context } from "./markdown.tsx";
+import { type Context, Markdown } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]]|\.)/g;
@@ -31,7 +35,7 @@ export function Anchor({ children: name }: { children: string }) {
 
 export function DocEntry(
   { children, tags, name, location, id, jsDoc, href, context }: {
-    children: unknown;
+    children: ComponentChildren;
     tags?: unknown[];
     name?: unknown;
     location: Location;
@@ -53,24 +57,31 @@ export function DocEntry(
       <div class={style("docEntry")}>
         <span class={style("docEntryChildren")}>
           <span class={style("docEntryChildren")}>
-            {!!tags?.length && <span class={tw`space-x-1`}>{tags}</span>}
+            {!!tags?.length && <span class="space-x-1">{tags}</span>}
 
-            <span class={tw`font-mono`}>
+            <span class="font-mono">
               {name && href
-                ? <a class={tw`font-bold link`} href={href}>{name}</a>
-                : <span class={tw`font-bold`}>{name}</span>}
-              <span class={tw`font-medium`}>{children}</span>
+                ? <a class="font-bold link" href={href}>{name}</a>
+                : <span class="font-bold">{name}</span>}
+              <span class="font-medium">{children}</span>
             </span>
           </span>
         </span>
         {sourceHref && (
-          <a href={sourceHref} target="_blank" class={style("sourceLink")}>
-            [src]
+          <a
+            href={sourceHref}
+            aria-label="Jump to src"
+            target="_blank"
+            class={style("sourceLink")}
+          >
+            <div class="hover:bg-gray-100 px-1 py-1 rounded-md">
+              <Icons.LinkLine class="w-5 h-5" />
+            </div>
           </a>
         )}
       </div>
 
-      <div class={tw`pl-5`}>
+      <div class="pl-5">
         <JsDoc context={context}>
           {jsDoc}
         </JsDoc>
@@ -102,9 +113,75 @@ export function Section(
   return (
     <div>
       <SectionTitle>{title}</SectionTitle>
-      <div class={tw`mt-2 space-y-7`}>
+      <div class="mt-2 space-y-7">
         {entries}
       </div>
+    </div>
+  );
+}
+
+export function Examples(
+  { children, context }: {
+    children: Child<JsDocType | undefined>;
+    context: Context;
+  },
+) {
+  const jsdoc = take(children);
+  const examples =
+    (jsdoc?.tags?.filter((tag) => tag.kind === "example" && tag.doc) ??
+      []) as JsDocTagDoc[];
+
+  if (examples.length === 0) {
+    return null;
+  }
+
+  return (
+    <div>
+      <SectionTitle>Examples</SectionTitle>
+      <div class="mt-2 space-y-3">
+        {examples.map((example, i) => (
+          <Example context={context} n={i}>{example.doc!}</Example>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Example(
+  { children, n, context }: {
+    children: Child<string>;
+    n: number;
+    context: Context;
+  },
+) {
+  const md = take(children);
+  let [summary, ...rest] = md.split("\n\n");
+  let body = rest.join("\n\n");
+  [summary, ...rest] = summary.split("```");
+  if (body === "") {
+    body = "```" + rest.join("```");
+  }
+
+  const id = `example_${n}`;
+
+  return (
+    <div class="group">
+      <Anchor>{id}</Anchor>
+      <details class={style("details")} id={id}>
+        <summary class="flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:children:first-child:text-gray-500">
+          <Icons.TriangleRight
+            tabindex={0}
+            onKeyDown="if (event.code === 'Space' || event.code === 'Enter') { this.parentElement.click(); event.preventDefault(); }"
+          />
+          <Markdown context={context} summary>
+            {summary || `Example ${n + 1}`}
+          </Markdown>
+        </summary>
+
+        <Markdown context={context}>
+          {body}
+        </Markdown>
+      </details>
     </div>
   );
 }
@@ -117,7 +194,7 @@ export const tagColors = {
 
 export function Tag(
   { children, color, large }: {
-    children: unknown;
+    children: ComponentChildren;
     color: keyof typeof tagColors;
     large?: boolean;
   },
@@ -125,7 +202,7 @@ export function Tag(
   const [bg, text] = tagColors[color];
   return (
     <div
-      class={tw`bg-${bg} text-${text} ${large ? "py-2 px-3" : "py-1 px-2"} ${
+      class={`bg-${bg} text-${text} ${large ? "py-2 px-3" : "py-1 px-2"} ${
         style("tag")
       }`}
     >
@@ -135,15 +212,20 @@ export function Tag(
 }
 
 export const tagVariants = {
-  deprecatedLg: () => <Tag color="gray" large>Deprecated</Tag>,
+  deprecatedLg: () => (
+    <Tag color="gray" large>
+      <Icons.ExclamationMark />
+      <span>Deprecated</span>
+    </Tag>
+  ),
   deprecated: () => <Tag color="gray">deprecated</Tag>,
   abstractLg: () => <Tag color="cyan" large>Abstract</Tag>,
   abstract: () => <Tag color="cyan">abstract</Tag>,
-  readonly: () => <Tag color="purple">readonly</Tag>,
-  writeonly: () => <Tag color="purple">readonly</Tag>,
-  optional: () => <Tag color="cyan">optional</Tag>,
   unstableLg: () => <Tag color="gray" large>Unstable</Tag>,
   unstable: () => <Tag color="gray">unstable</Tag>,
+  readonly: () => <Tag color="purple">readonly</Tag>,
+  writeonly: () => <Tag color="purple">writeonly</Tag>,
+  optional: () => <Tag color="cyan">optional</Tag>,
 } as const;
 
 export function getAccessibilityTag(accessibility?: Accessibility) {

@@ -1,9 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
-import { type ParamDef, tw } from "../deps.ts";
-import { runtime } from "../services.ts";
+import { type ParamDef } from "../deps.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, take } from "./utils.ts";
@@ -79,7 +76,7 @@ export function paramName(param: ParamDef, i: number): unknown {
   switch (param.kind) {
     case "array":
     case "object":
-      return <span class={tw`italic`}>unnamed {i}</span>;
+      return <span class="italic">unnamed {i}</span>;
     case "assign":
       return paramName(param.left, i);
     case "identifier":

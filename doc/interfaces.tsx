@@ -1,7 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import {
   type ClassIndexSignatureDef,
   type DocNodeInterface,
@@ -9,11 +7,12 @@ import {
   type InterfaceIndexSignatureDef,
   type InterfaceMethodDef,
   type InterfacePropertyDef,
-  tw,
+  type JsDocTagValued,
 } from "../deps.ts";
 import {
   Anchor,
   DocEntry,
+  Examples,
   nameToId,
   Section,
   Tag,
@@ -21,7 +20,6 @@ import {
 } from "./doc_common.tsx";
 import { Context } from "./markdown.tsx";
 import { Params } from "./params.tsx";
-import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { DocTypeParamsSummary, TypeDef, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, maybe, take } from "./utils.ts";
@@ -216,6 +214,11 @@ function PropertiesDoc(
         tags.push(tagVariants.deprecated());
       }
 
+      const defaultValue =
+        (jsDoc?.tags?.find(({ kind }) => kind === "default") as
+          | JsDocTagValued
+          | undefined)?.value;
+
       return (
         <DocEntry
           id={id}
@@ -232,6 +235,12 @@ function PropertiesDoc(
                 {tsType}
               </TypeDef>
             </>
+          )}
+          {defaultValue && (
+            <span>
+              <span class="font-normal">{" = "}</span>
+              {defaultValue}
+            </span>
           )}
         </DocEntry>
       );
@@ -255,7 +264,7 @@ export function DocSubTitleInterface(
 
   return (
     <div>
-      <span class={tw`text-[#9CA0AA] italic`}>{" implements "}</span>
+      <span class="text-[#9CA0AA] italic">{" implements "}</span>
       {interfaceDef.extends.map((typeDef, i) => (
         <>
           <TypeDef context={context}>
@@ -278,6 +287,8 @@ export function DocBlockInterface(
   context.typeParams = def.interfaceDef.typeParams.map(({ name }) => name);
   return (
     <div class={style("docBlockItems")}>
+      <Examples context={context}>{def.jsDoc}</Examples>
+
       <TypeParamsDoc base={def} context={context}>
         {def.interfaceDef.typeParams}
       </TypeParamsDoc>

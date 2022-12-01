@@ -32,6 +32,7 @@ export type {
   JsDocTagParam,
   JsDocTagReturn,
   JsDocTagTags,
+  JsDocTagValued,
   LiteralCallSignatureDef,
   LiteralIndexSignatureDef,
   LiteralMethodDef,
@@ -46,7 +47,7 @@ export type {
   TsTypeParamDef,
   TsTypeTupleDef,
   TsTypeUnionDef,
-} from "https://deno.land/x/deno_doc@0.44.0/lib/types.d.ts";
+} from "https://deno.land/x/deno_doc@0.49.1/lib/types.d.ts";
 
 export { toHtml } from "https://esm.sh/hast-util-to-html@8.0.3?pin=v87";
 export * as htmlEntities from "https://esm.sh/html-entities@2.3.3?pin=v87";
@@ -54,6 +55,7 @@ export { lowlight } from "https://esm.sh/lowlight@2.7.0?pin=v87";
 export {
   apply,
   type Configuration,
+  type CSSRules,
   type Directive,
   type Plugin,
   setup,
@@ -62,3 +64,4 @@ export {
 } from "twind";
 export * as twColors from "twind/colors";
 export { css } from "twind/css";
+export { type ComponentChildren } from "preact";

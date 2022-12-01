@@ -5,22 +5,15 @@ import {
   comrak,
   type Configuration as TwConfiguration,
   css,
+  type CSSRules,
+  type Directive,
   type Plugin,
   setup as twSetup,
   type ThemeConfiguration,
   twColors,
 } from "./deps.ts";
 import { mdToHtml } from "./doc/markdown.tsx";
-
-interface JsxRuntime {
-  Fragment: (props: Record<string, unknown>) => unknown;
-  h: (
-    type: string,
-    props: Record<string, unknown>,
-    // deno-lint-ignore no-explicit-any
-    ...children: any[]
-  ) => unknown;
-}
+import { comrakStyles } from "./styles.ts";
 
 export interface Configuration {
   /** Called when the doc components are trying to resolve a symbol.  The
@@ -54,10 +47,12 @@ export interface Configuration {
   resolveSourceHref?: (url: string, line?: number) => string;
   /** Called when markdown needs to be rendered. */
   markdownToHTML?: (markdown: string) => string;
-  /** The JSX runtime that should be used. */
-  runtime?: JsxRuntime;
   /** If provided, the twind {@linkcode twSetup setup} will be performed. */
   tw?: TwConfiguration;
+  /** Class to give to markdown blocks */
+  markdownStyle?: string | Directive<CSSRules>;
+  /** Class to give to markdown summary blocks */
+  markdownSummaryStyle?: string | Directive<CSSRules>;
 }
 
 export const theme: ThemeConfiguration = {
@@ -99,10 +94,12 @@ export const theme: ThemeConfiguration = {
   },
   extend: {
     colors: {
-      secondary: "#E5E7EB",
-      "default-highlight": "#333333C0",
-      ultralight: "#F8F7F6",
+      primary: "#056CF0",
+      symbol: "#7B61FF",
       border: "#DDDDDD",
+      grayDefault: "#F3F3F3",
+      ultralight: "#F8F7F6",
+      danger: "#F00C08",
     },
     spacing: {
       4.5: "1.125rem",
@@ -117,7 +114,7 @@ export const theme: ThemeConfiguration = {
 
 export const plugins: Record<string, Plugin> = {
   link:
-    apply`text-[#056CF0] transition duration-75 ease-in-out hover:text-blue-400`,
+    apply`text-primary transition duration-75 ease-in-out hover:text-blue-400`,
   "section-x-inset": (parts) =>
     parts[0] === "none"
       ? apply`max-w-none mx-0 px-0`
@@ -142,7 +139,8 @@ const runtimeConfig: Required<
     | "lookupHref"
     | "resolveSourceHref"
     | "markdownToHTML"
-    | "runtime"
+    | "markdownStyle"
+    | "markdownSummaryStyle"
   >
 > = {
   resolveHref(current, symbol, property) {
@@ -161,27 +159,14 @@ const runtimeConfig: Required<
     return line ? `${url}#L${line}` : url;
   },
   markdownToHTML: mdToHtml,
-  runtime: {
-    Fragment() {
-      throw new TypeError(
-        "The JSX runtime.Fragment is unset and must be set via setup().",
-      );
-    },
-    h() {
-      throw new TypeError(
-        "The JSX runtime.h is unset and must be set via setup().",
-      );
-    },
-  },
+  markdownStyle: comrakStyles,
+  markdownSummaryStyle: "",
 };
 
 /** Setup the services used by the doc components. */
 export async function setup(config: Configuration) {
-  const { runtime, tw, ...other } = config;
+  const { tw, ...other } = config;
   Object.assign(runtimeConfig, other);
-  if (runtime) {
-    Object.assign(runtimeConfig.runtime, runtime);
-  }
   if (tw) {
     twSetup(tw);
   }
@@ -189,15 +174,6 @@ export async function setup(config: Configuration) {
     await comrak.init();
   }
 }
-
-export const runtime: JsxRuntime = {
-  get Fragment() {
-    return runtimeConfig.runtime.Fragment;
-  },
-  get h() {
-    return runtimeConfig.runtime.h;
-  },
-};
 
 export const services = {
   /** Return a link to the provided URL and optional symbol. */
@@ -226,5 +202,14 @@ export const services = {
   /** Render Markdown to HTML */
   get markdownToHTML(): (markdown: string) => string {
     return runtimeConfig.markdownToHTML;
+  },
+
+  /** Class to give to markdown blocks */
+  get markdownStyle(): string | Directive<CSSRules> {
+    return runtimeConfig.markdownStyle;
+  },
+  /** Class to give to markdown summary blocks */
+  get markdownSummaryStyle(): string | Directive<CSSRules> {
+    return runtimeConfig.markdownSummaryStyle;
   },
 };

@@ -1,11 +1,11 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { DocNodeNamespace } from "https://deno.land/x/deno_doc@0.44.0/lib/types.d.ts";
 import {
   type DocNodeClass,
   type DocNodeEnum,
   type DocNodeFunction,
   type DocNodeInterface,
+  type DocNodeNamespace,
   type DocNodeTypeAlias,
 } from "../deps.ts";
 
@@ -20,7 +20,15 @@ export const classNode: DocNodeClass = {
   declarationKind: "export",
   jsDoc: {
     doc: "a deprecated class",
-    tags: [{ kind: "deprecated", doc: "don't use this" }],
+    tags: [{ kind: "deprecated", doc: "don't use this" }, {
+      kind: "example",
+      doc:
+        '```ts\nimport { ByteSliceStream } from "https://deno.land/std@$STD_VERSION/streams/buffer.ts";\nconst response = await fetch("https://example.com");\nconst rangedStream = response.body!\n  .pipeThrough(new ByteSliceStream(3, 8));\n```',
+    }, {
+      kind: "example",
+      doc:
+        'hello world\n\nmore body text\n```ts\nimport { ByteSliceStream } from "https://deno.land/std@$STD_VERSION/streams/buffer.ts";\nconst response = await fetch("https://example.com");\nconst rangedStream = response.body!\n  .pipeThrough(new ByteSliceStream(3, 8));\n```',
+    }],
   },
   classDef: {
     isAbstract: false,

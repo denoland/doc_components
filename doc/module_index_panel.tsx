@@ -1,10 +1,8 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
-import { DocNodeKind, JsDoc } from "../deps.ts";
+import { type DocNodeKind, type JsDoc, tw } from "../deps.ts";
 import { byKindValue, getIndex } from "./doc.ts";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, take } from "./utils.ts";
 import * as Icons from "../icons.tsx";
@@ -80,11 +78,24 @@ function Module(
   const href = services.resolveHref(url);
   const label = path.slice(parent === "/" ? 1 : parent.length + 1);
   const active = current ? current == path : isIndex;
+
+  const symbols: Record<string, DocNodeKind[]> = {};
+  for (
+    const symbolItem of items.filter((symbol) =>
+      symbol.kind !== "import" && symbol.kind !== "moduleDoc"
+    ).sort((a, b) =>
+      byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
+    )
+  ) {
+    if (Object.hasOwn(symbols, symbolItem.name)) {
+      symbols[symbolItem.name].push(symbolItem.kind);
+    } else {
+      symbols[symbolItem.name] = [symbolItem.kind];
+    }
+  }
+
   return (
-    <details
-      open={!!(active && currentSymbol)}
-      class={style("moduleIndexPanelDetails")}
-    >
+    <details open={!!(active && currentSymbol)} class={style("details")}>
       <summary
         class={style("moduleIndexPanelEntry") +
           ((active && !currentSymbol)
@@ -106,28 +117,23 @@ function Module(
         </a>
       </summary>
 
-      {items.filter((symbol) =>
-        symbol.kind !== "import" && symbol.kind !== "moduleDoc"
-      ).sort((a, b) =>
-        byKindValue(a.kind, b.kind) || a.name.localeCompare(b.name)
-      ).map((symbol) => {
-        const Icon = docNodeKindMap[symbol.kind];
-        return (
-          <a
-            class={style("moduleIndexPanelSymbol") +
-              ((active && currentSymbol === symbol.name)
-                ? " " + style("moduleIndexPanelActive")
-                : "")}
-            href={services.resolveHref(url, symbol.name)}
-            title={symbol.name}
-          >
-            <span>
-              <Icon />
-              <span>{symbol.name}</span>
-            </span>
-          </a>
-        );
-      })}
+      {Object.entries(symbols).map(([name, kinds]) => (
+        <a
+          class={style("moduleIndexPanelSymbol") +
+            ((active && currentSymbol === name)
+              ? " " + style("moduleIndexPanelActive")
+              : "")}
+          href={services.resolveHref(url, name)}
+          title={name}
+        >
+          <span>
+            <div class={tw`${style("symbolKindDisplay")} justify-end`}>
+              {kinds.map((kind) => docNodeKindMap[kind]())}
+            </div>
+            <span>{name}</span>
+          </span>
+        </a>
+      ))}
     </details>
   );
 }

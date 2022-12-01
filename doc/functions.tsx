@@ -1,7 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import {
   apply,
   css,
@@ -9,13 +7,19 @@ import {
   type FunctionDef,
   type JsDocTagParam,
   type JsDocTagReturn,
+  type JsDocTagValued,
   tw,
 } from "../deps.ts";
-import { DocEntry, nameToId, Section, tagVariants } from "./doc_common.tsx";
+import {
+  DocEntry,
+  Examples,
+  nameToId,
+  Section,
+  tagVariants,
+} from "./doc_common.tsx";
 import { JsDoc } from "./jsdoc.tsx";
 import { type Context, Markdown } from "./markdown.tsx";
 import { paramName, Params } from "./params.tsx";
-import { runtime } from "../services.ts";
 import { style } from "../styles.ts";
 import { DocTypeParamsSummary, TypeDef, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";
@@ -72,12 +76,12 @@ function DocFunctionOverload({
   return (
     <label
       htmlFor={overloadId}
-      class={tw`block p-4 rounded-lg border border-[#DDDDDD] hover:bg-ultralight cursor-pointer`}
+      class="block p-4 rounded-lg border border-[#DDDDDD] hover:bg-ultralight cursor-pointer"
     >
       <div>
-        <div class={tw`font-mono`}>
-          <span class={tw`font-bold`}>{def.name}</span>
-          <span class={tw`font-medium`}>
+        <div class="font-mono">
+          <span class="font-bold">{def.name}</span>
+          <span class="font-medium">
             <DocFunctionSummary context={context}>
               {def.functionDef}
             </DocFunctionSummary>
@@ -85,7 +89,7 @@ function DocFunctionOverload({
         </div>
 
         {!(def.functionDef.hasBody && i === 0) && (
-          <div class={tw`w-full`}>
+          <div class="w-full">
             <Markdown summary context={context}>
               {def.jsDoc?.doc}
             </Markdown>
@@ -123,7 +127,11 @@ function DocFunction(
     const name = paramName(param, i);
     const id = nameToId("function", `${def.name}_${n}_parameters_${name}`);
 
-    const defaultValue = param.kind === "assign" ? param.right : undefined;
+    const defaultValue = ((def.jsDoc?.tags?.find(({ kind }) =>
+      kind === "default"
+    ) as JsDocTagValued | undefined)?.value) ??
+      (param.kind === "assign" ? param.right : undefined);
+
     const type = param.kind === "assign" ? param.left.tsType : param.tsType;
 
     const tags = [];
@@ -146,21 +154,12 @@ function DocFunction(
             <TypeDef context={context}>
               {type}
             </TypeDef>
-            {
-              /*defaultValue && (
-              <>
-                <span> = {defaultValue}</span>
-                {param.tsType && (
-                  <span>
-                    :{" "}
-                    <TypeDef context={context}>
-                      {param.tsType}
-                    </TypeDef>
-                  </span>
-                )}
-              </>
-            )*/
-            }
+          </span>
+        )}
+        {defaultValue && (
+          <span>
+            <span class="font-normal">{" = "}</span>
+            {defaultValue}
           </span>
         )}
       </DocEntry>
@@ -175,6 +174,8 @@ function DocFunction(
   return (
     <div class={style("docBlockItems")} id={overloadId + "_div"}>
       <JsDoc context={context}>{def.jsDoc}</JsDoc>
+
+      <Examples context={context}>{def.jsDoc}</Examples>
 
       <TypeParamsDoc base={def} context={context}>
         {def.functionDef.typeParams}
@@ -249,7 +250,7 @@ export function DocBlockFunction(
           />
         );
       })}
-      <div class={tw`space-y-2`}>
+      <div class="space-y-2">
         {defs.map((def, i) => (
           <DocFunctionOverload i={i} context={context}>
             {def}

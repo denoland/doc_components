@@ -1,7 +1,5 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-/** @jsxFrag runtime.Fragment */
 import {
   type DocNode,
   htmlEntities,
@@ -18,10 +16,9 @@ import {
   type TsTypeParamDef,
   type TsTypeTupleDef,
   type TsTypeUnionDef,
-  tw,
 } from "../deps.ts";
 import { Params } from "./params.tsx";
-import { runtime, services } from "../services.ts";
+import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, maybe, take } from "./utils.ts";
 import { Context } from "./markdown.tsx";
@@ -471,7 +468,7 @@ export function TypeDef({ children, context }: {
       return (
         <>
           {href
-            ? <a href={href} class={tw`link`}>{typeRef.typeName}</a>
+            ? <a href={href} class="link">{typeRef.typeName}</a>
             : <span>{typeRef.typeName}</span>}
           <TypeArguments context={context}>
             {typeRef.typeParams}

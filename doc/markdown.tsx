@@ -1,9 +1,8 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-/** @jsx runtime.h */
-import { comrak, htmlEntities, lowlight, toHtml } from "../deps.ts";
-import { runtime, services } from "../services.ts";
-import { style, type StyleKey } from "../styles.ts";
+import { comrak, htmlEntities, lowlight, toHtml, tw } from "../deps.ts";
+import { services } from "../services.ts";
+import { comrakStyles, style, type StyleKey } from "../styles.ts";
 import { assert, type Child, take } from "./utils.ts";
 
 const CODE_BLOCK_RE =
@@ -118,15 +117,17 @@ export function Markdown(
     }
   }
   let mdStyle: StyleKey = "markdown";
+  let additionalStyle = services.markdownStyle;
   if (summary) {
     mdStyle = "markdownSummary";
+    additionalStyle = services.markdownSummaryStyle;
     [md] = md.split("\n\n");
     [md] = md.split("```");
   }
 
   return (
     <div
-      class={style(mdStyle)}
+      class={style(mdStyle) + " " + tw`${additionalStyle}`}
       dangerouslySetInnerHTML={{
         __html: services.markdownToHTML(
           parseLinks(md, context.url, context.namespace),
