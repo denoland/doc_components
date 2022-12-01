@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { type ParamDef } from "../deps.ts";
+import { type ComponentChildren, type ParamDef } from "../deps.ts";
 import { style } from "../styles.ts";
 import { TypeDef } from "./types.tsx";
 import { type Child, take } from "./utils.ts";
@@ -72,7 +72,7 @@ export function Params(
   }
 }
 
-export function paramName(param: ParamDef, i: number): unknown {
+export function paramName(param: ParamDef, i: number): ComponentChildren {
   switch (param.kind) {
     case "array":
     case "object":

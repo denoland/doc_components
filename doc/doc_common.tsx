@@ -37,7 +37,7 @@ export function DocEntry(
   { children, tags, name, location, id, jsDoc, href, context }: {
     children: ComponentChildren;
     tags?: unknown[];
-    name?: unknown;
+    name?: ComponentChildren;
     location: Location;
     id: string;
     jsDoc?: { doc?: string };
