@@ -27,7 +27,7 @@ function syntaxHighlight(html: string): string {
   let match;
   while ((match = CODE_BLOCK_RE.exec(html))) {
     const [text, lang, code] = match;
-    const tree = lowlight.highlight(lang, htmlEntities.decode(code), {
+    const tree = lowlight.highlight(lang.split(",")[0], htmlEntities.decode(code), {
       prefix: "code-",
     });
     assert(match.index != null);
