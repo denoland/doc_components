@@ -250,8 +250,8 @@ export function take<T>(
 }
 
 /**
- * Splits a markdown file by its first line or first codeblock, depending which
- * is first.
+ * Splits a markdown file by its first line or first codeblock, depending on
+ * which is first.
  *
  * @param markdown
  */
@@ -270,4 +270,16 @@ export function splitMarkdownTitle(
   const summary = markdown.slice(0, splitIndex).trim();
   const body = markdown.slice(splitIndex).trim();
   return [summary, body];
+}
+
+/**
+ * Get the property from a property string.
+ * @return the property and whether it is part of the prototype or static.
+ */
+export function processProperty(
+  property: string,
+): [property: string, isPrototype: boolean] {
+  const isPrototype = property.startsWith("prototype.");
+  const propName = isPrototype ? property.slice(10) : property;
+  return [propName, isPrototype];
 }

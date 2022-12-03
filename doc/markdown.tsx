@@ -2,7 +2,7 @@
 
 import { comrak, htmlEntities, lowlight, toHtml, tw } from "../deps.ts";
 import { services } from "../services.ts";
-import { comrakStyles, style, type StyleKey } from "../styles.ts";
+import { style, type StyleKey } from "../styles.ts";
 import { assert, type Child, splitMarkdownTitle, take } from "./utils.ts";
 
 const CODE_BLOCK_RE =

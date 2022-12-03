@@ -2,6 +2,8 @@
 
 import {
   type DocNode,
+  type DocNodeClass,
+  type DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
   type JsDocTagTags,
@@ -13,7 +15,13 @@ import * as Icons from "../icons.tsx";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
-import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";
+import {
+  type Child,
+  isAbstract,
+  isDeprecated,
+  processProperty,
+  take,
+} from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
 import { type Context, JsDoc, Markdown } from "./markdown.tsx";
 
@@ -26,15 +34,16 @@ function isTypeOnly(
 }
 
 export function SymbolDoc(
-  { children, name, library = false, ...context }: {
+  { children, name, library = false, property, ...context }: {
     children: Child<DocNode[]>;
     name: string;
     library?: boolean;
+    property?: string;
   } & Pick<Context, "url" | "replacers">,
 ) {
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
-  const splitNodes: Record<string, DocNode[]> = {};
+  let splitNodes: Record<string, DocNode[]> = {};
   for (const docNode of docNodes) {
     if (!(docNode.kind in splitNodes)) {
       splitNodes[docNode.kind] = [];
@@ -42,12 +51,45 @@ export function SymbolDoc(
     splitNodes[docNode.kind].push(docNode);
   }
 
+  let propertyName: string | undefined;
+  if (property && ("class" in splitNodes)) {
+    // TODO(@crowlKats): type parameters declared in the class are not available
+    //  in the drilled down method
+    const [propName, isPrototype] = processProperty(property);
+
+    const classNode = (splitNodes["class"] as DocNodeClass[])[0];
+    const functionNodes: DocNodeFunction[] = classNode.classDef.methods.filter((
+      def,
+    ) => def.name === propName && (isPrototype === !def.isStatic)).map(
+      (def) => {
+        return {
+          declarationKind: classNode.declarationKind,
+          functionDef: def.functionDef,
+          jsDoc: def.jsDoc,
+          kind: "function",
+          location: def.location,
+          name: def.name,
+        };
+      },
+    );
+
+    if (functionNodes.length !== 0) {
+      splitNodes = { function: functionNodes };
+      propertyName = `${classNode.name}.${property}`;
+    }
+  }
+
   const showUsage = !(context.url.href.endsWith(".d.ts") || library);
 
   return (
     <article class={style("symbolDoc")}>
       {Object.values(splitNodes).map((nodes) => (
-        <Symbol showUsage={showUsage} name={name} context={context}>
+        <Symbol
+          showUsage={showUsage}
+          property={propertyName}
+          name={name}
+          context={context}
+        >
           {nodes}
         </Symbol>
       ))}
@@ -56,9 +98,10 @@ export function SymbolDoc(
 }
 
 function Symbol(
-  { children, showUsage, name, context }: {
+  { children, showUsage, property, name, context }: {
     children: Child<DocNode[]>;
     showUsage: boolean;
+    property?: string;
     name: string;
     context: Context;
   },
@@ -114,7 +157,7 @@ function Symbol(
     <div class="space-y-8">
       <div class={style("symbolDocHeader")}>
         <div class="space-y-2">
-          <DocTitle name={name} context={context}>
+          <DocTitle property={property} name={name} context={context}>
             {docNodes[0]}
           </DocTitle>
 

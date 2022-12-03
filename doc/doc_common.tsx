@@ -13,7 +13,7 @@ import { type Child, splitMarkdownTitle, take } from "./utils.ts";
 import { type Context, JsDoc, Markdown } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
-export const TARGET_RE = /(\s|[\[\]])/g;
+export const TARGET_RE = /(\s|[\[\]]|\.)/g;
 
 export function nameToId(kind: string, name: string) {
   return `${kind}_${name.replaceAll(TARGET_RE, "_")}`;
@@ -33,17 +33,21 @@ export function Anchor({ children: name }: { children: string }) {
 }
 
 export function DocEntry(
-  { children, tags, name, location, id, jsDoc, context }: {
+  { children, tags, name, location, id, jsDoc, href, context }: {
     children: ComponentChildren;
     tags?: unknown[];
-    name?: unknown;
+    name?: ComponentChildren;
     location: Location;
     id: string;
     jsDoc?: { doc?: string };
+    href?: string;
     context: Context;
   },
 ) {
-  const href = services.resolveSourceHref(location.filename, location.line);
+  const sourceHref = services.resolveSourceHref(
+    location.filename,
+    location.line,
+  );
 
   return (
     <div class={style("docItem")} id={id}>
@@ -51,15 +55,20 @@ export function DocEntry(
 
       <div class={style("docEntry")}>
         <span class={style("docEntryChildren")}>
-          {!!tags?.length && <span class="space-x-1">{tags}</span>}
-          <span class="font-mono">
-            {name && <span class="font-bold">{name}</span>}
-            <span class="font-medium">{children}</span>
+          <span class={style("docEntryChildren")}>
+            {!!tags?.length && <span class="space-x-1">{tags}</span>}
+
+            <span class="font-mono">
+              {name && href
+                ? <a class="font-bold link" href={href}>{name}</a>
+                : <span class="font-bold">{name}</span>}
+              <span class="font-medium">{children}</span>
+            </span>
           </span>
         </span>
-        {href && (
+        {sourceHref && (
           <a
-            href={href}
+            href={sourceHref}
             aria-label="Jump to src"
             target="_blank"
             class={style("sourceLink")}

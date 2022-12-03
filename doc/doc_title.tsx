@@ -8,8 +8,9 @@ import { docNodeKindColors } from "./symbol_kind.tsx";
 import { Context } from "./markdown.tsx";
 
 export function DocTitle(
-  { children, name, context }: {
+  { children, property, name, context }: {
     children: Child<DocNode>;
+    property?: string;
     name: string;
     context: Context;
   },
@@ -40,10 +41,14 @@ export function DocTitle(
   return (
     <div class="font-medium space-y-1">
       <div class="text-xl">
-        <span class={`text-[${docNodeKindColors[docNode.kind][0]}]`}>
-          {decamelize(docNode.kind)}
+        <span
+          class={`text-[${
+            docNodeKindColors[property ? "function" : docNode.kind][0]
+          }]`}
+        >
+          {decamelize(property ? "method" : docNode.kind)}
         </span>{" "}
-        <span class="font-bold">{name}</span>
+        <span class="font-bold">{property ?? name}</span>
       </div>
       {subTitle && (
         <div class="text-sm leading-4 space-y-0.5">

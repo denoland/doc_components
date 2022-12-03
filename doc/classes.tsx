@@ -178,8 +178,9 @@ function ClassAccessorDoc(
 }
 
 function ClassMethodDoc(
-  { children, context }: {
+  { children, className, context }: {
     children: Child<ClassMethodDef[]>;
+    className: string;
     context: Context;
   },
 ) {
@@ -193,10 +194,15 @@ function ClassMethodDoc(
       optional,
       isAbstract,
       functionDef,
+      isStatic,
     },
     i,
   ) => {
     const id = nameToId("method", `${defs[0].name}_${i}`);
+
+    if (functionDef.hasBody && i !== 0) {
+      return <></>;
+    }
 
     const tags = [];
     const accessibilityTag = getAccessibilityTag(accessibility);
@@ -221,6 +227,11 @@ function ClassMethodDoc(
         location={location}
         name={name}
         jsDoc={jsDoc}
+        href={services.resolveHref(
+          context.url,
+          className,
+          isStatic ? name : `prototype.${name}`,
+        )}
         context={context}
       >
         <DocFunctionSummary context={context}>
@@ -291,8 +302,9 @@ function ClassPropertyDoc(
 }
 
 function ClassItemsDoc(
-  { children, context }: {
+  { children, className, context }: {
     children: Child<ClassItemDef[]>;
+    className: string;
     context: Context;
   },
 ) {
@@ -335,7 +347,7 @@ function ClassItemsDoc(
         methodList.push(next);
       }
       (def.isStatic ? staticMethods : methods).push(
-        <ClassMethodDoc context={context}>
+        <ClassMethodDoc className={className} context={context}>
           {methodList}
         </ClassMethodDoc>,
       );
@@ -477,7 +489,7 @@ export function DocBlockClass(
         {def.classDef.indexSignatures}
       </IndexSignaturesDoc>
 
-      <ClassItemsDoc context={context}>
+      <ClassItemsDoc className={def.name} context={context}>
         {classItems}
       </ClassItemsDoc>
     </div>
