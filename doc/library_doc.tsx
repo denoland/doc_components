@@ -2,14 +2,13 @@
 
 import { SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
-import { type Context, Markdown } from "./markdown.tsx";
+import { type Context, JsDoc, Markdown } from "./markdown.tsx";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, isDeprecated, take } from "./utils.ts";
 import { docNodeKindMap } from "./symbol_kind.tsx";
 import { categorize, type ProcessedSymbol } from "./library_doc_panel.tsx";
 import { type SymbolItem } from "./module_index_panel.tsx";
-import { JsDoc } from "./jsdoc.tsx";
 
 function Entry(
   { children, context }: {

@@ -9,14 +9,13 @@ import {
 import { byKind } from "./doc.ts";
 import { DocBlock } from "./doc_block.tsx";
 import { Tag, tagVariants } from "./doc_common.tsx";
-import { JsDoc } from "./jsdoc.tsx";
 import * as Icons from "../icons.tsx";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
 import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
-import { type Context, Markdown } from "./markdown.tsx";
+import { type Context, JsDoc, Markdown } from "./markdown.tsx";
 
 function isTypeOnly(
   docNodes: DocNode[],

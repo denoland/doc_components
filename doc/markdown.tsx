@@ -27,9 +27,13 @@ function syntaxHighlight(html: string): string {
   let match;
   while ((match = CODE_BLOCK_RE.exec(html))) {
     const [text, lang, code] = match;
-    const tree = lowlight.highlight(lang.split(",")[0], htmlEntities.decode(code), {
-      prefix: "code-",
-    });
+    const tree = lowlight.highlight(
+      lang.split(",")[0],
+      htmlEntities.decode(code),
+      {
+        prefix: "code-",
+      },
+    );
     assert(match.index != null);
     html = `${html.slice(0, match.index)}<pre><code>${
       toHtml(tree)
@@ -122,7 +126,6 @@ export function Markdown(
     mdStyle = "markdownSummary";
     additionalStyle = services.markdownSummaryStyle;
     [md] = splitMarkdownTitle(md);
-    console.log(JSON.stringify(md));
   }
 
   return (
@@ -135,4 +138,17 @@ export function Markdown(
       }}
     />
   );
+}
+
+export function JsDoc(
+  { children, context }: {
+    children: Child<{ doc?: string } | undefined>;
+    context: Context;
+  },
+) {
+  const jsDoc = take(children);
+  if (!jsDoc) {
+    return null;
+  }
+  return <Markdown context={context}>{jsDoc.doc}</Markdown>;
 }

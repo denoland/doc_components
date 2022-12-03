@@ -10,8 +10,7 @@ import {
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { type Child, splitMarkdownTitle, take } from "./utils.ts";
-import { JsDoc } from "./jsdoc.tsx";
-import { type Context, Markdown } from "./markdown.tsx";
+import { type Context, JsDoc, Markdown } from "./markdown.tsx";
 import * as Icons from "../icons.tsx";
 
 export const TARGET_RE = /(\s|[\[\]])/g;
