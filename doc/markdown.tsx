@@ -139,3 +139,16 @@ export function Markdown(
     />
   );
 }
+
+export function JsDoc(
+  { children, context }: {
+    children: Child<{ doc?: string } | undefined>;
+    context: Context;
+  },
+) {
+  const jsDoc = take(children);
+  if (!jsDoc) {
+    return null;
+  }
+  return <Markdown context={context}>{jsDoc.doc}</Markdown>;
+}

@@ -17,8 +17,7 @@ import {
   Section,
   tagVariants,
 } from "./doc_common.tsx";
-import { JsDoc } from "./jsdoc.tsx";
-import { type Context, Markdown } from "./markdown.tsx";
+import { type Context, JsDoc, Markdown } from "./markdown.tsx";
 import { paramName, Params } from "./params.tsx";
 import { style } from "../styles.ts";
 import { DocTypeParamsSummary, TypeDef, TypeParamsDoc } from "./types.tsx";

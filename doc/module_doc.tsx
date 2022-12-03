@@ -3,8 +3,7 @@
 import { type ComponentChildren, type DocNode } from "../deps.ts";
 import { Examples, SectionTitle, tagVariants } from "./doc_common.tsx";
 import * as Icons from "../icons.tsx";
-import { getJsDocModule, JsDoc } from "./jsdoc.tsx";
-import { type Context, Markdown } from "./markdown.tsx";
+import { type Context, JsDoc, Markdown } from "./markdown.tsx";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
@@ -168,7 +167,7 @@ export function ModuleDoc(
     kind !== "moduleDoc" && declarationKind === "export"
   );
   const collection = asCollection(docNodes);
-  const jsDoc = getJsDocModule(collection.moduleDoc);
+  const jsDoc = collection.moduleDoc?.[0][1].jsDoc;
 
   return (
     <div>
