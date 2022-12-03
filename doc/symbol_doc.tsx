@@ -16,7 +16,13 @@ import * as Icons from "../icons.tsx";
 import { services } from "../services.ts";
 import { style } from "../styles.ts";
 import { Usage } from "./usage.tsx";
-import { type Child, isAbstract, isDeprecated, take } from "./utils.ts";
+import {
+  type Child,
+  isAbstract,
+  isDeprecated,
+  processProperty,
+  take,
+} from "./utils.ts";
 import { DocTitle } from "./doc_title.tsx";
 import { type Context, Markdown } from "./markdown.tsx";
 
@@ -48,8 +54,9 @@ export function SymbolDoc(
 
   let propertyName: string | undefined;
   if (property && ("class" in splitNodes)) {
-    const isPrototype = property.startsWith("prototype.");
-    const propName = isPrototype ? property.slice(10) : property;
+    // TODO(@crowlKats): type parameters declared in the class are not available
+    //  in the drilled down method
+    const [propName, isPrototype] = processProperty(property);
 
     const classNode = (splitNodes["class"] as DocNodeClass[])[0];
     const functionNodes: DocNodeFunction[] = classNode.classDef.methods.filter((
