@@ -1,6 +1,6 @@
 // Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
 
-import { type DocNodeModuleDoc } from "../deps.ts";
+import { type DocNodeModuleDoc, type JsDoc as JsDocType } from "../deps.ts";
 import { type Context, Markdown } from "./markdown.tsx";
 import { type Child, DocNodeTupleArray, take } from "./utils.ts";
 
@@ -17,13 +17,13 @@ export function JsDoc(
   return <Markdown context={context}>{jsDoc.doc}</Markdown>;
 }
 
-export function JsDocModule(
-  { children, context }: {
-    children: Child<DocNodeTupleArray<DocNodeModuleDoc>>;
-    context: Context;
-  },
-) {
-  const moduleDoc = take(children, true, true);
+export function getJsDocModule(
+  JSDocModule?: Child<DocNodeTupleArray<DocNodeModuleDoc>>,
+): JsDocType | undefined {
+  if (!JSDocModule) {
+    return undefined;
+  }
+  const moduleDoc = take(JSDocModule, true, true);
   const [[, { jsDoc }]] = moduleDoc;
-  return <JsDoc context={context}>{jsDoc}</JsDoc>;
+  return jsDoc;
 }
