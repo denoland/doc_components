@@ -6,7 +6,7 @@ import { style, type StyleKey } from "../styles.ts";
 import { assert, type Child, splitMarkdownTitle, take } from "./utils.ts";
 
 const CODE_BLOCK_RE =
-  /<pre><code\sclass="language-([^"]+)">([^<]+)<\/code><\/pre>/m;
+  /<pre><code\sclass="language-((?!ignore)[^"]+)">([^<]+)<\/code><\/pre>/m;
 
 /** Matches `{@link ...}`, `{@linkcode ...}, and `{@linkplain ...}` structures
  * in JSDoc */
