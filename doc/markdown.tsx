@@ -26,18 +26,25 @@ const MARKDOWN_OPTIONS: comrak.ComrakOptions = {
 function syntaxHighlight(html: string): string {
   let match;
   while ((match = CODE_BLOCK_RE.exec(html))) {
-    const [text, lang, code] = match;
-    const tree = lowlight.highlight(
-      lang.split(",")[0],
-      htmlEntities.decode(code),
-      {
-        prefix: "code-",
-      },
-    );
+    let [text, lang, code] = match;
+    lang = lang.split(",")[0];
+    let codeHTML;
+    if (lowlight.registered(lang)) {
+      const tree = lowlight.highlight(
+        lang,
+        htmlEntities.decode(code),
+        {
+          prefix: "code-",
+        },
+      );
+      codeHTML = toHtml(tree);
+    } else {
+      codeHTML = code;
+    }
     assert(match.index != null);
-    html = `${html.slice(0, match.index)}<pre><code>${
-      toHtml(tree)
-    }</code></pre>${html.slice(match.index + text.length)}`;
+    html = `${html.slice(0, match.index)}<pre><code>${codeHTML}</code></pre>${
+      html.slice(match.index + text.length)
+    }`;
   }
   return html;
 }
