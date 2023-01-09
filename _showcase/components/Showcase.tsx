@@ -11,6 +11,7 @@ import { Usage } from "@doc_components/doc/usage.tsx";
 
 import { ComponentLink } from "./ComponentLink.tsx";
 import { ComponentTitle } from "./ComponentTitle.tsx";
+import { Footer } from "@doc_components/footer.tsx";
 
 const app = css({
   ":global": {
@@ -100,6 +101,9 @@ export function Showcase(
           isType
         />
       </div>
+
+      <ComponentTitle module="/footer.tsx">Footer</ComponentTitle>
+      <Footer />
     </div>
   );
 }
