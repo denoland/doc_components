@@ -51,6 +51,7 @@ export function Footer() {
             <FooterSection
               title="Company"
               entries={{
+                "Careers": "https://deno.com/jobs",
                 "Blog": "https://deno.com/blog",
                 "Pricing": "https://deno.com/deploy/pricing",
                 "News": "https://deno.news",
@@ -70,16 +71,10 @@ export function Footer() {
               class="w-full focus:outline-none"
             />
 
-            <div class="space-y-2.5 lg:space-y-4.5">
-              <span class="text-xs text-[#9CA0AA] leading-tight">
-                Copyright © 2022 Deno Land Inc.{" "}
-                <span class="whitespace-nowrap">All rights reserved.</span>
-              </span>
-              <a class="block text-symbol" href="https://deno.com/jobs">
-                We are hiring, join
-                us<Icons.LongArrowRight class="inline ml-1.5" />
-              </a>
-            </div>
+            <span class="text-xs text-[#9CA0AA] leading-tight">
+              Copyright © 2022 Deno Land Inc.{" "}
+              <span class="whitespace-nowrap">All rights reserved.</span>
+            </span>
 
             <div class="flex gap-3 text-[#6C6E78]">
               <a href="https://github.com/denoland">
