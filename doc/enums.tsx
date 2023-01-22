@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+// Copyright 2021-2023 the Deno authors. All rights reserved. MIT license.
 
 import { type DocNodeEnum } from "../deps.ts";
 import { DocEntry, Examples, nameToId, Section } from "./doc_common.tsx";

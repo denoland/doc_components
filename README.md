@@ -110,7 +110,7 @@ setup({ theme });
 
 ---
 
-Copyright 2021-2022 the Deno authors. All rights reserved. MIT License.
+Copyright 2021-2023 the Deno authors. All rights reserved. MIT License.
 
 [Build Status - Cirrus]: https://github.com/denoland/doc_components/workflows/ci/badge.svg?branch=main&event=push
 [Build status]: https://github.com/denoland/doc_components/actions

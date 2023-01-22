@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+// Copyright 2021-2023 the Deno authors. All rights reserved. MIT license.
 
 export * as comrak from "https://deno.land/x/comrak@0.1.1/mod.ts";
 export type {

@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+// Copyright 2021-2023 the Deno authors. All rights reserved. MIT license.
 
 import { type DocNodeTypeAlias } from "../deps.ts";
 import { DocEntry, Examples, nameToId, tagVariants } from "./doc_common.tsx";

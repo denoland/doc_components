@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+// Copyright 2021-2023 the Deno authors. All rights reserved. MIT license.
 
 import { DocSubTitleClass } from "./classes.tsx";
 import { type DocNode } from "../deps.ts";
