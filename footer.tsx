@@ -1,4 +1,4 @@
-// Copyright 2022 the Deno authors. All rights reserved. MIT license.
+// Copyright 2022-2023 the Deno authors. All rights reserved. MIT license.
 
 import * as Icons from "./icons.tsx";
 
@@ -72,7 +72,7 @@ export function Footer() {
             />
 
             <span class="text-xs text-[#9CA0AA] leading-tight">
-              Copyright © 2022 Deno Land Inc.{" "}
+              Copyright © 2023 Deno Land Inc.{" "}
               <span class="whitespace-nowrap">All rights reserved.</span>
             </span>
 

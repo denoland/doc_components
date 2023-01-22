@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+// Copyright 2021-2023 the Deno authors. All rights reserved. MIT license.
 
 import { comrak, htmlEntities, lowlight, toHtml, tw } from "../deps.ts";
 import { services } from "../services.ts";

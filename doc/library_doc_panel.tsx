@@ -1,4 +1,4 @@
-// Copyright 2021-2022 the Deno authors. All rights reserved. MIT license.
+// Copyright 2021-2023 the Deno authors. All rights reserved. MIT license.
 
 import { type DocNodeKind, type JsDoc } from "../deps.ts";
 import { services } from "../services.ts";
