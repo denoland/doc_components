@@ -100,6 +100,10 @@ export const theme: ThemeConfiguration = {
       grayDefault: "#F3F3F3",
       ultralight: "#F8F7F6",
       danger: "#F00C08",
+
+      mainBlue: "#0094FF",
+      azure2: "#BEECFD",
+      azure3: "#E1ECF2",
     },
     spacing: {
       4.5: "1.125rem",
@@ -118,7 +122,7 @@ export const plugins: Record<string, Plugin> = {
   "section-x-inset": (parts) =>
     parts[0] === "none"
       ? apply`max-w-none mx-0 px-0`
-      : apply`max-w-screen-${parts[0]} mx-auto px-4 sm:px-6 md:px-8`,
+      : apply`max-w-screen-${parts[0]} mx-auto px-6 md:px-8 lg:px-10 xl:px-14`,
   "divide-incl-y": (parts) =>
     css({
       "& > *": {
