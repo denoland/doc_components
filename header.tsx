@@ -5,12 +5,12 @@ import { tw } from "twind";
 import { css } from "twind/css";
 import type { ComponentChildren, JSX } from "preact";
 
-interface HrefEntry {
+export interface HrefEntry {
   content: string;
   href: string;
   icon?: (props: { class?: string }) => JSX.Element;
 }
-interface ChildrenEntry {
+export interface ChildrenEntry {
   content: string;
   children: HrefEntry[];
 }
@@ -64,9 +64,10 @@ const entries: Array<HrefEntry | ChildrenEntry> = [
   },
 ];
 
-export function Header({ manual, search }: {
+export function Header({ manual, search, entriesOverwrite }: {
   manual?: boolean;
   search?: ComponentChildren;
+  entriesOverwrite?: Array<HrefEntry | ChildrenEntry>,
 }) {
   return (
     <div class={`${manual ? "lg:border-b" : "border-b"} border-border`}>
@@ -107,7 +108,7 @@ export function Header({ manual, search }: {
 
           <div class="hidden flex-col mx-2 mt-5 gap-x-5 gap-y-4 font-medium lg:(flex flex-row items-center mx-0 mt-0)">
             <div class="leading-loose divide-incl-y lg:(space-x-3.5 select-none children:inline-block divide-incl-y-0)">
-              {entries.map((entry) => {
+              {(entriesOverwrite ?? entries).map((entry) => {
                 if ("children" in entry) {
                   return (
                     <div class="lg:(relative inline-block hover:children:(even:(shadow bg-azure3) last-child:block)) z-10">
