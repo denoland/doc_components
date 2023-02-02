@@ -49,7 +49,7 @@ export const theme: ThemeConfiguration = {
       danger: "#F00C08",
 
       mainBlue: "#0094FF",
-      azure2: "#BEECFD",
+      azure2: "#D2DDE2",
       azure3: "#E1ECF2",
     },
     spacing: {
