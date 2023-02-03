@@ -173,6 +173,7 @@ function Symbol(
             docNodes[0].location.line,
           )}
           class="icon-button"
+          title="View Source"
         >
           <Icons.Source />
         </a>
