@@ -118,6 +118,7 @@ export function ModuleIndex(
         <a
           href={services.resolveSourceHref(sourceUrl)}
           class="icon-button"
+          title="View Source"
         >
           <Icons.Source />
         </a>
