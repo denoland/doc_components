@@ -67,8 +67,8 @@ const defaultEntries: Array<HrefEntry | ChildrenEntry> = [
 export function Header({ manual, search, entriesOverwrite, afterEntries }: {
   manual?: boolean;
   search?: ComponentChildren;
-  entriesOverwrite?: Array<HrefEntry | ChildrenEntry>,
-  afterEntries?: Array<HrefEntry | ChildrenEntry>,
+  entriesOverwrite?: Array<HrefEntry | ChildrenEntry>;
+  afterEntries?: Array<HrefEntry | ChildrenEntry>;
 }) {
   return (
     <div class={`${manual ? "lg:border-b" : "border-b"} border-border`}>
@@ -147,8 +147,7 @@ function Entries({ entries }: { entries: Array<HrefEntry | ChildrenEntry> }) {
               <div
                 class={tw`hidden lg:(absolute -bottom-[20px] pt-[5px] w-full children:bg-azure3 ${
                   css({
-                    filter:
-                      "drop-shadow(0px 1.5px 2px rgba(0, 0, 0, 0.3))",
+                    filter: "drop-shadow(0px 1.5px 2px rgba(0, 0, 0, 0.3))",
                   })
                 })`}
               >
@@ -196,5 +195,5 @@ function Entries({ entries }: { entries: Array<HrefEntry | ChildrenEntry> }) {
         }
       })}
     </div>
-  )
+  );
 }
