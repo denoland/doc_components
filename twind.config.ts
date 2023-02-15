@@ -19,23 +19,13 @@ export const theme: ThemeConfiguration = {
     pink: twColors.pink,
   },
   fontFamily: {
-    "sans": [
-      "Inter var",
-      "system-ui",
-      "Segoe UI",
-      "Roboto",
-      "Helvetica Neue",
-      "Arial",
-      "Noto Sans",
-      "sans-serif",
-    ],
-    "mono": [
+    mono: [
       "Menlo",
       "Monaco",
-      "Lucida Console",
+      '"Lucida Console"',
       "Consolas",
-      "Liberation Mono",
-      "Courier New",
+      '"Liberation Mono"',
+      '"Courier New"',
       "monospace",
     ],
   },
