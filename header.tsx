@@ -15,7 +15,7 @@ export interface ChildrenEntry {
   children: HrefEntry[];
 }
 
-const entries: Array<HrefEntry | ChildrenEntry> = [
+const defaultEntries: Array<HrefEntry | ChildrenEntry> = [
   {
     content: "Modules",
     children: [
@@ -64,10 +64,11 @@ const entries: Array<HrefEntry | ChildrenEntry> = [
   },
 ];
 
-export function Header({ manual, search, entriesOverwrite }: {
+export function Header({ manual, search, entriesOverwrite, afterEntries }: {
   manual?: boolean;
   search?: ComponentChildren;
   entriesOverwrite?: Array<HrefEntry | ChildrenEntry>,
+  afterEntries?: Array<HrefEntry | ChildrenEntry>,
 }) {
   return (
     <div class={`${manual ? "lg:border-b" : "border-b"} border-border`}>
@@ -107,87 +108,93 @@ export function Header({ manual, search, entriesOverwrite }: {
           </div>
 
           <div class="hidden flex-col mx-2 mt-5 gap-x-5 gap-y-4 font-medium lg:(flex flex-row items-center mx-0 mt-0)">
-            <div class="leading-loose divide-incl-y lg:(space-x-3.5 select-none children:inline-block divide-incl-y-0)">
-              {(entriesOverwrite ?? entries).map((entry) => {
-                if ("children" in entry) {
-                  return (
-                    <div class="lg:(relative inline-block hover:children:(even:(shadow bg-azure3) last-child:block)) z-10">
-                      <input
-                        type="checkbox"
-                        id={entry.content}
-                        class="hidden checked:(siblings:last-child:block sibling:children:last-child:children:(odd:hidden even:block))"
-                        autoComplete="off"
-                      />
-
-                      <label
-                        htmlFor={entry.content}
-                        tabIndex={0}
-                        class="rounded-md flex items-center justify-between px-1 my-3 lg:(px-2 my-0 pointer-events-none)"
-                      >
-                        <span>{entry.content}</span>
-                        <div class="lg:hidden text-[#9CA0AA]">
-                          <Icons.Plus />
-                          <Icons.Minus class="hidden" />
-                        </div>
-                      </label>
-
-                      <div
-                        class={tw`hidden lg:(absolute -bottom-[20px] pt-[5px] w-full children:bg-azure3 ${
-                          css({
-                            filter:
-                              "drop-shadow(0px 1.5px 2px rgba(0, 0, 0, 0.3))",
-                          })
-                        })`}
-                      >
-                        <div
-                          class={tw`hidden lg:block w-full h-[15px] ${
-                            css({
-                              "clip-path":
-                                "polygon(calc(50% - 15px * 2 / 3) 15px,50% 0,calc(50% + 15px * 2 / 3) 15px)",
-                            })
-                          }`}
-                        />
-                        <div class="pb-2 pl-2 mb-3 space-y-1.5 lg:(absolute pl-0 py-2 -mt-px mb-0 space-y-0 rounded-md overflow-hidden divide-y divide-white)">
-                          {entry.children.map(({
-                            href,
-                            content,
-                            icon,
-                          }) => (
-                            <div class="text-sm font-semibold lg:(top-1 text-base font-normal flex)">
-                              <a
-                                class="flex gap-2 items-center whitespace-nowrap py-1.5 pl-1 py-3 lg:(py-3.5 px-4) w-full leading-tight! hover:lg:bg-azure2"
-                                href={href}
-                              >
-                                {icon?.({
-                                  class: "w-5! text-mainBlue flex-none",
-                                })}
-                                {content}
-                              </a>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div>
-                      <a
-                        class="block w-full px-1 my-3 lg:(w-auto m-0 px-2 rounded-md hover:bg-azure3)"
-                        href={entry.href}
-                      >
-                        {entry.content}
-                      </a>
-                    </div>
-                  );
-                }
-              })}
-            </div>
-
+            <Entries entries={entriesOverwrite ?? defaultEntries} />
             {search}
+            {afterEntries && <Entries entries={afterEntries} />}
           </div>
         </nav>
       </div>
     </div>
   );
+}
+
+function Entries({ entries }: { entries: Array<HrefEntry | ChildrenEntry> }) {
+  return (
+    <div class="leading-loose divide-incl-y lg:(space-x-3.5 select-none children:inline-block divide-incl-y-0)">
+      {entries.map((entry) => {
+        if ("children" in entry) {
+          return (
+            <div class="lg:(relative inline-block hover:children:(even:(shadow bg-azure3) last-child:block)) z-10">
+              <input
+                type="checkbox"
+                id={entry.content}
+                class="hidden checked:(siblings:last-child:block sibling:children:last-child:children:(odd:hidden even:block))"
+                autoComplete="off"
+              />
+
+              <label
+                htmlFor={entry.content}
+                tabIndex={0}
+                class="rounded-md flex items-center justify-between px-1 my-3 lg:(px-2 my-0 pointer-events-none)"
+              >
+                <span>{entry.content}</span>
+                <div class="lg:hidden text-[#9CA0AA]">
+                  <Icons.Plus />
+                  <Icons.Minus class="hidden" />
+                </div>
+              </label>
+
+              <div
+                class={tw`hidden lg:(absolute -bottom-[20px] pt-[5px] w-full children:bg-azure3 ${
+                  css({
+                    filter:
+                      "drop-shadow(0px 1.5px 2px rgba(0, 0, 0, 0.3))",
+                  })
+                })`}
+              >
+                <div
+                  class={tw`hidden lg:block w-full h-[15px] ${
+                    css({
+                      "clip-path":
+                        "polygon(calc(50% - 15px * 2 / 3) 15px,50% 0,calc(50% + 15px * 2 / 3) 15px)",
+                    })
+                  }`}
+                />
+                <div class="pb-2 pl-2 mb-3 space-y-1.5 lg:(absolute pl-0 py-2 -mt-px mb-0 space-y-0 rounded-md overflow-hidden divide-y divide-white)">
+                  {entry.children.map(({
+                    href,
+                    content,
+                    icon,
+                  }) => (
+                    <div class="text-sm font-semibold lg:(top-1 text-base font-normal flex)">
+                      <a
+                        class="flex gap-2 items-center whitespace-nowrap py-1.5 pl-1 py-3 lg:(py-3.5 px-4) w-full leading-tight! hover:lg:bg-azure2"
+                        href={href}
+                      >
+                        {icon?.({
+                          class: "w-5! text-mainBlue flex-none",
+                        })}
+                        {content}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <a
+                class="block w-full px-1 my-3 lg:(w-auto m-0 px-2 rounded-md hover:bg-azure3)"
+                href={entry.href}
+              >
+                {entry.content}
+              </a>
+            </div>
+          );
+        }
+      })}
+    </div>
+  )
 }
