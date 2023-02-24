@@ -73,7 +73,7 @@ export function Header({ manual, search, entriesOverwrite, afterEntries }: {
   return (
     <div class={`${manual ? "lg:border-b" : "border-b"} border-border`}>
       <div class="section-x-inset-2xl py-4.5 h-full">
-        <nav class="flex justify-between flex-col lg:flex-row h-full">
+        <nav class="flex justify-between flex-col lg:(flex-row gap-6) h-full">
           <input
             type="checkbox"
             id="menuToggle"
@@ -120,7 +120,7 @@ export function Header({ manual, search, entriesOverwrite, afterEntries }: {
 
 function Entries({ entries }: { entries: Array<HrefEntry | ChildrenEntry> }) {
   return (
-    <div class="leading-loose divide-incl-y lg:(space-x-3.5 select-none children:inline-block divide-incl-y-0)">
+    <div class="leading-loose divide-incl-y lg:(space-x-3.5 flex-none select-none children:inline-block divide-incl-y-0)">
       {entries.map((entry) => {
         if ("children" in entry) {
           return (
