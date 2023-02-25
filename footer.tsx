@@ -97,16 +97,18 @@ export function Footer() {
 function FooterSection(
   { title, entries }: { title: string; entries: Record<string, string> },
 ) {
+  // Make sure we have a unique Id because some entries title are common in the code base
+  const id = "Footer" + title;
   return (
     <div>
       <input
         type="checkbox"
-        id={title}
+        id={id}
         class="hidden checked:(siblings:last-child:flex sibling:children:last-child:children:(odd:hidden even:block))"
         autoComplete="off"
       />
       <label
-        htmlFor={title}
+        htmlFor={id}
         tabIndex={0}
         class="flex items-center justify-between px-1 my-3 lg:(px-0 my-0)"
       >
