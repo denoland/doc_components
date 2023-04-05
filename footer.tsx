@@ -28,6 +28,8 @@ export function Footer() {
                 "Deno CLI": "https://deno.land",
                 "Deno Deploy": "https://deno.com/deploy",
                 "Deploy Subhosting": "https://deno.com/deploy/subhosting",
+                "Fresh": "https://fresh.deno.dev/",
+                "SaaSKit": "https://deno.com/saaskit/",
               }}
             />
             <FooterSection
