@@ -33,7 +33,7 @@ export interface Configuration {
    *
    * Implementors should return a string which will be used as the `href` value
    * for a link. */
-  resolveHref?: (url: URL, symbol?: string, property?: string) => string;
+  resolveHref?: (url: URL, symbol?: string, namespace?: string, property?: string) => string;
   /** Called when doc components are trying to generate a link to a source file.
    *
    * Implementors should return a string which which will be used as the `href`
@@ -61,7 +61,7 @@ const runtimeConfig: Required<
     | "markdownSummaryStyle"
   >
 > = {
-  resolveHref(current, symbol, property) {
+  resolveHref(current, _namespace, symbol, property) {
     return symbol
       ? (property
         ? `/${current}/~/${symbol}/~/${property}`
@@ -98,6 +98,7 @@ export const services = {
   get resolveHref(): (
     url: URL,
     symbol?: string,
+    namespace?: string,
     property?: string,
   ) => string {
     return runtimeConfig.resolveHref;
