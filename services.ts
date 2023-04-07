@@ -66,7 +66,7 @@ const runtimeConfig: Required<
     | "markdownSummaryStyle"
   >
 > = {
-  resolveHref(current, _namespace, symbol, property) {
+  resolveHref(current, symbol, _namespace, property) {
     return symbol
       ? (property
         ? `/${current}/~/${symbol}/~/${property}`
