@@ -88,6 +88,9 @@ export function Footer() {
               <a href="https://twitter.com/deno_land">
                 <Icons.Twitter class="text-gray-500 hover:text-black" />
               </a>
+              <a href="https://youtube.com/@deno_land">
+                <Icons.YouTube class="text-gray-500 hover:text-black h-6 w-6" />
+              </a>
             </div>
           </div>
         </nav>
