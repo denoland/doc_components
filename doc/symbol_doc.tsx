@@ -75,7 +75,7 @@ export function SymbolDoc(
 
     if (functionNodes.length !== 0) {
       splitNodes = { function: functionNodes };
-      propertyName = `${classNode.name}.${property}`;
+      propertyName = property;
     }
   }
 

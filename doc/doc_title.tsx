@@ -48,7 +48,7 @@ export function DocTitle(
         >
           {decamelize(property ? "method" : docNode.kind)}
         </span>{" "}
-        <span class="font-bold">{property ?? name}</span>
+        <span class="font-bold">{property ? `${name}.${property}` : name}</span>
       </div>
       {subTitle && (
         <div class="text-sm leading-4 space-y-0.5">

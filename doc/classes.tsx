@@ -230,6 +230,7 @@ function ClassMethodDoc(
         href={services.resolveHref(
           context.url,
           className,
+          context.namespace,
           isStatic ? name : `prototype.${name}`,
         )}
         context={context}
