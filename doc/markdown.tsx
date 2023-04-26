@@ -90,8 +90,8 @@ function parseLinks(markdown: string, url: URL, namespace?: string): string {
       }
     } else {
       replacement = modifier === "code"
-        ? `{_@link_ \`${link}\`${title ? ` | ${title}` : ""}}`
-        : `{_@link_ ${link}${title ? ` | ${title}` : ""}}`;
+        ? `\`${link}\`${title ? ` | ${title}` : ""}`
+        : `${link}${title ? ` | ${title}` : ""}`;
     }
     markdown = `${markdown.slice(0, match.index)}${replacement}${
       markdown.slice(match.index + text.length)
