@@ -210,8 +210,8 @@ export function parseURL(url: URL): ParsedURL | undefined {
       if (match) {
         let { pathname: { groups: { regver, org, pkg, ver, mod } } } = match;
         if (registry === "gist.github.com") {
-          pkg = pkg.substring(0, 7);
-          ver = ver.substring(0, 7);
+          pkg = pkg?.substring(0, 7);
+          ver = ver?.substring(0, 7);
         }
         return {
           registry: regver ? `${registry} @ ${regver}` : registry,
