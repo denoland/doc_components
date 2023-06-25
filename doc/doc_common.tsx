@@ -206,6 +206,7 @@ export function Tag(
 }
 
 export const tagVariants = {
+  reExportLg: () => <Tag color="purple" large>Re-export</Tag>,
   deprecatedLg: () => (
     <Tag color="gray" large>
       <Icons.ExclamationMark />

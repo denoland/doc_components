@@ -44,7 +44,12 @@ export function SymbolDoc(
   const docNodes = [...take(children, true)];
   docNodes.sort(byKind);
   let splitNodes: Record<string, DocNode[]> = {};
+  let isReExport = false;
   for (const docNode of docNodes) {
+    if (docNode.kind === "import") {
+      isReExport = true;
+      continue;
+    }
     if (!(docNode.kind in splitNodes)) {
       splitNodes[docNode.kind] = [];
     }
@@ -88,6 +93,7 @@ export function SymbolDoc(
           showUsage={showUsage}
           property={propertyName}
           name={name}
+          isReExport={isReExport}
           context={context}
         >
           {nodes}
@@ -98,11 +104,12 @@ export function SymbolDoc(
 }
 
 function Symbol(
-  { children, showUsage, property, name, context }: {
+  { children, showUsage, property, name, isReExport, context }: {
     children: Child<DocNode[]>;
     showUsage: boolean;
     property?: string;
     name: string;
+    isReExport: boolean;
     context: Context;
   },
 ) {
@@ -111,6 +118,10 @@ function Symbol(
   const isFunction = docNodes[0].kind === "function";
 
   const tags = [];
+
+  if (isReExport) {
+    tags.push(tagVariants.reExportLg());
+  }
 
   const jsDocTags: string[] = docNodes.flatMap(({ jsDoc }) =>
     (jsDoc?.tags?.filter(({ kind }) => kind === "tags") as
