@@ -75,7 +75,7 @@ function DocFunctionOverload({
   return (
     <label
       htmlFor={overloadId}
-      class="block p-4 rounded-lg border border-[#DDDDDD] hover:bg-ultralight cursor-pointer"
+      class="block p-4 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer"
     >
       <div>
         <div class="font-mono">
@@ -240,7 +240,7 @@ export function DocBlockFunction(
                 [`&:checked ~ *:last-child > :not(#${overloadId}_div)`]:
                   apply`hidden`,
                 [`&:checked ~ div:first-of-type > label[for='${overloadId}']`]:
-                  apply`bg-[#056CF00C] border-[#056CF0] border-2 cursor-unset`,
+                  apply`bg-[#056CF00C] border-blue-600 border-2 cursor-unset`,
                 [`&:checked ~ div:first-of-type > label[for='${overloadId}'] > div`]:
                   apply`-m-px`,
               })

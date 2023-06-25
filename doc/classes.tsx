@@ -426,7 +426,7 @@ export function DocSubTitleClass(
     <>
       {classDef.implements.length !== 0 && (
         <div>
-          <span class="text-[#9CA0AA] italic">{" implements "}</span>
+          <span class="text-gray-400 italic">{" implements "}</span>
           {classDef.implements.map((typeDef, i) => (
             <>
               <TypeDef context={context}>
@@ -440,7 +440,7 @@ export function DocSubTitleClass(
 
       {classDef.extends && (
         <div>
-          <span class="text-[#9CA0AA] italic">{" extends "}</span>
+          <span class="text-gray-400 italic">{" extends "}</span>
           {extendsHref
             ? <a href={extendsHref} class="link">{classDef.extends}</a>
             : <span>{classDef.extends}</span>}

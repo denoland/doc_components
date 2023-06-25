@@ -39,7 +39,7 @@ export const comrakStyles = css({
 const styles = {
   anchor:
     apply`float-left leading-none hidden group-hover:block text-gray-600 -ml-[18px] pr-[4px]`,
-  copyButton: apply`rounded border border-[#D2D2DC] p-1.5 hover:bg-border`,
+  copyButton: apply`rounded border border-gray-300 p-1.5 hover:bg-gray-100`,
   details: css({
     "& > summary": apply`list-none`,
     "& > summary::-webkit-details-marker": apply`hidden`,
@@ -59,22 +59,22 @@ const styles = {
   }`,
   moduleDoc: apply`space-y-6`,
   moduleDocHeader: apply`flex justify-between mb-8`,
-  moduleIndex: apply`rounded-lg w-full border border-[#E5E7EB]`,
+  moduleIndex: apply`rounded-lg w-full border border-gray-300`,
   moduleIndexHeader: apply`flex justify-between items-center py-3.5 pr-5`,
   moduleIndexHeaderTitle: apply`ml-5 font-semibold text-lg flex items-center`,
   moduleIndexHeaderTitleSpan: apply`ml-2 leading-none`,
   moduleIndexTable: apply`block lg:table w-full`,
-  moduleIndexRow: apply`block lg:table-row odd:bg-[#F8F7F6]`,
+  moduleIndexRow: apply`block lg:table-row odd:bg-gray-50`,
   moduleIndexLinkCell:
     apply`block lg:table-cell pl-5 pr-3 py-2.5 font-semibold`,
   moduleIndexLinkCellIcon: apply`inline my-1.5 mr-3`,
   moduleIndexDocCell:
-    apply`block lg:(table-cell pl-0 pt-2.5 mt-0) pl-11 pr-[1.375rem] pb-2.5 -mt-2 text-[#9CA0AA]`,
+    apply`block lg:(table-cell pl-0 pt-2.5 mt-0) pl-11 pr-[1.375rem] pb-2.5 -mt-2 text-gray-500`,
   moduleIndexPanel: apply`lg:w-72 flex-shrink-0`,
   moduleIndexPanelActive: apply`bg-gray-100 font-bold`,
   moduleIndexPanelEntry:
     apply`flex items-center gap-2 py-2 px-3 rounded-lg w-full leading-6 hover:(text-gray-500  bg-gray-50) children:last-child:(truncate flex-shrink-1)`,
-  moduleIndexPanelModuleIndex: apply`text-[#6C6E78] font-light`,
+  moduleIndexPanelModuleIndex: apply`text-gray-500 font-light`,
   moduleIndexPanelSymbol:
     apply`flex items-center justify-between gap-1 py-1.5 pl-2.5 pr-3 rounded-lg w-full leading-6 hover:(text-gray-500 bg-gray-50) children:first-child:(flex items-center gap-2 min-w-0 children:last-child:truncate)`,
   section: apply`text-sm leading-6 font-semibold text-gray-400 py-1`,
@@ -85,14 +85,14 @@ const styles = {
   sourceLink:
     apply`pl-2 break-words text-gray-600 hover:text-gray-800 hover:underline`,
   symbolListCellSymbol:
-    apply`block lg:table-cell py-1 pr-3 text-[#232323] font-bold children:(space-x-2 min-w-[13rem] flex items-center)`,
-  symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-[#9CA0AA]`,
+    apply`block lg:table-cell py-1 pr-3 font-bold children:(space-x-2 min-w-[13rem] flex items-center)`,
+  symbolListCellDoc: apply`block lg:table-cell py-1 text-sm text-gray-500`,
   symbolListRow: apply`block lg:table-row`,
   symbolListTable: apply`block lg:table`,
   symbolKindDisplay:
     apply`w-11 flex-none flex children:(not-first-child:-ml-[7px])`,
   tag:
-    apply`inline-flex items-center gap-0.5 children:flex-none rounded-full font-medium text-sm leading-none font-sans`,
+    apply`inline-flex items-center gap-0.5 children:flex-none rounded-full font-medium text-sm leading-none`,
 } as const;
 
 export type StyleKey = keyof typeof styles;
