@@ -264,7 +264,7 @@ export function DocSubTitleInterface(
 
   return (
     <div>
-      <span class="text-[#9CA0AA] italic">{" implements "}</span>
+      <span class="text-gray-400 italic">{" implements "}</span>
       {interfaceDef.extends.map((typeDef, i) => (
         <>
           <TypeDef context={context}>

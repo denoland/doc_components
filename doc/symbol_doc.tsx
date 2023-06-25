@@ -192,7 +192,7 @@ function Symbol(
 
       {deprecated?.doc && (
         <div>
-          <div class="py-1 text-danger flex gap-1 items-center">
+          <div class="py-1 text-red-500 flex gap-1 items-center">
             <Icons.TrashCan class="h-4 w-auto" />
             <span class="font-bold leading-6">
               Deprecated
