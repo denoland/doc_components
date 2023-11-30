@@ -6,7 +6,7 @@ import {
   type DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
-  JsDocTagDoc,
+  type JsDocTagDoc,
   type JsDocTagTags,
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
