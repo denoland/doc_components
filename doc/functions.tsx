@@ -22,6 +22,7 @@ import { paramName, Params } from "./params.tsx";
 import { style } from "../styles.ts";
 import { DocTypeParamsSummary, TypeDef, TypeParamsDoc } from "./types.tsx";
 import { type Child, isDeprecated, take } from "./utils.ts";
+import * as Icons from "../icons.tsx";
 
 export function DocFunctionSummary({
   children,
@@ -72,12 +73,32 @@ function DocFunctionOverload({
   context.typeParams = def.functionDef.typeParams.map(({ name }) => name);
   const overloadId = nameToId("function", `${def.name}_${i}`);
 
+  const deprecated = isDeprecated(def);
+
   return (
     <label
       htmlFor={overloadId}
       class="block p-4 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer"
     >
       <div>
+        {deprecated && (
+          <div class="mb-2">
+            <div className="py-1 text-red-500 flex gap-1 items-center">
+              <Icons.TrashCan class="h-4 w-auto" />
+              <span className="font-bold leading-6">
+                Deprecated
+              </span>
+            </div>
+
+            {deprecated.doc &&
+              (
+                <div className="pl-2.5 border-l-4 border-[#F00C084C]">
+                  <Markdown context={context}>{deprecated.doc}</Markdown>
+                </div>
+              )}
+          </div>
+        )}
+
         <div class="font-mono">
           <span class="font-bold">{def.name}</span>
           <span class="font-medium">
@@ -230,6 +251,8 @@ export function DocBlockFunction(
         const id = nameToId("function", def.name);
         const overloadId = nameToId("function", `${def.name}_${i}`);
 
+        const deprecated = isDeprecated(def);
+
         return (
           <input
             type="radio"
@@ -240,7 +263,11 @@ export function DocBlockFunction(
                 [`&:checked ~ *:last-child > :not(#${overloadId}_div)`]:
                   apply`hidden`,
                 [`&:checked ~ div:first-of-type > label[for='${overloadId}']`]:
-                  apply`bg-[#056CF00C] border-blue-600 border-2 cursor-unset`,
+                  apply`border-2 cursor-unset ${
+                    deprecated
+                      ? "bg-[#D256460C] border-red-600"
+                      : "bg-[#056CF00C] border-blue-600"
+                  }`,
                 [`&:checked ~ div:first-of-type > label[for='${overloadId}'] > div`]:
                   apply`-m-px`,
               })
