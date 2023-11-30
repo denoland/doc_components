@@ -100,7 +100,6 @@ export function Showcase(
           isType
         />
       </div>
-
     </div>
   );
 }

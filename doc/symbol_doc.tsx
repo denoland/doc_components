@@ -6,6 +6,7 @@ import {
   type DocNodeFunction,
   type DocNodeInterface,
   type DocNodeTypeAlias,
+  type JsDocTagDoc,
   type JsDocTagTags,
 } from "../deps.ts";
 import { byKind } from "./doc.ts";
@@ -154,9 +155,13 @@ function Symbol(
   if (isAbstract(docNodes[0])) {
     tags.push(tagVariants.abstractLg());
   }
-  const deprecated = isDeprecated(docNodes[0]);
-  if (deprecated) {
-    tags.push(tagVariants.deprecatedLg());
+
+  let deprecated: JsDocTagDoc | undefined;
+  if (docNodes.every(isDeprecated)) {
+    deprecated = isDeprecated(docNodes[0]);
+    if (deprecated) {
+      tags.push(tagVariants.deprecatedLg());
+    }
   }
 
   const lastSymbolIndex = name.lastIndexOf(".");
