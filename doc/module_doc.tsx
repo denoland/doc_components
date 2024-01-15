@@ -168,6 +168,7 @@ export function ModuleDoc(
   );
   const collection = asCollection(docNodes);
   const jsDoc = collection.moduleDoc?.[0][1].jsDoc;
+  const deprecated = isDeprecated({ jsDoc });
 
   return (
     <div>
@@ -184,6 +185,24 @@ export function ModuleDoc(
       <article class={style("main")}>
         <div class={style("moduleDoc")}>
           <div class="space-y-3">
+            {deprecated && (
+              <div class="mb-2">
+                <div class="py-1 text-red-500 flex gap-1 items-center">
+                  <Icons.TrashCan class="h-4 w-auto" />
+                  <span class="font-bold leading-6">
+                    Deprecated
+                  </span>
+                </div>
+
+                {deprecated.doc &&
+                  (
+                    <div class="pl-2.5 border-l-4 border-[#F00C084C]">
+                      <Markdown context={context}>{deprecated.doc}</Markdown>
+                    </div>
+                  )}
+              </div>
+            )}
+
             {isEmpty || hasExports ? <Usage url={context.url} /> : undefined}
 
             <JsDoc context={context}>{jsDoc}</JsDoc>
