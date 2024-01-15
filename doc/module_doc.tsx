@@ -187,16 +187,16 @@ export function ModuleDoc(
           <div class="space-y-3">
             {deprecated && (
               <div class="mb-2">
-                <div className="py-1 text-red-500 flex gap-1 items-center">
+                <div class="py-1 text-red-500 flex gap-1 items-center">
                   <Icons.TrashCan class="h-4 w-auto" />
-                  <span className="font-bold leading-6">
+                  <span class="font-bold leading-6">
                     Deprecated
                   </span>
                 </div>
 
                 {deprecated.doc &&
                   (
-                    <div className="pl-2.5 border-l-4 border-[#F00C084C]">
+                    <div class="pl-2.5 border-l-4 border-[#F00C084C]">
                       <Markdown context={context}>{deprecated.doc}</Markdown>
                     </div>
                   )}
