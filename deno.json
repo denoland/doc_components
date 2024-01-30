@@ -7,6 +7,8 @@
   "importMap": "./_showcase/import_map.json",
   "tasks": {
     "check": "deno check _showcase/main.ts",
+    "check:types": "deno check **/*.ts && deno check **/*.tsx",
+    "ok": "deno fmt --check && deno lint && deno task check:types && deno task test",
     "showcase": "cd _showcase && deno task start",
     "test": "deno test"
   }

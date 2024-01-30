@@ -47,11 +47,11 @@ export type {
   TsTypeParamDef,
   TsTypeTupleDef,
   TsTypeUnionDef,
-} from "https://deno.land/x/deno_doc@0.56.0/lib/types.d.ts";
+} from "https://deno.land/x/deno_doc@0.99.0/types.d.ts";
 
-export { toHtml } from "https://esm.sh/hast-util-to-html@8.0.3";
-export * as htmlEntities from "https://esm.sh/html-entities@2.3.3";
-export { lowlight } from "https://esm.sh/lowlight@2.7.0";
+export { toHtml } from "https://esm.sh/hast-util-to-html@9.0.0";
+export * as htmlEntities from "https://esm.sh/html-entities@2.4.0";
+export { all, createLowlight } from "https://esm.sh/lowlight@3.1.0";
 export {
   apply,
   type Configuration,
