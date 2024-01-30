@@ -1,6 +1,13 @@
 // Copyright 2021-2023 the Deno authors. All rights reserved. MIT license.
 
-import { comrak, htmlEntities, lowlight, toHtml, tw } from "../deps.ts";
+import {
+  all,
+  comrak,
+  createLowlight,
+  htmlEntities,
+  toHtml,
+  tw,
+} from "../deps.ts";
 import { services } from "../services.ts";
 import { style, type StyleKey } from "../styles.ts";
 import { assert, type Child, splitMarkdownTitle, take } from "./utils.ts";
@@ -22,6 +29,8 @@ const MARKDOWN_OPTIONS: comrak.ComrakOptions = {
     tagfilter: true,
   },
 };
+
+let lowlight: ReturnType<typeof createLowlight>;
 
 function syntaxHighlight(html: string): string {
   let match;
@@ -101,6 +110,9 @@ function parseLinks(markdown: string, url: URL, namespace?: string): string {
 }
 
 export function mdToHtml(markdown: string): string {
+  if (!lowlight) {
+    lowlight = createLowlight(all);
+  }
   return syntaxHighlight(comrak.markdownToHTML(markdown, MARKDOWN_OPTIONS));
 }
 
