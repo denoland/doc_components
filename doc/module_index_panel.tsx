@@ -29,7 +29,7 @@ interface DocPageModuleItem {
 export type DocPageNavItem = DocPageModuleItem | DocPageDirItem;
 
 export function splitItems(
-  rootPath: string,
+  _rootPath: string,
   items: DocPageNavItem[],
 ): [folders: DocPageDirItem[], modules: DocPageModuleItem[]] {
   const folders: DocPageDirItem[] = [];
