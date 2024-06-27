@@ -21,7 +21,7 @@ import { ComponentTitle } from "./ComponentTitle.tsx";
 
 const app = css({
   ":global": {
-    "html": apply`bg(white dark:gray-900)`,
+    "html": apply`bg-white dark:bg-gray-900`,
   },
 });
 
@@ -46,7 +46,7 @@ export function ShowcaseDocBlocks(
   ) as DocNodeNamespace;
   return (
     <div
-      class={tw`bg-white dark:(bg-gray-900 text-white) ${app} max-w-screen-xl mx-auto my-4 p-4`}
+      class={tw`bg-white dark:bg-gray-900 dark:text-white ${app} max-w-screen-xl mx-auto my-4 p-4`}
     >
       <h1 class="text-3xl py-3">Deno Doc Components</h1>
       <h2 class="text-2xl py-2 border-b-1">DocBlock Component Showcase</h2>
