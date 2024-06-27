@@ -11,7 +11,7 @@ export function ComponentTitle(
     >
       <a
         href={href}
-        class="text-blue(800 dark:300) hover:underline"
+        class="text-blue-800 dark:text-blue-300 hover:underline"
         target="_blank"
       >
         {name}

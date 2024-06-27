@@ -5,7 +5,7 @@ export function ComponentLink({ children: name }: { children: string }) {
     <li>
       <a
         href={`#${headerify(name)}`}
-        class="text-blue(800 dark:300) hover:underline"
+        class="text-blue-800 dark:text-blue-300 hover:underline"
       >
         {name}
       </a>
