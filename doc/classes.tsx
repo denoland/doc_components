@@ -201,7 +201,7 @@ function ClassMethodDoc(
     const id = nameToId("method", `${defs[0].name}_${i}`);
 
     if (functionDef.hasBody && i !== 0) {
-      return <></>;
+      return null;
     }
 
     const tags = [];
@@ -311,7 +311,7 @@ function ClassItemsDoc(
 ) {
   const defs = take(children, true);
   if (!defs.length) {
-    return <></>;
+    return null;
   }
 
   const properties: unknown[] = [];
