@@ -666,7 +666,7 @@ export function DocTypeParamsSummary(
 ) {
   const typeParams = take(children, true);
   if (typeParams.length === 0) {
-    return <></>;
+    return null;
   }
 
   return (

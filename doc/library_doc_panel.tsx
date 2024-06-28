@@ -188,7 +188,7 @@ export function LibraryDocPanel(
   }
 
   if (entries.length === 0) {
-    return <></>;
+    return null;
   }
   return (
     <div class={style("moduleIndexPanel")}>

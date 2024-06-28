@@ -259,7 +259,7 @@ export function DocSubTitleInterface(
   const { interfaceDef } = take(children);
 
   if (interfaceDef.extends.length === 0) {
-    return <></>;
+    return null;
   }
 
   return (

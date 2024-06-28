@@ -67,7 +67,7 @@ function DocFunctionOverload({
   const def = take(children, true);
 
   if (def.functionDef.hasBody && i !== 0) {
-    return <></>;
+    return null;
   }
 
   context.typeParams = def.functionDef.typeParams.map(({ name }) => name);
@@ -235,7 +235,7 @@ export function DocBlockFunction(
 
   const items = defs.map((def, i) => {
     if (def.functionDef.hasBody && i !== 0) {
-      return <></>;
+      return null;
     }
 
     return <DocFunction n={i} context={context}>{def}</DocFunction>;
@@ -245,7 +245,7 @@ export function DocBlockFunction(
     <div class={style("docBlockItems")}>
       {defs.map((def, i) => {
         if (def.functionDef.hasBody && i !== 0) {
-          return <></>;
+          return null;
         }
 
         const id = nameToId("function", def.name);
