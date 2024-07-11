@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repo has been archived, please use the `deno doc --html` command or the `deno_doc` rust crate.
+
 # deno_doc_components
 
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https://deno.land/x/deno_doc_components/mod.ts)
